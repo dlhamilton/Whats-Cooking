@@ -37,9 +37,9 @@
                 <ul>
                     {% for ingredients_item in ingredients %}
                     {% if ingredients_item.ingredients.approved == True %}
-                    <li>{{ ingredients_item.ingredients.name | safe }}</li>
+                    <li>{{ ingredients_item.ingredients.name }} - {{ ingredients_item.amount }} {{ ingredients_item.unit }}</li>
                     {% else %}
-                    <li><strong>{{ ingredients_item.ingredients.name | safe }}</strong></strong></li>
+                    <li><strong>{{ ingredients_item.ingredients.name }}</strong> - {{ ingredients_item.amount }} {{ ingredients_item.unit }}</li>
                     {% endif %}
                     {% endfor %}
                     <!-- {{ ingredients }} -->
