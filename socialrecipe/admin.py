@@ -21,6 +21,7 @@ class CommentsAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe', 'status', 'post_date')
     search_fields = ['user__first_name', 'user__last_name','user__email', 'body', 'recipe_title']
     list_filter = ('post_date', 'status')
+    
     def remove_comment(self, request, queryset):
         queryset.update(status=3)
 
