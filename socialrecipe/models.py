@@ -107,12 +107,18 @@ class Ingredients(models.Model):
     class Meta:
         ordering = ['name']
 
+    def __str__(self):
+        return self.name
+
 
 class Units(models.Model):
     '''
     units of measure
     '''
     name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
 
 
 class RecipeItems(models.Model):
@@ -124,6 +130,8 @@ class RecipeItems(models.Model):
     amount = models.DecimalField(max_digits=5, decimal_places=2)
     unit = models.ForeignKey(Units, on_delete=models.CASCADE, related_name="recipe_items")
 
+    def __str__(self):
+        return self.ingredients.name
 
 class ShoppingList(models.Model):
     '''
@@ -137,6 +145,9 @@ class ShoppingList(models.Model):
     class Meta:
         ordering = ['-last_update']
 
+    def __str__(self):
+        return self.name
+
 
 class ShoppingListItems(models.Model):
     '''
@@ -149,3 +160,4 @@ class ShoppingListItems(models.Model):
 
     class Meta:
         ordering = ['list']
+    
