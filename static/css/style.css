@@ -23,8 +23,8 @@ body {
     background-color: #fff;
 }
 
-.dark-bg {
-    background-color: #445261;
+.footer-bg {
+    background-color: #8AA848;
 }
 
 .main-bg {
@@ -164,6 +164,11 @@ body {
 
 .brand-text-short{
     display: none;
+}
+
+.footer_button, .footer_button:visited{
+    text-decoration: none;
+    color: inherit;
 }
 
 @media only screen and (max-width: 575px) {
