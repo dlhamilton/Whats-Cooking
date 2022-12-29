@@ -3,97 +3,99 @@
 {% block content %}
 
 
-    <!---->
+<!---->
 <!-- Carousel -->
 <div id="demo" class="carousel slide" data-bs-ride="carousel">
 
-    <!-- Indicators/dots -->
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
-      <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
-      <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
-    </div>
-    
-    <!-- The slideshow/carousel -->
-    <div class="carousel-inner">
-      <div class="carousel-item active h-50 carousel-max-vh-50">
-        <img src="{% static 'media/pic1.webp' %}" alt="Los Angeles" class="d-block" style="width:100%">
-        <div class="carousel-caption">
-          <a href="#" class="post-link">
+  <!-- Indicators/dots -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+  </div>
+
+  <!-- The slideshow/carousel -->
+  <div class="carousel-inner">
+    <div class="carousel-item active h-50 carousel-max-vh-50">
+      <img src="{% static 'media/pic1.webp' %}" alt="Los Angeles" class="d-block" style="width:100%">
+      <div class="carousel-caption">
+        <a href="#" class="post-link">
           <h3>Veggie Chilli Sweet Potato Fries</h3>
           <p>Made by Chris Robinson</p>
         </a>
-        </div>
       </div>
-      <div class="carousel-item h-50 carousel-max-vh-50">
-        <img src="{% static 'media/pic2.webp' %}" alt="Chicago" class="d-block" style="width:100%">
-        <div class="carousel-caption">
-          <a href="#" class="post-link">
+    </div>
+    <div class="carousel-item h-50 carousel-max-vh-50">
+      <img src="{% static 'media/pic2.webp' %}" alt="Chicago" class="d-block" style="width:100%">
+      <div class="carousel-caption">
+        <a href="#" class="post-link">
           <h3>Beans and Courgette Salad</h3>
           <p>Made by Amy Lancanster</p>
-          </a>
-        </div> 
+        </a>
       </div>
-      <div class="carousel-item h-50 carousel-max-vh-50">
-        <img src="{% static 'media/pic3.webp' %}" alt="New York" class="d-block" style="width:100%">
-        <div class="carousel-caption">
-          <a href="#" class="post-link">
+    </div>
+    <div class="carousel-item h-50 carousel-max-vh-50">
+      <img src="{% static 'media/pic3.webp' %}" alt="New York" class="d-block" style="width:100%">
+      <div class="carousel-caption">
+        <a href="#" class="post-link">
           <h3>Rice & Calalou Salad</h3>
           <p>Made by Lucy Smith</p>
-          </a>
-        </div>  
+        </a>
       </div>
-      <div class="carousel-button">
-        <a class="btn btn-outline-secondary" href="#">Coming soon</a>
-              </div>
     </div>
-    
-    <!-- Left and right controls/icons -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
-      <span class="carousel-control-next-icon"></span>
-    </button>
+    <div class="carousel-button">
+      <a class="btn btn-outline-secondary" href="#">Coming soon</a>
+    </div>
   </div>
 
-    <!--  -->
-    <div class="container-fluid">
-    <div class="row">
+  <!-- Left and right controls/icons -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
 
-        <!-- Blog Entries Column -->
-        <div class="col-12 mt-3 left">
-            <div class="row">
-                {% for item in top_users %}
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <div class="image-container">
-                                {% if "placeholder" in item.recipe_image.url %}
-                                <img class="card-img-top" src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
-                                {% else %}
-                                <img class="card-img-top" src="{{ item.recipe_image.url }}">
-                                {% endif %}
-                                <div class="image-flash">
-                                    <p class="author">Author: {{ item.author }}</p>
-                                </div>
-                            </div>
+<!--  -->
+<div class="container-fluid">
+  <div class="row">
 
-                            <a href="{% url 'recipe_detail' item.slug %}" class="post-link">
-                                <h2 class="card-title">{{ item.title }}</h2>
-                                <p class="card-text">{{ item.excerpt }}</p>
-                            </a>
-                            <hr/>
-                            <p class="card-text text-muted h6">{{ item.upload_date}}
-                                <i class="far fa-heart"></i>{{ item.number_of_favourites }}
-                            </p>
-                        </div>
-                    </div>
+    <!-- Blog Entries Column -->
+    <div class="col-12 mt-3 left">
+      <div class="row">
+        {% for item in top_users %}
+        <div class="col-md-4">
+          <div class="card mb-4">
+            <a href="{% url 'recipe_detail' item.slug %}" class="post-link">
+            <div class="index-card-body">
+              <div class="image-container">
+                {% if "placeholder" in item.recipe_image.url %}
+                <img class="card-img-top" src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
+                {% else %}
+                <img class="card-img-top" src="{{ item.recipe_image.url }}">
+                {% endif %}
+                <div class="image-flash">
+                  <p class="author">Author: {{ item.author }}</p>
                 </div>
-                {% endfor %}
+              </div>
+
+              
+                <h2 class="card-title">{{ item.title }}</h2>
+                <p class="card-text">{{ item.excerpt }}</p>
+              
+              <hr />
+              <p class="card-text text-muted h6">{{ item.upload_date}}
+                <i class="far fa-heart"></i>{{ item.number_of_favourites }}
+              </p>
             </div>
+          </a>
+          </div>
         </div>
+        {% endfor %}
+      </div>
     </div>
+  </div>
 
 </div>
 

@@ -171,6 +171,11 @@ body {
     color: inherit;
 }
 
+.index-card-body{
+    border:2px solid #E84610;
+    padding: 10px;
+    }
+
 @media only screen and (max-width: 575px) {
     .carousel-caption h3{
         font-size: medium;
