@@ -70,7 +70,7 @@ class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     body = models.TextField()
     post_date = models.DateTimeField(auto_now_add=True)
-    status = models.IntegerField(choices=RECIPE_STATUS, default=0)
+    status = models.IntegerField(choices=RECIPE_STATUS, default=1)
 
     class Meta:
         ordering = ['-post_date']

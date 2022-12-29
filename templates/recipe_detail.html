@@ -1,5 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 
+{% load crispy_forms_tags %}
+
 <div class="masthead">
     <div class="container">
         <div class="row g-0">
@@ -37,9 +39,11 @@
                 <ul>
                     {% for ingredients_item in ingredients %}
                     {% if ingredients_item.ingredients.approved == True %}
-                    <li>{{ ingredients_item.ingredients.name }} - {{ ingredients_item.amount }} {{ ingredients_item.unit }}</li>
+                    <li>{{ ingredients_item.ingredients.name }} - {{ ingredients_item.amount }}
+                        {{ ingredients_item.unit }}</li>
                     {% else %}
-                    <li><strong>{{ ingredients_item.ingredients.name }}</strong> - {{ ingredients_item.amount }} {{ ingredients_item.unit }}</li>
+                    <li><strong>{{ ingredients_item.ingredients.name }}</strong> - {{ ingredients_item.amount }}
+                        {{ ingredients_item.unit }}</li>
                     {% endif %}
                     {% endfor %}
                     <!-- {{ ingredients }} -->
@@ -55,7 +59,8 @@
 
                     <div class="col-1">
                         <!-- The number of likes goes before the closing strong tag -->
-                        <strong class="text-secondary"><i class="far fa-heart"></i> {{ recipe.number_of_favourites }} </strong>
+                        <strong class="text-secondary"><i class="far fa-heart"></i> {{ recipe.number_of_favourites }}
+                        </strong>
                     </div>
                     <div class="col-1">
                         {% with methods.count as total_methods %}
@@ -137,7 +142,29 @@
         </div>
         <div class="col-md-4 card mb-4  mt-3 ">
             <div class="card-body">
-                <!-- For later -->
+                <!-- For comments -->
+
+                {% if user.is_authenticated %}
+                {% if commented %}
+                {% if valid_comment %}
+                <div class="alert alert-success" role="alert">
+                    Comment Submitted
+                </div>
+                {% else %}
+                <div class="alert alert-danger" role="alert">
+                    Error With Comment
+                </div>
+                {% endif %}
+                {% endif %}
+                <h3>Leave a comment:</h3>
+                <p>Posting as: {{ user.username }}</p>
+                <form method="post" style="margin-top: 1.3em;">
+                    {{ comment_form | crispy }}
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-signup btn-lg">Submit Comment</button>
+                </form>
+
+                {% endif %}
             </div>
         </div>
     </div>
