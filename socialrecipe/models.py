@@ -35,15 +35,20 @@ class Recipes(models.Model):
     favourites = models.ManyToManyField(User, related_name='user_favourites', blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
+    prep_time = models.PositiveIntegerField(default=0)
+    cook_time = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ['-upload_date']
 
     def __str__(self):
         return self.title
-    
+
     def number_of_favourites(self):
         return self.favourites.count()
+
+    def total_time(self):
+        return self.prep_time + self.cook_time
 
 
 class RecipeImages(models.Model):
