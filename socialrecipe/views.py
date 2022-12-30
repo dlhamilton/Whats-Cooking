@@ -1,6 +1,7 @@
 # from itertools import chain
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, reverse
 from django.views import generic, View
+from django.http import HttpResponseRedirect
 from .models import Recipes
 from .forms import CommentsForm
 from django.db.models import Count
@@ -113,3 +114,14 @@ class RecipeDetail(View):
                 "comment_form": CommentsForm(),
             },
         )
+
+
+class RecipeFavourite(View):
+    def post(self, request, slug):
+        recipe = get_object_or_404(Recipes,slug=slug)
+
+        if recipe.favourites.filter(id=request.user.id).exists():
+            recipe.favourites.remove(request.user)
+        else:
+            recipe.favourites.add(request.user)
+        return HttpResponseRedirect(reverse('recipe_detail', args=[slug]))
