@@ -50,6 +50,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile_page' user.username %}">Profile</a>
+                    </li>
                     {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
@@ -86,54 +89,7 @@
             <i class="fab fa-youtube-square ms-3"></i></p>
     </footer>
 
-    <script>
-        const form = document.querySelector('#myForm');
-        var button = form.querySelector('.btn-like');
-         var element = document.querySelector('#fav_count');
-        var currentValue = parseInt(element.innerHTML,10);
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const formData = new FormData(form);
-            fetch("{% url 'recipe_favourite' recipe.slug %}", {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then((response) => response.json())
-                .then((data) => {
-                    // update the HTML page with the updated data
-                    if (data.liked) {
-                        button.innerHTML = '<i class="fas fa-heart"></i>';
-                        currentValue = currentValue + 1;
-                        element.innerHTML = currentValue;
-                    } else {
-                        button.innerHTML = '<i class="far fa-heart"></i>';
-                        if (currentValue > 0){
-                            currentValue = currentValue -1;
-                    }else{
-                        currentValue = currentValue;
-                    }
-                        element.innerHTML = currentValue;
-                    }
-                })
-                .then(() => {
-                });
-            return false;
-        });
-
-        
-        const checkbox = document.getElementById('flexSwitchCheckChecked')
-const comments_row = document.getElementById('comments_row')
-checkbox.addEventListener('change', (event) => {
-  if (event.currentTarget.checked) {
-    comments_row.style.display = 'block';
-  } else {
-    comments_row.style.display = 'none';
-  }
-})
-
-    
-
-    </script>
+  
 </body>
 
 </html>

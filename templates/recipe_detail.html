@@ -31,7 +31,7 @@
 </div>
 <div class="container">
     <div class="row">
-        <div class="d-inline col-6 ">
+        <div class="d-inline col-12">
             <!-- The post content goes inside the card-text. -->
             <!-- Use the | safe filter inside the template tags -->
             <h3>About:</h3>
@@ -63,13 +63,55 @@
             {% endif %}
         </div>
     </div>
+    <div class="row recipe_icons">
+
+        <div class="col-2">
+            <strong>
+                {% if user.is_authenticated %}
+                <form id="myForm" class="d-inline" action="{% url 'recipe_favourite' recipe.slug %}"
+                    method="POST">
+                    {% csrf_token %}
+                    {% if favourited %}
+                    <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    {% else %}
+                    <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    {% endif %}
+                </form>
+                {% else %}
+                <span class="text-secondary"><i class="far fa-heart"></i></span>
+                {% endif %}
+                <span id="fav_count" class="text-secondary">{{ recipe.number_of_favourites }}</span>
+            </strong>
+
+        </div>
+        <div class="col-2">
+            {% with methods.count as total_methods %}
+            <strong class="text-secondary"><i class="fas fa-list-ul"></i>
+                <!-- Our total_comments variable goes before the closing strong tag -->
+                {{ total_methods }}
+            </strong>
+            {% endwith %}
+        </div>
+        <div class="col-2">
+            {% with comments.count as total_comments %}
+            <strong class="text-secondary"><i class="far fa-comments"></i>
+                <!-- Our total_comments variable goes before the closing strong tag -->
+                {{ total_comments }}
+            </strong>
+            {% endwith %}
+        </div>
+    </div>
     <div class="row">
         <div class="col">
             <hr>
         </div>
     </div>
     <div class="row">
-        <div class="d-inline col-6 ">
+        <div class="d-inline col-12 ">
 
                 <h3>Ingredients:</h3>
                 <ul>
@@ -100,48 +142,7 @@
                 <li>{{ method_item.method | safe }}</li>
                 {% endfor %}
             </ol>
-            <div class="row">
-
-                <div class="col-1">
-                    <strong>
-                        {% if user.is_authenticated %}
-                        <form id="myForm" class="d-inline" action="{% url 'recipe_favourite' recipe.slug %}"
-                            method="POST">
-                            {% csrf_token %}
-                            {% if favourited %}
-                            <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
-                                <i class="fas fa-heart"></i>
-                            </button>
-                            {% else %}
-                            <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            {% endif %}
-                        </form>
-                        {% else %}
-                        <span class="text-secondary"><i class="far fa-heart"></i></span>
-                        {% endif %}
-                        <span id="fav_count" class="text-secondary">{{ recipe.number_of_favourites }}</span>
-                    </strong>
-
-                </div>
-                <div class="col-1">
-                    {% with methods.count as total_methods %}
-                    <strong class="text-secondary"><i class="fas fa-list-ul"></i>
-                        <!-- Our total_comments variable goes before the closing strong tag -->
-                        {{ total_methods }}
-                    </strong>
-                    {% endwith %}
-                </div>
-                <div class="col-1">
-                    {% with comments.count as total_comments %}
-                    <strong class="text-secondary"><i class="far fa-comments"></i>
-                        <!-- Our total_comments variable goes before the closing strong tag -->
-                        {{ total_comments }}
-                    </strong>
-                    {% endwith %}
-                </div>
-            </div>
+            
         </div>
 
     </div>
@@ -271,5 +272,50 @@
     </div>
     <!-- new test content -->
 </div>
+
+<script>
+    const form = document.querySelector('#myForm');
+    var button = form.querySelector('.btn-like');
+    var element = document.querySelector('#fav_count');
+    var currentValue = parseInt(element.innerHTML, 10);
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        fetch("{% url 'recipe_favourite' recipe.slug %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                // update the HTML page with the updated data
+                if (data.liked) {
+                    button.innerHTML = '<i class="fas fa-heart"></i>';
+                    currentValue = currentValue + 1;
+                    element.innerHTML = currentValue;
+                } else {
+                    button.innerHTML = '<i class="far fa-heart"></i>';
+                    if (currentValue > 0) {
+                        currentValue = currentValue - 1;
+                    } else {
+                        currentValue = currentValue;
+                    }
+                    element.innerHTML = currentValue;
+                }
+            })
+            .then(() => {});
+        return false;
+    });
+
+
+    const checkbox = document.getElementById('flexSwitchCheckChecked')
+    const comments_row = document.getElementById('comments_row')
+    checkbox.addEventListener('change', (event) => {
+        if (event.currentTarget.checked) {
+            comments_row.style.display = 'block';
+        } else {
+            comments_row.style.display = 'none';
+        }
+    })
+</script>
 
 {% endblock content %}

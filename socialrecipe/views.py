@@ -1,7 +1,9 @@
 # from itertools import chain
-from django.shortcuts import render, get_object_or_404, reverse
+from django.shortcuts import render, get_object_or_404, reverse,redirect
 from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.base import RedirectView
 from .models import Recipes
 from .forms import CommentsForm
 from django.db.models import Count
@@ -127,3 +129,26 @@ class RecipeFavourite(View):
             recipe.favourites.add(request.user)
         # return HttpResponseRedirect(reverse('recipe_detail', args=[slug]))
         return JsonResponse({'liked': True})
+
+
+class ProfilePage(View):
+    def get(self, request, username, *args, **kwargs):
+        top_recipes = "Test"
+        # queryset = Users.objects.filter(status=1)
+        # users = get_object_or_404(queryset, slug=slug)
+
+        return render(
+            request,
+            "user_profile_page.html",
+            {
+                "top_users": top_recipes,
+                "page_name": request.user.username,
+            }
+        )
+
+
+class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        return reverse('profile_page', kwargs={'username': self.request.user.username})
+        #return redirect("profile_page", slug=username)

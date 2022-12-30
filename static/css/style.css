@@ -135,6 +135,7 @@ body {
     color: #E84610;
     border: none;
     background: transparent;
+    padding:0;
 }
 
 .btn-like:hover,
@@ -142,6 +143,11 @@ body {
     color: #E84610;
     background: transparent;
     border: none;
+}
+
+.recipe_icons{
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* Carousel Index Page */
