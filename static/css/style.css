@@ -59,12 +59,12 @@ body {
     overflow: hidden;
     position: relative;
     display: inline-block;
-    height: 33vh;
+    max-height: 25vh;
     width: 100%;
 }
 
 .masthead-text {
-    background-color: #445261;
+    background-color: #FF8156;
     color: white;
     position: relative;
 }
@@ -81,7 +81,7 @@ body {
     right: 90%;
     height: 100%;
     width: 150%;
-    background: #445261;
+    background: #FF8156;
     -webkit-transform: skew(15deg);
     -moz-transform: skew(15deg);
     transform: skew(15deg);
@@ -99,13 +99,14 @@ body {
 }
 
 .post-title {
-    margin-top: 20%;
+    margin-top: 35px;
     margin-left: 5%;
 }
 
 .post-subtitle {
     margin-left: 5%;
-    color: lightgray;
+    color: #4A4A4F;
+    font-size: medium;
 }
 
 .btn-signup {
@@ -175,6 +176,74 @@ body {
     border:2px solid #E84610;
     padding: 10px;
     }
+
+.container h3{
+    font-size:large;
+}
+
+.comments-section .card{
+    border: none;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+    border-radius: 4px;
+}
+
+.comments-section .dots{
+    height: 4px;
+    width: 4px;
+    margin-bottom: 2px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.comments-section .badge{
+    padding: 7px;
+    padding-right: 9px;
+    padding-left: 16px;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+}
+
+.comments-section .user-img{
+    margin-top: 4px;
+}
+
+.comments-section .check-icon{
+    font-size: 17px;
+    color: #c3bfbf;
+    top: 1px;
+    position: relative;
+    margin-left: 3px;
+}
+
+.comments-section .form-check-input{
+    margin-top: 6px;
+    margin-left: -24px !important;
+    cursor: pointer;
+}
+
+.comments-section .form-check-input:focus{
+    box-shadow: none;
+}
+
+.comments-section .icons i{
+    margin-left: 8px;
+}
+
+.comments-section .reply{
+    margin-left: 12px;
+}
+.comments-section .margin-l-name{
+    margin-left: 8px;
+}
+
+.comments-section .reply small{
+    color: #b7b4b4;
+}
+
+.comments-section .reply small:hover{
+    color: green;
+    cursor: pointer;
+}
 
 @media only screen and (max-width: 575px) {
     .carousel-caption h3{

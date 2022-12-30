@@ -11,7 +11,7 @@
                     {{ recipe.title }}
                 </h1>
                 <!-- Post author goes before the | the post's created date goes after -->
-                <p class="post-subtitle">{{ recipe.author }} | {{ recipe.upload_date }}</p>
+                <h2 class="post-subtitle">{{ recipe.author }} | {{ recipe.upload_date }}</h2>
             </div>
             <div class="d-none d-md-block col-md-6 masthead-image">
                 <!-- The featured image URL goes in the src attribute -->
@@ -24,18 +24,54 @@
         </div>
     </div>
 </div>
-
+<div class="row">
+    <div class="col">
+        <hr>
+    </div>
+</div>
 <div class="container">
     <div class="row">
-        <div class="col card mb-4  mt-3 left  top">
-            <div class="card-body">
-                <!-- The post content goes inside the card-text. -->
-                <!-- Use the | safe filter inside the template tags -->
-                <p class="card-text ">
-                    {{ recipe.excerpt | safe }}
-                </p>
-                <br>
-                Ingredients:
+        <div class="d-inline col-6 ">
+            <!-- The post content goes inside the card-text. -->
+            <!-- Use the | safe filter inside the template tags -->
+            <h3>About:</h3>
+            <p class="card-text ">
+                {{ recipe.excerpt | safe }}
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="d-inline col-6 ">
+            <!-- The post content goes inside the card-text. -->
+            <!-- Use the | safe filter inside the template tags -->
+            <h3>Rating:</h3>
+            <p class="card-text ">
+                {{ recipe.excerpt | safe }}
+            </p>
+        </div>
+        <div class="d-inline d-md-none col-6">
+            <!-- The featured image URL goes in the src attribute -->
+            {% if "placeholder" in recipe.recipe_image.url %}
+            <img src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg" width="100%">
+            {% else %}
+            <img src="{{ recipe.recipe_image.url }}" width="100%">
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="d-inline col-6 ">
+
+                <h3>Ingredients:</h3>
                 <ul>
                     {% for ingredients_item in ingredients %}
                     {% if ingredients_item.ingredients.approved == True %}
@@ -48,56 +84,66 @@
                     {% endfor %}
                     <!-- {{ ingredients }} -->
                 </ul>
-                <br>
-                Methods:
-                <ol>
-                    {% for method_item in methods %}
-                    <li>{{ method_item.method | safe }}</li>
-                    {% endfor %}
-                </ol>
-                <div class="row">
 
-                    <div class="col-1">
-                        <strong>
-                            {% if user.is_authenticated %}
-                            <form class="d-inline" action="{% url 'recipe_favourite' recipe.slug %}" method="POST">
-                                {% csrf_token %}
-                                {% if favourited %}
-                                <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                                {% else %}
-                                <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
-                                    <i class="far fa-heart"></i>
-                                </button>
-                                {% endif %}
-                            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="card-body">
+            <h3>Methods:</h3>
+            <ol>
+                {% for method_item in methods %}
+                <li>{{ method_item.method | safe }}</li>
+                {% endfor %}
+            </ol>
+            <div class="row">
+
+                <div class="col-1">
+                    <strong>
+                        {% if user.is_authenticated %}
+                        <form id="myForm" class="d-inline" action="{% url 'recipe_favourite' recipe.slug %}"
+                            method="POST">
+                            {% csrf_token %}
+                            {% if favourited %}
+                            <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
+                                <i class="fas fa-heart"></i>
+                            </button>
                             {% else %}
-                            <span class="text-secondary"><i class="far fa-heart"></i></span>
+                            <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
+                                <i class="far fa-heart"></i>
+                            </button>
                             {% endif %}
-                            <span class="text-secondary">{{ recipe.number_of_favourites }}</span>
-                        </strong>
+                        </form>
+                        {% else %}
+                        <span class="text-secondary"><i class="far fa-heart"></i></span>
+                        {% endif %}
+                        <span id="fav_count" class="text-secondary">{{ recipe.number_of_favourites }}</span>
+                    </strong>
 
-                    </div>
-                    <div class="col-1">
-                        {% with methods.count as total_methods %}
-                        <strong class="text-secondary"><i class="fas fa-list-ul"></i>
-                            <!-- Our total_comments variable goes before the closing strong tag -->
-                            {{ total_methods }}
-                        </strong>
-                        {% endwith %}
-                    </div>
-                    <div class="col-1">
-                        {% with comments.count as total_comments %}
-                        <strong class="text-secondary"><i class="far fa-comments"></i>
-                            <!-- Our total_comments variable goes before the closing strong tag -->
-                            {{ total_comments }}
-                        </strong>
-                        {% endwith %}
-                    </div>
+                </div>
+                <div class="col-1">
+                    {% with methods.count as total_methods %}
+                    <strong class="text-secondary"><i class="fas fa-list-ul"></i>
+                        <!-- Our total_comments variable goes before the closing strong tag -->
+                        {{ total_methods }}
+                    </strong>
+                    {% endwith %}
+                </div>
+                <div class="col-1">
+                    {% with comments.count as total_comments %}
+                    <strong class="text-secondary"><i class="far fa-comments"></i>
+                        <!-- Our total_comments variable goes before the closing strong tag -->
+                        {{ total_comments }}
+                    </strong>
+                    {% endwith %}
                 </div>
             </div>
         </div>
+
     </div>
     <div class="row">
         <div class="col">
@@ -144,24 +190,48 @@
     </div>
     <!-- Comments upload place -->
     <div class="row">
-        <div class="col-md-8 card mb-4  mt-3 ">
-            <h3>Comments:</h3>
-            <div class="card-body">
-                <!-- We want a for loop inside the tags to iterate through each comment in comments -->
-                {% for comment in comments %}
-                <div class="comments" style="padding: 10px;">
-                    <p class="font-weight-bold">
-                        <!-- The commenter's name goes here. Check the model if you're not sure what that is -->
-                        {{ comment.user }}
-                        <span class=" text-muted font-weight-normal">
-                            <!-- The comment's created date goes here -->
-                            {{ comment.post_date }}
-                        </span> wrote:
-                    </p>
-                    <!-- The body of the comment goes before the | -->
-                    {{ comment.body | linebreaks }}
+        <div class="col-md-8 card mt-3 comments-section">
+            <div class="headings d-flex justify-content-between align-items-center mb-3">
+                <h3>Comments:</h3>
+                <div class="buttons">
+                    <span class="badge bg-white d-flex flex-row align-items-center">
+                        <span class="text-primary">Comments "ON"</span>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                        </div>
+                    </span>
                 </div>
-                <!-- Our for loop ends here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="comments_row">
+        <div class="col-md-8 card mb-4  mt-3 comments-section">
+            <div>
+                {% for comment in comments %}
+                <div class="card p-3 mt-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="user d-flex flex-row align-items-center">
+                            <img src="https://i.imgur.com/hczKIze.jpg" width="30" class="user-img rounded-circle mr-2">
+                            <span class="font-weight-bold text-primary margin-l-name">{{ comment.user }}</span>
+                        </div>
+                        <small>{{ comment.post_date }}</small>
+                    </div>
+                    <div class="font-weight-bold reply px-4">{{ comment.body | linebreaks }}</div>
+                    <div class="action d-flex justify-content-between mt-2 align-items-center">
+                        <div class="reply px-4">
+                            <small>Remove</small>
+                            <span class="dots"></span>
+                            <small>Reply</small>
+                            <span class="dots"></span>
+                            <small>Translate</small>
+                        </div>
+                        <div class="icons align-items-center">
+                            <i class="fa fa-star text-warning"></i>
+                            <i class="fa fa-check-circle-o check-icon"></i>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
         </div>
@@ -193,6 +263,13 @@
             </div>
         </div>
     </div>
+
+    <!-- new test content -->
+
+    <div class="row  d-flex justify-content-center">
+
+    </div>
+    <!-- new test content -->
 </div>
 
 {% endblock content %}
