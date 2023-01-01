@@ -3,6 +3,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 
+from allauth.account.signals import user_signed_up
+from django.contrib.auth.models import Group
+from django.dispatch import receiver
+
 RECIPE_STATUS = ((0, "Draft"), (1, "Published"), (2, "Hidden"), (3, "Removed"))
 USER_STATUS = ((0, "Suspended"), (1, "Standard"), (2, "Bronze"), (3, "Silver"), (4, "Gold"), (5, "Platnium"))
 INGREDIENTS = ((0, "Approved"), (1, "Disapproved"))
@@ -12,14 +16,21 @@ class UserDetails(models.Model):
     '''
     Extend the user model
     '''
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    location = models.CharField(max_length=150)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_details")
+    location = models.CharField(max_length=150,blank=True)
     status = models.IntegerField(choices=USER_STATUS, default=1)
     user_image = CloudinaryField('image', default='placeholder')
     follows = models.ManyToManyField(User, related_name='user_follows', blank=True)
 
+    def __str__(self):
+        return self.user.username
+
     def number_of_follows(self):
         return self.follows.count()
+    
+    def get_followers(self):
+        x=self.follows.all()
+        return x
 
 
 class Recipes(models.Model):
@@ -37,6 +48,7 @@ class Recipes(models.Model):
     update_date = models.DateTimeField(auto_now=True)
     prep_time = models.PositiveIntegerField(default=0)
     cook_time = models.PositiveIntegerField(default=0)
+    serves = models.PositiveIntegerField(default=1)
 
     class Meta:
         ordering = ['-upload_date']
@@ -165,4 +177,8 @@ class ShoppingListItems(models.Model):
 
     class Meta:
         ordering = ['list']
-    
+
+'Add more user details'
+@receiver(user_signed_up)
+def after_user_signed_up(sender, request, user, **kwargs):
+    UserDetails.objects.create(user=user)

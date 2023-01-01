@@ -4,7 +4,7 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes
+from .models import Recipes, User, UserDetails
 from .forms import CommentsForm
 from django.db.models import Count
 
@@ -133,16 +133,26 @@ class RecipeFavourite(View):
 
 class ProfilePage(View):
     def get(self, request, username, *args, **kwargs):
-        top_recipes = "Test"
-        # queryset = Users.objects.filter(status=1)
-        # users = get_object_or_404(queryset, slug=slug)
+
+        # top_recipes = UserDetails.objects.filter(status=1)
+        page_name = get_object_or_404(User, username=username)
+
+        # page_name = get_object_or_404(queryset, username=username)
+        fav_recipes=[]
+        all_recipes = Recipes.objects.filter(status=1)
+        
+        for r in all_recipes:
+            if r.favourites.filter(id=page_name.id).exists():
+                fav_recipes.append(r)
 
         return render(
             request,
             "user_profile_page.html",
             {
-                "top_users": top_recipes,
-                "page_name": request.user.username,
+                "page_name": page_name,
+                "fav_recipes": fav_recipes,
+                "fav_recipes_count": len(fav_recipes),
+                "logged_in_user": request.user.username,
             }
         )
 

@@ -3,14 +3,138 @@
 {% block content %}
 
 
-
-
-<!--  -->
 <div class="container-fluid">
   <div class="row">
+    <div class="col">
+      <p>username: {{ page_name.username }}</p>
+      <p>firstname: {{ page_name.first_name }}</p>
+      <p>lastname: {{ page_name.last_name }}</p>
+      <p>email: {{ page_name.email }}</p>
+    </div>
+  </div>
 
-    <p>{{ top_users }}</p>
-    
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <p>location: {{ page_name.user_details.location }}</p>
+      {% if page_name.user_details.status == 0 %}
+      <p>status: Suspended</p>
+      {% elif page_name.user_details.status == 1 %}
+      <p>status: Standard</p>
+      {% elif page_name.user_details.status == 2 %}
+      <p>status: Bronze</p>
+      {% elif page_name.user_details.status == 3 %}
+      <p>status: Silver</p>
+      {% elif page_name.user_details.status == 4 %}
+      <p>status: Gold</p>
+      {% elif page_name.user_details.status == 5 %}
+      <p>status: Platnium</p>
+      {% else %}
+      <p>status: Error no Status</p>
+      {% endif %}
+
+      <p>user_image:</p>
+      <img class="col-2" src="{{ page_name.user_details.user_image.url }}">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <p>followers count: {{ page_name.user_details.number_of_follows }}</p>
+      <p>followers:</p>
+      {% if page_name.user_details.number_of_follows > 0 %}
+      <ul>
+        {% for follow in page_name.user_details.get_followers %}
+        <a class="nav-link" href="{% url 'profile_page' follow.username %}">
+          <li>{{ follow }}</li>
+        </a>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p><strong>No Follows</strong></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <p>recipe count: {{ page_name.user_recipes.count }}</p>
+      <p>recipes:</p>
+      {% if page_name.user_recipes.count > 0 %}
+      <ul>
+        {% for recipe in page_name.user_recipes.all %}
+        <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+          <li>{{ recipe }}</li>
+        </a>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p><strong>No Recipes</strong></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
+      <p>Shopping Lists:</p>
+      {% if page_name.shopping_list.count > 0 %}
+      <ul>
+        {% for lists in page_name.shopping_list.all %}
+        <li>{{ lists }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p><strong>No Shopping Lists</strong></p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <p>Favourite Recipes Count: {{ fav_recipes_count }}</p>
+      <p>Favourite Recipes:</p>
+      {% if fav_recipes_count > 0 %}
+      <ul>
+        {% for favourite in fav_recipes %}
+        <a href="{% url 'recipe_detail' favourite.slug %}" class="post-link">
+          <li>{{ favourite }}</li>
+        </a>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p><strong>No Favourite Recipes</strong></p>
+      {% endif %}
+    </div>
   </div>
 
 </div>
