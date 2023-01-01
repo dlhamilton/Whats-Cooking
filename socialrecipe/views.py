@@ -4,7 +4,7 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails
+from .models import Recipes, User, UserDetails, ShoppingList
 from .forms import CommentsForm
 from django.db.models import Count
 
@@ -156,6 +156,41 @@ class ProfilePage(View):
             }
         )
 
+
+class ProfileShoppingList(View):
+    def get(self, request, username, *args, **kwargs):
+
+        if username == request.user.username:
+            return render(
+                request,
+                "shopping_lists.html",
+                {
+                    "page_name": request.user.username,
+                    "logged_in_user": request.user,
+                }
+            )
+        else:
+            return HttpResponseRedirect(reverse('profile_page', kwargs={'username': request.user.username}))
+
+
+class ProfileSingleList(View):
+    def get(self, request, username, list, *args, **kwargs):
+
+        if username == request.user.username:
+            shopping_list = get_object_or_404(ShoppingList, slug=list)
+            user_list_items = shopping_list.shopping_list_items.filter()
+            return render(
+                request,
+                "shopping_list.html",                
+                {
+                    "page_name": request.user.username,
+                    "logged_in_user": request.user,
+                    "user_list": user_list_items,
+                    "user_shopping_list": shopping_list,
+                }
+            )
+        else:
+            return HttpResponseRedirect(reverse('profile_page', kwargs={'username': request.user.username}))
 
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
 

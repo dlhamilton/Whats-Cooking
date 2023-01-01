@@ -56,6 +56,7 @@ class ShoppingListAdmin(admin.ModelAdmin):
     list_display = ('name', 'user', 'date_made')
     search_fields = ['name', 'user__first_name', 'user__last_name', 'user__email']
     list_filter = ('user__username', 'date_made')
+    prepopulated_fields = {'slug': ('user','name')}
 
 
 @admin.register(socialrecipe.models.ShoppingListItems)

@@ -150,6 +150,7 @@ class RecipeItems(models.Model):
     def __str__(self):
         return self.ingredients.name
 
+
 class ShoppingList(models.Model):
     '''
     stores the users shopping list
@@ -158,6 +159,7 @@ class ShoppingList(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shopping_list")
     date_made = models.DateTimeField(auto_now_add=True)
     last_update = models.DateTimeField(auto_now=True)
+    slug = models.SlugField(max_length=150, unique=True)
 
     class Meta:
         ordering = ['-last_update']
@@ -174,6 +176,7 @@ class ShoppingListItems(models.Model):
     ingredients = models.ForeignKey(Ingredients, on_delete=models.CASCADE, related_name="shopping_list_items")
     amount = models.DecimalField(max_digits=5, decimal_places=2)
     unit = models.ForeignKey(Units, on_delete=models.CASCADE, related_name="shopping_list_items")
+    collected = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['list']
