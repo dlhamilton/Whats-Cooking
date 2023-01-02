@@ -66,6 +66,9 @@
                 <!-- <span class="navbar-text text-muted">
                     adventures of a software developer
                 </span> -->
+                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body
+                    scrolling</button>
             </div>
         </div>
     </nav>
@@ -90,7 +93,89 @@
             <i class="fab fa-youtube-square ms-3"></i></p>
     </footer>
 
-  
+    <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+        id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasScrollingLabel">
+                <a class="navbar-brand" href="{% url 'home' %}">
+                    <img src="{% static 'media/Logo-WC.png' %}">
+                    <span class="brand">
+                        <span class="brand-text">what's cooking</span>
+                        <span class="brand-text-short">wc</span>
+                        <span class="thin brand-bar">| Profile</span>
+                    </span>
+                </a>
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            {% if user.is_authenticated %}
+            <div class="image_box_size mx-auto d-block">
+                <div class="ratio ratio-1x1 rounded-circle overflow-hidden">
+                    <img src="{{ user.user_details.user_image.url }}" class="card-img-top img-cover" alt="Raeesh">
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row mt-4">
+                <div class="col">
+                    <div class="mx-auto d-block">
+                        <p class="text-center text-uppercase">{{ user.username }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <p>First name: {{ user.first_name }}</p>
+                    <p>Last name: {{ user.last_name }}</p>
+                    <p>Email: {{ user.email }}</p>
+                    <p>Location: {{ user.user_details.location }}</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card text-white bg-info">
+                        <div class="card-header">Account Status</div>
+                        <div class="card-body">
+                            <h1 class="card-title"><i class="fas fa-award"></i>
+                                {{ user.user_details.get_status_display }}</h1>
+                            <p class="card-text">You have shared {{ user.user_recipes.count }}
+                                recipe{% if user.user_recipes.count != 1 %}s
+                                {% endif %}
+                            </p>
+                            <p class="card-text">
+                                You are {{ user.user_details.get_amount_to_next }} away from the next award
+                            </p>
+                            <div class="progress">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                    style="width: {% widthratio 10 1 user.user_details.get_amount_of_recipes %}%"
+                                    aria-valuenow="{{ user.user_details.get_amount_of_recipes }}" aria-valuemin="0"
+                                    aria-valuemax="10"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row my-2">
+                <div class="col">
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="d-grid gap-2 col-6 mx-auto">
+                        <button class="btn btn-secondary" type="button">My Profile</button>
+                        <button class="btn btn-outline-secondary" type="button">Logout</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </body>
 
 </html>

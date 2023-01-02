@@ -192,6 +192,54 @@ class ProfileSingleList(View):
         else:
             return HttpResponseRedirect(reverse('profile_page', kwargs={'username': request.user.username}))
 
+
+class Profilerecipes(View):
+    def get(self, request, username, *args, **kwargs):
+        page_name = get_object_or_404(User, username=username)
+        return render(
+            request,
+            "user_recipes.html",
+            {
+                "page_name": page_name,
+                "logged_in_user": request.user,
+            }
+        )
+
+
+class ProfileFollowers(View):
+    def get(self, request, username, *args, **kwargs):
+        page_name = get_object_or_404(User, username=username)
+        return render(
+            request,
+            "user_followers.html",
+            {
+                "page_name": page_name,
+                "logged_in_user": request.user,
+            }
+        )
+
+
+class ProfileFavourites(View):
+    def get(self, request, username, *args, **kwargs):
+        page_name = get_object_or_404(User, username=username)
+        all_recipes = Recipes.objects.filter(status=1)
+        fav_recipes = []
+        for r in all_recipes:
+            if r.favourites.filter(id=page_name.id).exists():
+                fav_recipes.append(r)
+        
+        return render(
+            request,
+            "user_favourites.html",
+            {
+                "page_name": page_name,
+                "logged_in_user": request.user,
+                "fav_recipes": fav_recipes,
+                "fav_recipes_count": len(fav_recipes),
+            }
+        )
+
+
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):

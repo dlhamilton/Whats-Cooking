@@ -251,6 +251,15 @@ body {
     cursor: pointer;
 }
 
+.img-cover{
+    object-fit: cover;
+    object-position: center;
+}
+
+.image_box_size{
+    width: 50%;
+}
+
 @media only screen and (max-width: 575px) {
     .carousel-caption h3{
         font-size: medium;

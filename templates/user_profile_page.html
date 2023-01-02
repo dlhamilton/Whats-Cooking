@@ -51,12 +51,18 @@
 
   <div class="row">
     <div class="col">
+      <h2>
+        <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
+          Followers:
+        </a>
+      </h2>
+
       <p>followers count: {{ page_name.user_details.number_of_follows }}</p>
-      <p>followers:</p>
+
       {% if page_name.user_details.number_of_follows > 0 %}
       <ul>
         {% for follow in page_name.user_details.get_followers %}
-        <a class="nav-link" href="{% url 'profile_page' follow.username %}">
+        <a class="post-link" href="{% url 'profile_page' follow.username %}">
           <li>{{ follow }}</li>
         </a>
         {% endfor %}
@@ -75,8 +81,14 @@
 
   <div class="row">
     <div class="col">
+      <h2>
+        <a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
+          Recipes:
+        </a>
+      </h2>
+
       <p>recipe count: {{ page_name.user_recipes.count }}</p>
-      <p>recipes:</p>
+
       {% if page_name.user_recipes.count > 0 %}
       <ul>
         {% for recipe in page_name.user_recipes.all %}
@@ -99,11 +111,13 @@
 
   <div class="row">
     <div class="col">
-      <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
-      <p>
+      <h2>
         <a href="{% url 'profile_page_shopping' page_name.username %}" class="post-link">
           Shopping Lists:</a>
-      </p>
+        </h2>
+
+      <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
+
       {% if page_name.shopping_list.count > 0 %}
       <ul>
         {% for lists in page_name.shopping_list.all %}
@@ -126,8 +140,14 @@
 
   <div class="row">
     <div class="col">
+      <h2>
+        <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
+        Favourite Recipes:
+        </a>
+      </h2>
+
       <p>Favourite Recipes Count: {{ fav_recipes_count }}</p>
-      <p>Favourite Recipes:</p>
+
       {% if fav_recipes_count > 0 %}
       <ul>
         {% for favourite in fav_recipes %}
@@ -146,72 +166,72 @@
 
 <div class="container">
   <div class="row">
-      <div class="splide">
-          <div class="splide__track">
-              <div class="splide__list">
-                  <div class="col-sm-4 splide__slide m-2">
-                      <div class="card bg-dark text-white">
-                          <div class="card-body">
-                              <h5 class="card-title">Crad Slider 1 </h5>
-                              <p class="card-text">With supporting text below as a natural lead-in to
-                                  additional content.</p>
-                              <a href="#" class="btn btn-primary">Read more</a>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-sm-4 splide__slide m-2">
-                      <div class="card bg-dark text-white">
-                          <div class="card-body">
-                              <h5 class="card-title">Crad Slider 2</h5>
-                              <p class="card-text">With supporting text below as a natural lead-in to
-                                  additional content.</p>
-                              <a href="#" class="btn btn-primary">Read more</a>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-sm-4 splide__slide m-2">
-                      <div class="card bg-dark text-white">
-                          <div class="card-body">
-                              <h5 class="card-title">Crad Slider 3</h5>
-                              <p class="card-text">With supporting text below as a natural lead-in to
-                                  additional content.</p>
-                              <a href="#" class="btn btn-primary">Read more</a>
-                          </div>
-                      </div>
-                  </div>
-                  <div class="col-sm-4 splide__slide m-2">
-                      <div class="card bg-dark text-white">
-                          <div class="card-body">
-                              <h5 class="card-title">Crad Slider 4</h5>
-                              <p class="card-text">With supporting text below as a natural lead-in to
-                                  additional content.</p>
-                              <a href="#" class="btn btn-primary">Read more</a>
-                          </div>
-                      </div>
-                  </div>
+    <div class="splide">
+      <div class="splide__track">
+        <div class="splide__list">
+          <div class="col-sm-4 splide__slide m-2">
+            <div class="card bg-dark text-white">
+              <div class="card-body">
+                <h5 class="card-title">Crad Slider 1 </h5>
+                <p class="card-text">With supporting text below as a natural lead-in to
+                  additional content.</p>
+                <a href="#" class="btn btn-primary">Read more</a>
               </div>
+            </div>
           </div>
+          <div class="col-sm-4 splide__slide m-2">
+            <div class="card bg-dark text-white">
+              <div class="card-body">
+                <h5 class="card-title">Crad Slider 2</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to
+                  additional content.</p>
+                <a href="#" class="btn btn-primary">Read more</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4 splide__slide m-2">
+            <div class="card bg-dark text-white">
+              <div class="card-body">
+                <h5 class="card-title">Crad Slider 3</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to
+                  additional content.</p>
+                <a href="#" class="btn btn-primary">Read more</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4 splide__slide m-2">
+            <div class="card bg-dark text-white">
+              <div class="card-body">
+                <h5 class="card-title">Crad Slider 4</h5>
+                <p class="card-text">With supporting text below as a natural lead-in to
+                  additional content.</p>
+                <a href="#" class="btn btn-primary">Read more</a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
 <script>
-var splide = new Splide('.splide', {
-      type: 'loop',
-      perPage: 3,
-      rewind: true,
-      breakpoints: {
-          640: {
-              perPage: 2,
-              gap: '.7rem',
-              height: '12rem',
-          },
-          480: {
-              perPage: 1,
-              gap: '.7rem',
-              height: '12rem',
-          },
+  var splide = new Splide('.splide', {
+    type: 'loop',
+    perPage: 3,
+    rewind: true,
+    breakpoints: {
+      640: {
+        perPage: 2,
+        gap: '.7rem',
+        height: '12rem',
       },
+      480: {
+        perPage: 1,
+        gap: '.7rem',
+        height: '12rem',
+      },
+    },
   });
   splide.mount();
 </script>

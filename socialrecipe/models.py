@@ -32,6 +32,14 @@ class UserDetails(models.Model):
         x=self.follows.all()
         return x
 
+    def get_amount_of_recipes(self):
+        total = self.user.user_recipes.count()
+        return total % 10
+
+    def get_amount_to_next(self):
+        total = self.user.user_recipes.count()
+        return 10 - total % 10
+
 
 class Recipes(models.Model):
     '''
