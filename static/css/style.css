@@ -93,6 +93,12 @@ body {
     color: #445261;
 }
 
+.btn-index{
+    /* background-color: #E84610; */
+    border:2px solid  #E84610 ;
+    /* color: white; */
+}
+
 .post-link:hover,
 .page-link {
     color: #E84610;
@@ -143,6 +149,14 @@ body {
     color: #E84610;
     background: transparent;
     border: none;
+}
+
+.text-orange-color{
+    color: #E84610 !important;
+}
+
+.profile_icons{
+    font-size: medium;
 }
 
 .recipe_icons{
@@ -258,6 +272,60 @@ body {
 
 .image_box_size{
     width: 50%;
+}
+
+.bg-standard{
+background-color: #0dcaf0!important;
+}
+
+.bg-bronze{
+    background-color:#CD7F32!important;
+}
+
+.bg-silver{
+    background-color:#808080!important;
+}
+
+.bg-gold{
+    background-color:#FFD700!important;
+}
+
+.bg-platnium{
+    background-color:#E5E4E2!important;
+    color:black!important;
+}
+
+.bg-suspended{
+    background-color:#C70039!important;
+}
+
+.card-img-top{
+    width: 100%;
+    
+    aspect-ratio: 16/9;
+}
+.auto-img-h{
+    height: auto;
+}
+
+.card-h{
+    min-height: 50px;
+    height: 50px;
+    max-height: 50px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-h-small{
+    min-height: 75px;
+    height: 75px;
+    max-height: 75px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 @media only screen and (max-width: 575px) {

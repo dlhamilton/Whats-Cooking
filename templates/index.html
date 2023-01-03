@@ -44,7 +44,7 @@
       </div>
     </div>
     <div class="carousel-button">
-      <a class="btn btn-outline-secondary" href="#">Coming soon</a>
+      <a class="btn btn-outline-secondary btn-index" href="#"><strong>Login/ Sign Up</strong></a>
     </div>
   </div>
 
@@ -71,9 +71,9 @@
             <div class="index-card-body">
               <div class="image-container">
                 {% if "placeholder" in item.recipe_image.url %}
-                <img class="card-img-top" src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
+                <img class="card-img-top auto-img-h" src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
                 {% else %}
-                <img class="card-img-top" src="{{ item.recipe_image.url }}">
+                <img class="card-img-top auto-img-h" src="{{ item.recipe_image.url }}">
                 {% endif %}
                 <div class="image-flash">
                   <p class="author">Author: {{ item.author }}</p>
@@ -82,7 +82,7 @@
 
               
                 <h2 class="card-title">{{ item.title }}</h2>
-                <p class="card-text">{{ item.excerpt }}</p>
+                <p class="card-text card-h">{{ item.excerpt }}</p>
               
               <hr />
               <p class="card-text text-muted h6">{{ item.upload_date}}

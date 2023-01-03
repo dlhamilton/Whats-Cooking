@@ -26,16 +26,19 @@
     <!-- Navigation -->
 
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'media/Logo-WC.png' %}">
-                <span class="brand">
+        <div class="container-fluid justify-content-start">
+            <a class="text-decoration-none text-reset" href="{% url 'home' %}">
+                <img class="me-3" src="{% static 'media/Logo-WC.png' %}">
+            </a>
+            <span class="brand">
+                <a class="text-decoration-none text-reset" href="{% url 'home' %}">
                     <span class="brand-text">what's cooking</span>
                     <span class="brand-text-short">wc</span>
-                    <span class="thin brand-bar">| {{ page_name }}</span>
-                </span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
+                </a>
+                <span class="thin brand-bar ">| {{ page_name }}</span>
+            </span>
+
+            <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
                 aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -48,11 +51,12 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'recipes' %}">Recipes</a>
                     </li>
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
-                    </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" href="{% url 'profile_page' user.username %}">Profile</a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Profile</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
@@ -66,9 +70,6 @@
                 <!-- <span class="navbar-text text-muted">
                     adventures of a software developer
                 </span> -->
-                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Enable body
-                    scrolling</button>
             </div>
         </div>
     </nav>
@@ -93,38 +94,55 @@
             <i class="fab fa-youtube-square ms-3"></i></p>
     </footer>
 
+
+
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasScrollingLabel">
                 <a class="navbar-brand" href="{% url 'home' %}">
                     <img src="{% static 'media/Logo-WC.png' %}">
-                    <span class="brand">
+                </a>
+                <span class="brand">
+                    <a class="text-decoration-none text-reset" href="{% url 'home' %}">
                         <span class="brand-text">what's cooking</span>
                         <span class="brand-text-short">wc</span>
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
                         <span class="thin brand-bar">| Profile</span>
-                    </span>
-                </a>
+                    </a>
+                    {% else %}
+                    <span class="thin brand-bar">| Login</span>
+                    {% endif %}
+                </span>
+
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
             {% if user.is_authenticated %}
-            <div class="image_box_size mx-auto d-block">
-                <div class="ratio ratio-1x1 rounded-circle overflow-hidden">
-                    <img src="{{ user.user_details.user_image.url }}" class="card-img-top img-cover" alt="Raeesh">
+            <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
+                <div class="image_box_size mx-auto d-block">
+                    <div class="ratio ratio-1x1 rounded-circle overflow-hidden">
+                        <img src="{{ user.user_details.user_image.url }}" class="card-img-top img-cover" alt="profile pic">
+                    </div>
                 </div>
-            </div>
-            {% endif %}
+            </a>
+
 
             <div class="row mt-4">
                 <div class="col">
                     <div class="mx-auto d-block">
-                        <p class="text-center text-uppercase">{{ user.username }}</p>
+                        <strong>
+                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
+                                <p class="text-center text-uppercase post-link">{{ user.username }}</p>
+                            </a>
+                        </strong>
                     </div>
                 </div>
             </div>
-
+            {% if user.first_name != "" %}
             <div class="row">
                 <div class="col">
                     <p>First name: {{ user.first_name }}</p>
@@ -133,20 +151,40 @@
                     <p>Location: {{ user.user_details.location }}</p>
                 </div>
             </div>
+            {% else %}
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="card text-dark bg-warning">
+                        <div class="card-body">
+                            <h4>Information missing</h4>
+                            <p class="card-text">
+                                You have not completed all details in your account. Click the button below to enter the
+                                final details</p>
+                            <button type="button" class="btn btn-outline-danger"><a
+                                    class="text-decoration-none text-reset"
+                                    href="{% url 'profile_page' user.username %}">Complete Account</a></button>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
+            {% endif %}
             <div class="row">
                 <div class="col">
-                    <div class="card text-white bg-info">
+                    <div class="card text-white bg-{{ user.user_details.get_status_display|lower }}">
                         <div class="card-header">Account Status</div>
                         <div class="card-body">
-                            <h1 class="card-title"><i class="fas fa-award"></i>
-                                {{ user.user_details.get_status_display }}</h1>
+                            <h2 class="card-title"><i class="fas fa-award"></i>
+                                {{ user.user_details.get_status_display }}</h2>
                             <p class="card-text">You have shared {{ user.user_recipes.count }}
                                 recipe{% if user.user_recipes.count != 1 %}s
                                 {% endif %}
+                                
+                                {% if user.user_details.get_amount_to_next == -1 %}
                             </p>
-                            <p class="card-text">
-                                You are {{ user.user_details.get_amount_to_next }} away from the next award
+                            {% else %}
+                            <br>
+                            You are {{ user.user_details.get_amount_to_next }} away from the next award
                             </p>
                             <div class="progress">
                                 <div class="progress-bar bg-success" role="progressbar"
@@ -154,26 +192,55 @@
                                     aria-valuenow="{{ user.user_details.get_amount_of_recipes }}" aria-valuemin="0"
                                     aria-valuemax="10"></div>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="row my-2">
-                <div class="col">
-
+            <div class="row my-3 justify-content-center">
+                <div class="col-3 text-center d-inline">
+                    <a href="{% url 'profile_page_favourites' user.username %}" class="post-link">
+                        <strong>
+                            <i class="fas fa-heart text-orange-color profile_icons"></i>
+                        </strong>
+                        <p><span class="d-none d-md-block">My </span>Favourites</p>
+                    </a>
+                </div>
+                <div class="col-3 text-center d-inline">
+                    <a href="{% url 'profile_page_recipes' user.username %}" class="post-link">
+                        <strong>
+                            <i class="fas fa-utensils text-orange-color profile_icons"></i>
+                        </strong>
+                        <p><span class="d-none d-md-block">My </span>Recipes</p>
+                    </a>
+                </div>
+                <div class="col-3 text-center d-inline">
+                    <a href="{% url 'profile_page_followers' user.username %}" class="post-link">
+                        <strong>
+                            <i class="fas fa-user-friends text-orange-color profile_icons"></i>
+                        </strong>
+                        <p><span class="d-none d-md-block">My </span>Follows</p>
+                    </a>
+                </div>
+                <div class="col-3 text-center d-inline">
+                    <a href="{% url 'profile_page_shopping' user.username %}" class="post-link">
+                        <strong>
+                            <i class="fas fa-list text-orange-color profile_icons"></i>
+                        </strong>
+                        <p><span class="d-none d-md-block">My </span>Shopping</p>
+                    </a>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col">
                     <div class="d-grid gap-2 col-6 mx-auto">
-                        <button class="btn btn-secondary" type="button">My Profile</button>
-                        <button class="btn btn-outline-secondary" type="button">Logout</button>
+                        <button class="btn btn-secondary" type="button" onclick="location.href ='{% url 'profile_page' user.username %}'">My Profile</button>
+                        <button class="btn btn-outline-secondary" type="button" onclick="location.href ='{% url 'account_logout' %}'">Logout</button>
                     </div>
                 </div>
             </div>
-
+            {% endif %}
         </div>
     </div>
 </body>

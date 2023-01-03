@@ -19,7 +19,7 @@ class UserDetails(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_details")
     location = models.CharField(max_length=150,blank=True)
     status = models.IntegerField(choices=USER_STATUS, default=1)
-    user_image = CloudinaryField('image', default='placeholder')
+    user_image = CloudinaryField('image', default='v1670885027/placeholder.jpg')
     follows = models.ManyToManyField(User, related_name='user_follows', blank=True)
 
     def __str__(self):
