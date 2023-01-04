@@ -1,0 +1,167 @@
+
+.user-profile-card{
+    
+    border-radius: 15px;
+    border: 2px solid;
+    padding: 5px;
+    background-image: linear-gradient(to right, rgba(230, 230, 230, 0.097), rgb(191, 191, 191));
+}
+.user-profile-card .user-profile-card-title-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile-card-img{
+
+  vertical-align: middle;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  aspect-ratio: 16/9;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fcfcfd;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-success {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #e8faf8;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #ebf7ff;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: floralwhite;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-danger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #feeeef;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-light {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fefeff;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #ebedee;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-base {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #f0fafb;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-meeting-info {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1rem;
+  width:100%;
+}
+
+
+.user-profile-card .user-profile-card-title-wrapper .user-profile-card-meeting-info .user-profile-card-start-time {
+  color: #E84610;
+  font-size: 14px;
+}
+
+.user-profile-card .user-profile-card-meeting-action {
+  text-align: right;
+}
+
+.user-profile-card .user-profile-card-meeting-action a {
+  text-transform: uppercase;
+}
+
+.hide {
+  display: none;
+  
+}
+
+.user-profile-card-title:hover {
+  display: inline!important;
+}
+
+.color-slide{
+ border-radius: 25px;
+ border: 1px solid lightslategrey;
+ padding:4px;
+ max-width: fit-content;
+}
+
+.user-profile-card-shrt{
+  display: none;
+}
+
+@media only screen and (max-width: 575px) {
+
+  .user-profile-card-lrg{
+      display: none;
+  }
+  .user-profile-card-shrt{
+      display: inline;
+  }
+
+}
+
+@media only screen and (max-width: 351px) {
+  .user-profile-card-shrt-hide{
+    display: none;
+}
+}

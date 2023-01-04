@@ -1,0 +1,86 @@
+{% load static %}
+
+<head>
+
+    <link rel="stylesheet" href="{% static 'css/style_card.css' %}">
+
+</head>
+
+<div class="col-lg-12 ">
+    <div class="card-margin p-1 pt-2 m-1">
+
+        <div class="user-profile-card border-{{ page_name.user_details.get_status_display|lower }}">
+            <div class="user-profile-card-title-wrapper">
+                <a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}">
+                    <img src="{{ page_name.user_details.user_image.url }}" class="user-profile-card-img"
+                        alt="profile pic">
+                </a>
+                <div class="user-profile-card-meeting-info">
+                    <span class="text-uppercase post-link">
+                        <a class="text-decoration-none text-reset"
+                            href="{% url 'profile_page' page_name.username %}">{{ page_name.username }}</a>
+                        {% if page_name.user_details.location != "" %}
+                        <span
+                            class="text-capitalize user-profile-card-lrg">({{ page_name.user_details.location }})</span>
+                        {% endif %}
+                    </span>
+                    <span class="user-profile-card-start-time mb-1 user-profile-card-lrg">Member Since:
+                        {{ page_name.date_joined|date:"jS F Y" }}</span>
+                    <span
+                        class="user-profile-card-start-time mb-1 user-profile-card-shrt">{{ page_name.date_joined|date:"M y" }}</span>
+
+                    <div class="color-slide float-start bg-{{ page_name.user_details.get_status_display|lower }}">
+                        <span class="user-profile-card-title">
+                            <i class="fas fa-award"></i>
+                            <span>{{ page_name.user_details.get_status_display }}</span>
+                        </span>
+                    </div>
+
+                </div>
+                <div class="user-profile-card-meeting-action ms-auto user-profile-card-lrg">
+                    <a href="#" class="btn btn-wc-green">Follow</a>
+                </div>
+                <div
+                    class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide">
+                    <a href="#" class="btn btn-wc-green"><i class="fas fa-user-plus"></i></a>
+                </div>
+            </div>
+
+
+<div class="row">
+    <div class="col">
+        <hr>
+    </div>
+</div>
+
+
+
+            <div class="row justify-content-center">
+                <div class="col-4 text-center d-inline">
+                    <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
+                        <strong>
+                            <i class="fas fa-heart text-orange-color profile_icons"></i>
+                        </strong>
+                        <p><span class="d-none d-md-block">Favourites</span>{{ page_name.user_recipes.count }}</p>
+                    </a>
+                </div>
+                <div class="col-4 text-center d-inline">
+                    <a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
+                        <strong>
+                            <i class="fas fa-utensils text-orange-color profile_icons"></i>
+                        </strong>
+                        <p><span class="d-none d-md-block">Recipes</span>{{ fav_recipes_count }}</p>
+                    </a>
+                </div>
+                <div class="col-4 text-center d-inline">
+                    <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
+                        <strong>
+                            <i class="fas fa-user-friends text-orange-color profile_icons"></i>
+                        </strong>
+                        <p><span class="d-none d-md-block">Follows</span>{{ page_name.user_details.number_of_follows }}</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

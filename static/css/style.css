@@ -299,6 +299,40 @@ background-color: #0dcaf0!important;
     background-color:#C70039!important;
 }
 
+.border-standard{
+    border-color: #0dcaf0!important;
+    }
+    
+    .border-bronze{
+        border-color:#CD7F32!important;
+    }
+    
+    .border-silver{
+        border-color:#808080!important;
+    }
+    
+    .border-gold{
+        border-color:#FFD700!important;
+    }
+    
+    .border-platnium{
+        border-color:#E5E4E2!important;
+    }
+    
+    .border-suspended{
+        border-color:#C70039!important;
+    }
+
+.btn-wc-green{
+    background-color: #8AA848;
+    color:white;
+}
+
+.btn-wc-green:hover{
+    background-color: #5c7429;
+    color:white;
+}
+
 .card-img-top{
     width: 100%;
     

@@ -6,10 +6,9 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-      <p>username: {{ page_name.username }}</p>
-      <p>firstname: {{ page_name.first_name }}</p>
-      <p>lastname: {{ page_name.last_name }}</p>
-      <p>email: {{ page_name.email }}</p>
+      <div class="basic">
+        {% include "logged_in_user_card.html" %}    
+        </div>
     </div>
   </div>
 
@@ -21,36 +20,19 @@
 
   <div class="row">
     <div class="col">
-      <p>location: {{ page_name.user_details.location }}</p>
-      {% if page_name.user_details.status == 0 %}
-      <p>status: Suspended</p>
-      {% elif page_name.user_details.status == 1 %}
-      <p>status: Standard</p>
-      {% elif page_name.user_details.status == 2 %}
-      <p>status: Bronze</p>
-      {% elif page_name.user_details.status == 3 %}
-      <p>status: Silver</p>
-      {% elif page_name.user_details.status == 4 %}
-      <p>status: Gold</p>
-      {% elif page_name.user_details.status == 5 %}
-      <p>status: Platnium</p>
-      {% else %}
-      <p>status: Error no Status</p>
-      {% endif %}
-
-      <p>user_image:</p>
-      <img class="col-2" src="{{ page_name.user_details.user_image.url }}">
+      <h1>My Profile</h1>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <hr>
-    </div>
-  </div>
 
+<div class="row">
+  <div class="col">
+    <hr>
+  </div>
+</div>
   <div class="row">
     <div class="col">
+      
       <h2>
         <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
           Followers:

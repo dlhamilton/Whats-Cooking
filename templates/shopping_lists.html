@@ -6,15 +6,9 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-      <h1>My Shopping Lists</h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <p>username: {{ logged_in_user.username }}</p>
-      <p>firstname: {{ logged_in_user.first_name }}</p>
-      <p>lastname: {{ logged_in_user.last_name }}</p>
-      <p>email: {{ logged_in_user.email }}</p>
+      <div class="basic">
+        {% include "logged_in_user_card.html" %}    
+        </div>
     </div>
   </div>
 
@@ -26,25 +20,7 @@
 
   <div class="row">
     <div class="col">
-      <p>location: {{ logged_in_user.user_details.location }}</p>
-      {% if logged_in_user.user_details.status == 0 %}
-      <p>status: Suspended</p>
-      {% elif logged_in_user.user_details.status == 1 %}
-      <p>status: Standard</p>
-      {% elif logged_in_user.user_details.status == 2 %}
-      <p>status: Bronze</p>
-      {% elif logged_in_user.user_details.status == 3 %}
-      <p>status: Silver</p>
-      {% elif logged_in_user.user_details.status == 4 %}
-      <p>status: Gold</p>
-      {% elif logged_in_user.user_details.status == 5 %}
-      <p>status: Platnium</p>
-      {% else %}
-      <p>status: Error no Status</p>
-      {% endif %}
-
-      <p>user_image:</p>
-      <img class="col-2" src="{{ logged_in_user.user_details.user_image.url }}">
+      <h1>My Shopping Lists</h1>
     </div>
   </div>
 

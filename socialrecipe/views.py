@@ -161,12 +161,14 @@ class ProfileShoppingList(View):
     def get(self, request, username, *args, **kwargs):
 
         if username == request.user.username:
+            recipes_count = Recipes.objects.filter(author=request.user.id).filter(status=1).count()
             return render(
                 request,
                 "shopping_lists.html",
                 {
-                    "page_name": request.user.username,
+                    "page_name": request.user,
                     "logged_in_user": request.user,
+                    "fav_recipes_count": recipes_count,
                 }
             )
         else:
@@ -179,14 +181,17 @@ class ProfileSingleList(View):
         if username == request.user.username:
             shopping_list = get_object_or_404(ShoppingList, slug=list)
             user_list_items = shopping_list.shopping_list_items.filter()
+            recipes_count = Recipes.objects.filter(author=request.user.id).filter(status=1).count()
+            
             return render(
                 request,
                 "shopping_list.html",                
                 {
-                    "page_name": request.user.username,
+                    "page_name": request.user,
                     "logged_in_user": request.user,
                     "user_list": user_list_items,
                     "user_shopping_list": shopping_list,
+                    "fav_recipes_count": recipes_count,
                 }
             )
         else:
@@ -196,12 +201,15 @@ class ProfileSingleList(View):
 class Profilerecipes(View):
     def get(self, request, username, *args, **kwargs):
         page_name = get_object_or_404(User, username=username)
+        recipes_count = Recipes.objects.filter(author=page_name.id).filter(status=1).count()
+
         return render(
             request,
             "user_recipes.html",
             {
                 "page_name": page_name,
                 "logged_in_user": request.user,
+                "fav_recipes_count": recipes_count,
             }
         )
 
@@ -209,12 +217,15 @@ class Profilerecipes(View):
 class ProfileFollowers(View):
     def get(self, request, username, *args, **kwargs):
         page_name = get_object_or_404(User, username=username)
+        recipes_count = Recipes.objects.filter(author=page_name.id).filter(status=1).count()
+
         return render(
             request,
             "user_followers.html",
             {
                 "page_name": page_name,
                 "logged_in_user": request.user,
+                "fav_recipes_count": recipes_count,
             }
         )
 
