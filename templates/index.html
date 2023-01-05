@@ -43,9 +43,11 @@
         </a>
       </div>
     </div>
+    {% if not user.is_authenticated %}
     <div class="carousel-button">
-      <a class="btn btn-outline-secondary btn-index" href="#"><strong>Login/ Sign Up</strong></a>
+      <a class="btn btn-outline-secondary btn-index" href="{% url 'account_login' %}"><strong>Login/ Sign Up</strong></a>
     </div>
+    {% endif %}
   </div>
 
   <!-- Left and right controls/icons -->
@@ -81,7 +83,7 @@
               </div>
 
               
-                <h2 class="card-title">{{ item.title }}</h2>
+                <h2 class="card-title one-Line-ellipsis">{{ item.title }}</h2>
                 <p class="card-text card-h">{{ item.excerpt }}</p>
               
               <hr />

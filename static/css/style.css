@@ -370,6 +370,12 @@ background-color: #0dcaf0!important;
     overflow: hidden;
 }
 
+.one-Line-ellipsis{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @media only screen and (max-width: 575px) {
     .carousel-caption h3{
         font-size: medium;

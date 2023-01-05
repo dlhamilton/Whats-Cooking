@@ -152,7 +152,15 @@ class ProfilePage(View):
         for r in all_recipes:
             if r.favourites.filter(id=page_name.id).exists():
                 fav_recipes.append(r)
+        is_following_data = 0
+        if request.user.is_authenticated:
+            is_following = page_name.user_details.get_followers()
+            if page_name.user_follows.filter(user=request.user).exists():
+                is_following_data = 2
+            else:
+                is_following_data = 1
 
+    # user is not in the list
         return render(
             request,
             "user_profile_page.html",
@@ -161,6 +169,7 @@ class ProfilePage(View):
                 "fav_recipes": fav_recipes,
                 "fav_recipes_count": len(fav_recipes),
                 "logged_in_user": request.user.username,
+                "is_following": is_following_data,
             }
         )
 

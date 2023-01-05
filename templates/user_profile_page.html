@@ -7,8 +7,8 @@
   <div class="row">
     <div class="col">
       <div class="basic">
-        {% include "logged_in_user_card.html" %}    
-        </div>
+        {% include "logged_in_user_card.html" %}
+      </div>
     </div>
   </div>
 
@@ -25,14 +25,14 @@
   </div>
 
 
-<div class="row">
-  <div class="col">
-    <hr>
-  </div>
-</div>
   <div class="row">
     <div class="col">
-      
+      <hr>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+
       <h2>
         <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
           Followers:
@@ -94,37 +94,8 @@
   <div class="row">
     <div class="col">
       <h2>
-        <a href="{% url 'profile_page_shopping' page_name.username %}" class="post-link">
-          Shopping Lists:</a>
-        </h2>
-
-      <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
-
-      {% if page_name.shopping_list.count > 0 %}
-      <ul>
-        {% for lists in page_name.shopping_list.all %}
-        <a href="{% url 'profile_single_shopping' username=page_name.username list=lists.slug %}" class="post-link">
-          <li>{{ lists }}</li>
-        </a>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p><strong>No Shopping Lists</strong></p>
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <hr>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <h2>
         <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
-        Favourite Recipes:
+          Favourite Recipes:
         </a>
       </h2>
 
@@ -143,6 +114,37 @@
       {% endif %}
     </div>
   </div>
+
+  {% if page_name == user %}
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h2>
+        <a href="{% url 'profile_page_shopping' page_name.username %}" class="post-link">
+          Shopping Lists:</a>
+      </h2>
+
+      <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
+
+      {% if page_name.shopping_list.count > 0 %}
+      <ul>
+        {% for lists in page_name.shopping_list.all %}
+        <a href="{% url 'profile_single_shopping' username=page_name.username list=lists.slug %}" class="post-link">
+          <li>{{ lists }}</li>
+        </a>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p><strong>No Shopping Lists</strong></p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
 
 </div>
 
