@@ -33,8 +33,14 @@
   <div class="row">
     <div class="col">
       <p>Recipe count: {{ page_name.user_recipes.count }}</p>
+      {% if average_recipe != 0 %}
+      <p>Average rating for all recipes: {{ average_recipe }}</p>
+      <p>Average rating stars: {{ average_recipe|floatformat:"0" }}</p>
+      {% else %}
+      <p>No Recipe Ratings</p>
+      {% endif %}
       <p>
-        Recipes:
+        Recipes: 
       </p>
       {% if page_name.user_recipes.count > 0 %}
       <ul>

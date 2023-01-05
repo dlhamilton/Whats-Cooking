@@ -2,16 +2,26 @@
 
 {% load crispy_forms_tags %}
 
-<div class="masthead">
-    <div class="container">
+<div class="masthead mb-2">
+    <div class="container-fluid">
         <div class="row g-0">
             <div class="col-md-6 masthead-text">
                 <!-- Post title goes in these h1 tags -->
-                <h1 class="post-title">
+                <h1 class="post-title text-capitalize">
                     {{ recipe.title }}
                 </h1>
                 <!-- Post author goes before the | the post's created date goes after -->
-                <h2 class="post-subtitle">{{ recipe.author }} | {{ recipe.upload_date }}</h2>
+                <h2 class="post-subtitle post-link-green">
+            Recipe by:
+                    <span class="text-uppercase">
+                        <strong>
+                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}">
+                                {{ recipe.author }}
+                            </a>
+                        </strong>
+                    </span>
+                </h2>
+                <p class="post-subtitle">Uploaded: {{ recipe.upload_date|date:"d/m/Y" }}</p>
             </div>
             <div class="d-none d-md-block col-md-6 masthead-image">
                 <!-- The featured image URL goes in the src attribute -->
@@ -26,10 +36,10 @@
 </div>
 <div class="row">
     <div class="col">
-        <hr>
+
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="d-inline col-12">
             <!-- The post content goes inside the card-text. -->
@@ -49,10 +59,20 @@
         <div class="d-inline col-6 ">
             <!-- The post content goes inside the card-text. -->
             <!-- Use the | safe filter inside the template tags -->
-            <h3>Rating:</h3>
-            <p class="card-text ">
-                {{ recipe.excerpt | safe }}
+            <h3>Rating:{% if recipes_avg > 0 %}
+                {{ recipes_avg }}
+                {% else %}
+                No Ratings
+                {% endif %}</h3>
+            <p class="card-text mt-2">
+               {% for _ in star_loop %}
+                <i class="fa-solid fa-star"></i>
+                {% endfor %}
+                {% for _ in empty_star_loop %}
+                <i class="fa-regular fa-star"></i>
+                {% endfor %}
             </p>
+            <p><small>Ratings: ({{ recipes_count }})</small></p>
         </div>
         <div class="d-inline d-md-none col-6">
             <!-- The featured image URL goes in the src attribute -->
@@ -68,8 +88,7 @@
         <div class="col-2">
             <strong>
                 {% if user.is_authenticated %}
-                <form id="myForm" class="d-inline" action="{% url 'recipe_favourite' recipe.slug %}"
-                    method="POST">
+                <form id="myForm" class="d-inline" action="{% url 'recipe_favourite' recipe.slug %}" method="POST">
                     {% csrf_token %}
                     {% if favourited %}
                     <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
@@ -113,19 +132,19 @@
     <div class="row">
         <div class="d-inline col-12 ">
 
-                <h3>Ingredients:</h3>
-                <ul>
-                    {% for ingredients_item in ingredients %}
-                    {% if ingredients_item.ingredients.approved == True %}
-                    <li>{{ ingredients_item.ingredients.name }} - {{ ingredients_item.amount }}
-                        {{ ingredients_item.unit }}</li>
-                    {% else %}
-                    <li><strong>{{ ingredients_item.ingredients.name }}</strong> - {{ ingredients_item.amount }}
-                        {{ ingredients_item.unit }}</li>
-                    {% endif %}
-                    {% endfor %}
-                    <!-- {{ ingredients }} -->
-                </ul>
+            <h3>Ingredients:</h3>
+            <ul>
+                {% for ingredients_item in ingredients %}
+                {% if ingredients_item.ingredients.approved == True %}
+                <li>{{ ingredients_item.ingredients.name }} - {{ ingredients_item.amount }}
+                    {{ ingredients_item.unit }}</li>
+                {% else %}
+                <li><strong>{{ ingredients_item.ingredients.name }}</strong> - {{ ingredients_item.amount }}
+                    {{ ingredients_item.unit }}</li>
+                {% endif %}
+                {% endfor %}
+                <!-- {{ ingredients }} -->
+            </ul>
 
         </div>
     </div>
@@ -142,7 +161,7 @@
                 <li>{{ method_item.method | safe }}</li>
                 {% endfor %}
             </ol>
-            
+
         </div>
 
     </div>

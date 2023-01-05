@@ -1,23 +1,25 @@
-
-.user-profile-card{
-    
-    border-radius: 15px;
-    border: 2px solid;
-    padding: 5px;
-    background-image: linear-gradient(to right, rgba(230, 230, 230, 0.097), rgb(191, 191, 191));
+.user-profile-card {
+  background: radial-gradient(328px at 2.9% 15%, rgb(191, 224, 251) 0%, rgb(232, 233, 251) 25.8%, rgb(252, 239, 250) 50.8%, rgb(234, 251, 251) 77.6%, rgb(240, 251, 244) 100.7%);
+  border-radius: 15px;
+  border: 2px solid;
+  padding: 5px;
+  box-shadow: rgba(17, 17, 26, 0.05) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
 }
+
 .user-profile-card .user-profile-card-title-wrapper {
   display: flex;
   align-items: center;
 }
 
-.user-profile-card-img{
+.user-profile-card-img {
 
   vertical-align: middle;
   width: 100px;
   height: 100px;
   border-radius: 50%;
   aspect-ratio: 16/9;
+  border: 1px solid black;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
 }
 
 .user-profile-card .user-profile-card-title-wrapper .user-profile-card-date-secondary {
@@ -112,7 +114,7 @@
   display: flex;
   flex-direction: column;
   margin-left: 1rem;
-  width:100%;
+  width: 100%;
 }
 
 
@@ -131,37 +133,40 @@
 
 .hide {
   display: none;
-  
+
 }
 
 .user-profile-card-title:hover {
-  display: inline!important;
+  display: inline !important;
 }
 
-.color-slide{
- border-radius: 25px;
- border: 1px solid lightslategrey;
- padding:4px;
- max-width: fit-content;
+.color-slide {
+  border-radius: 25px;
+  border: 1px solid lightslategrey;
+  padding: 4px;
+  padding: 4px 8px 4px 8px;
+  max-width: fit-content;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
-.user-profile-card-shrt{
+.user-profile-card-shrt {
   display: none;
 }
 
 @media only screen and (max-width: 575px) {
 
-  .user-profile-card-lrg{
-      display: none;
+  .user-profile-card-lrg {
+    display: none;
   }
-  .user-profile-card-shrt{
-      display: inline;
+
+  .user-profile-card-shrt {
+    display: inline;
   }
 
 }
 
 @media only screen and (max-width: 351px) {
-  .user-profile-card-shrt-hide{
+  .user-profile-card-shrt-hide {
     display: none;
-}
+  }
 }

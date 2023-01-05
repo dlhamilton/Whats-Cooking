@@ -64,9 +64,11 @@ body {
 }
 
 .masthead-text {
-    background-color: #FF8156;
+    /* background-color: #FF8156; */
+    background: linear-gradient(87.4deg, #F9FAFC 1.9%, #FF8156 100.5%);    
     color: white;
     position: relative;
+    padding-right: 5px;
 }
 
 .masthead-image {
@@ -88,7 +90,7 @@ body {
     z-index: 100;
 }
 
-.post-link {
+.post-link, .post-link-green {
     text-decoration: none;
     color: #445261;
 }
@@ -104,13 +106,19 @@ body {
     color: #E84610;
 }
 
+.post-link-green:hover,
+.page-link-green {
+    color: #8AA848;
+}
+
 .post-title {
     margin-top: 35px;
-    margin-left: 5%;
+    margin-left: 2%;
+    color: #4A4A4F;
 }
 
 .post-subtitle {
-    margin-left: 5%;
+    margin-left: 2%;
     color: #4A4A4F;
     font-size: medium;
 }

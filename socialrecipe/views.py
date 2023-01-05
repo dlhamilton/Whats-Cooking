@@ -4,9 +4,9 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, ShoppingList
+from .models import Recipes, User, UserDetails, ShoppingList,StarRating
 from .forms import CommentsForm
-from django.db.models import Count
+from django.db.models import Count, Avg
 
 
 class HomeList(View):
@@ -56,6 +56,10 @@ class RecipeDetail(View):
         recipe_comments = recipe.comments.filter(status=1).order_by('-post_date')
         recipe_ingredients = recipe.recipe_items.filter()
         recipe_images = recipe.recipe_images.filter()
+        recipes_avg = StarRating.objects.filter(recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
+        recipes_count = StarRating.objects.filter(recipe=recipe).count()
+        star_loop = range(0, int(recipes_avg))
+        empty_star_loop = range(0, 5-int(recipes_avg))
         favourited = False
         if recipe.favourites.filter(id=self.request.user.id).exists():
             favourited = True
@@ -74,6 +78,10 @@ class RecipeDetail(View):
                 "commented": False,
                 "valid_comment": True,
                 "comment_form": CommentsForm(),
+                "recipes_avg": recipes_avg,
+                "recipes_count": recipes_count,
+                "star_loop": star_loop,
+                "empty_star_loop": empty_star_loop,
             },
         )
 
@@ -202,6 +210,19 @@ class Profilerecipes(View):
     def get(self, request, username, *args, **kwargs):
         page_name = get_object_or_404(User, username=username)
         recipes_count = Recipes.objects.filter(author=page_name.id).filter(status=1).count()
+        recipe = Recipes.objects.filter(author=page_name.id).filter(status=1)
+        count = 0
+        recipes_avg=[]
+        
+        total_rec = 0
+        for i in recipe:
+            recipes_avg.append( StarRating.objects.filter(recipe=i).aggregate(Avg('rating')))      
+            total_rec = total_rec + recipes_avg[count].get('rating__avg')
+            count = count+1
+        if count != 0 :
+            user_recipe_average = total_rec/count
+        else:
+            user_recipe_average = 0
 
         return render(
             request,
@@ -210,6 +231,7 @@ class Profilerecipes(View):
                 "page_name": page_name,
                 "logged_in_user": request.user,
                 "fav_recipes_count": recipes_count,
+                "average_recipe": user_recipe_average,
             }
         )
 

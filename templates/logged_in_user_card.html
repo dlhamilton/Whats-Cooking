@@ -17,8 +17,8 @@
                 </a>
                 <div class="user-profile-card-meeting-info">
                     <span class="text-uppercase post-link">
-                        <a class="text-decoration-none text-reset"
-                            href="{% url 'profile_page' page_name.username %}">{{ page_name.username }}</a>
+                        <strong><a class="text-decoration-none text-reset"
+                            href="{% url 'profile_page' page_name.username %}">{{ page_name.username }}</a></strong>
                         {% if page_name.user_details.location != "" %}
                         <span
                             class="text-capitalize user-profile-card-lrg">({{ page_name.user_details.location }})</span>
