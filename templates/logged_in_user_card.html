@@ -11,14 +11,14 @@
 
         <div class="user-profile-card border-{{ page_name.user_details.get_status_display|lower }}">
             <div class="user-profile-card-title-wrapper">
-                <a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}">
+                <a class="text-decoration-none text-reset hide_small" href="{% url 'profile_page' page_name.username %}">
                     <img src="{{ page_name.user_details.user_image.url }}" class="user-profile-card-img"
                         alt="profile pic">
                 </a>
                 <div class="user-profile-card-meeting-info">
                     <span class="text-uppercase post-link">
                         <strong><a class="text-decoration-none text-reset"
-                            href="{% url 'profile_page' page_name.username %}">{{ page_name.username }}</a></strong>
+                                href="{% url 'profile_page' page_name.username %}">{{ page_name.username }}</a></strong>
                         {% if page_name.user_details.location != "" %}
                         <span
                             class="text-capitalize user-profile-card-lrg">({{ page_name.user_details.location }})</span>
@@ -35,6 +35,8 @@
                             <span>{{ page_name.user_details.get_status_display }}</span>
                         </span>
                     </div>
+
+
 
                 </div>
                 {% if is_following != 0 %}
@@ -57,11 +59,28 @@
                 {% endif %}
                 {% endif %}
             </div>
-<div class="row">
-    <div class="col">
-        <hr>
-    </div>
+
+<div class="mt-2">
+            {% if average_recipe.user_recipe_average != 0 %}
+            <p class="mb-0">Rating:
+                {% for number in average_recipe.user_recipe_average_star %}
+                <i class="fa-solid fa-star"></i>
+                {% endfor %}
+                {% for number in average_recipe.user_recipe_average_blank %}
+                <i class="fa-regular fa-star"></i>
+                {% endfor %}
+                {{ average_recipe.user_recipe_average }}
+            </p>
+            {% else %}
+            <p class="mb-0">No Recipe Ratings</p>
+            {% endif %}
 </div>
+
+            <div class="row">
+                <div class="col">
+                    <hr>
+                </div>
+            </div>
 
 
 
@@ -87,7 +106,8 @@
                         <strong>
                             <i class="fas fa-user-friends text-orange-color profile_icons"></i>
                         </strong>
-                        <p><span class="d-none d-md-block">Follows</span>{{ page_name.user_details.number_of_follows }}</p>
+                        <p><span class="d-none d-md-block">Follows</span>{{ page_name.user_details.number_of_follows }}
+                        </p>
                     </a>
                 </div>
             </div>

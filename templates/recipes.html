@@ -3,6 +3,23 @@
 {% block content %}
 
 <div class="container-fluid">
+
+    <form id="search_recipe_bar" method="get" action="{% url 'recipes_search' %}">
+        {% for field in form %}
+        {{ field }}
+        {% endfor %}
+        <input type="submit" value="Search">
+    </form>
+
+    
+
+    {% if query == False %}
+        {% if recipes_list == "car" %}
+            <p>you said car</p>
+        {% else %}
+            <p>{{ recipes_list }}</p>
+        {% endif %}
+    {% else %}
     <div class="row">
 
         <!-- Blog Entries Column -->
@@ -59,5 +76,28 @@
         </ul>
     </nav>
     {% endif %}
+    {% endif %}
 </div>
+
+<p>test_elm</p>
+<p>{{ test_elm }}</p>
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function() {
+    $('#search_query').keyup(function() {
+        $('#search_recipe_bar').submit();
+        
+    });
+    
+    $('#search_query').focus();
+    
+    var input = $('#search_query')[0];
+    var length = input.value.length;
+    input.setSelectionRange(length, length);
+    input.focus();
+});
+
+
+</script>
 {%endblock%}

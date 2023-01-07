@@ -169,4 +169,8 @@
   .user-profile-card-shrt-hide {
     display: none;
   }
+.hide_small{
+  display: none;
 }
+}
+
