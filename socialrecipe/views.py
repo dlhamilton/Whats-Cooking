@@ -4,9 +4,10 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, ShoppingList,StarRating
-from .forms import CommentsForm, SearchRecipeForm
+from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm
 from django.db.models import Count, Avg, Q
+from django.urls import resolve
 
 
 class HomeList(View):
@@ -31,14 +32,15 @@ class HomeList(View):
 #     template_name = 'recipes.html'
 #     paginate_by = 6
 #     # result_list = list(chain(recipes_list))
-def RecipeFilterList():
-    search_list = ["cheese", "leek"]
+def RecipeFilterList(search_list):
     test=[]
+    # for i in search_list:
+        # test.append(i.name)
     temp_recipes_list = Recipes.objects.filter(status=1)
-    for recipes_list in search_list:
-        temp_recipes_list = temp_recipes_list.filter(Q(recipe_items__ingredients__name__icontains=recipes_list))
+    for i in search_list:
+        temp_recipes_list = temp_recipes_list.filter(Q(recipe_items__ingredients__name__icontains=i.name))
         # test.append(recipes_list)
-
+    
     return temp_recipes_list
 
 
@@ -46,15 +48,24 @@ class RecipesList(View):
     def get(self, request, *args, **kwargs):
         recipes_list = Recipes.objects.filter(status=1).order_by('-upload_date')
         form = SearchRecipeForm(request.GET)
+        filter_form = FilterRecipeForm(request.GET)
         query = True
         if form.is_valid():
             if form.cleaned_data['search_query'] != "": 
                 recipes_list = form.cleaned_data['search_query']
                 recipes_list = Recipes.objects.filter(status=1).filter(Q(author__username__icontains=recipes_list) | Q(title__icontains=recipes_list)).order_by('-upload_date')
-                if len(recipes_list) == 0:
-                    recipes_list = "No Recipes Match Your Search"
-                    query = False
-        test_elm = RecipeFilterList()   
+
+        recipe_elm=[]
+        the_path_name = resolve(request.path_info).url_name
+
+        if filter_form.is_valid():
+            recipe_elm = filter_form.cleaned_data['filter_query']
+            recipes_list = RecipeFilterList(recipe_elm)
+            
+        if len(recipes_list) == 0:
+            recipes_list = "No Recipes Match Your Search"
+            query = False
+
         return render(
             request,
             "recipes.html",
@@ -64,8 +75,7 @@ class RecipesList(View):
                 "page_name": "Recipes",
                 'form': form,
                 "query": query,
-                "test_elm": test_elm,
-
+                "filter_form": filter_form,
             }
         )
 

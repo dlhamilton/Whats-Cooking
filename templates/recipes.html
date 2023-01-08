@@ -11,7 +11,12 @@
         <input type="submit" value="Search">
     </form>
 
-    
+    <form id="ingredients_bar" method="get" action="{% url 'recipes_filter' %}">    
+            {% for object in filter_form %}
+                {{ object }}
+            {% endfor %}
+    </form>
+
 
     {% if query == False %}
         {% if recipes_list == "car" %}
@@ -79,15 +84,15 @@
     {% endif %}
 </div>
 
-<p>test_elm</p>
-<p>{{ test_elm }}</p>
-
 <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script>
 $(document).ready(function() {
     $('#search_query').keyup(function() {
-        $('#search_recipe_bar').submit();
-        
+        $('#search_recipe_bar').submit();     
+    });
+
+    $('#id_filter_query').change(function() {
+        $('#ingredients_bar').submit();
     });
     
     $('#search_query').focus();
