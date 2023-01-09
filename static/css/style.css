@@ -448,7 +448,7 @@ input[type="checkbox"] {
 }
 
 .checked_item_search{
-    background-color: rgba(171, 255, 167, 0.495);
+    background-color: rgba(255, 255, 167, 0.495);
     border: 2px solid rgba(139, 139, 139, .3);
     color: #5b5b5b;
     border-radius: 25px;

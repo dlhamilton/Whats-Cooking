@@ -63,7 +63,14 @@ class RecipesList(View):
             recipe_elm = filter_form.cleaned_data['filter_query']
             recipes_list = RecipeFilterList(recipe_elm)
 
-            
+        for arecipe in recipes_list:
+            recipes_avg = StarRating.objects.filter(recipe=arecipe).aggregate(Avg('rating')).get('rating__avg')
+            recipes_count = StarRating.objects.filter(recipe=arecipe).count()
+            arecipe.the_star_rating = recipes_avg
+            arecipe.the_star_rating_int = range(0, int(recipes_avg))
+            arecipe.the_star_rating_count = recipes_count
+           
+
         if len(recipes_list) == 0:
             recipes_list = "No Recipes Match Your Search"
             query = False
