@@ -4,31 +4,42 @@
 
 <div class="container-fluid">
 
-    <form id="search_recipe_bar" method="get" action="{% url 'recipes_search' %}">
-        {% for field in form %}
-        {{ field }}
-        {% endfor %}
-        <input type="submit" value="Search">
-    </form>
+    <div class="row">
+        <div class="col">
 
-    <form id="ingredients_bar" method="get" action="{% url 'recipes_filter' %}">    
-            {% for object in filter_form %}
-                {{ object }}
-            {% endfor %}
-    </form>
+            <form class="d-inline" id="search_recipe_bar" method="get" action="{% url 'recipes_search' %}">
+                {% for field in form %}
+                {{ field }}
+                {% endfor %}
+                <input class="btn btn-secondary" type="submit" value="Search">
+            </form>
 
+            <button class="btn btn-secondary d-inline" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasFilterScroll" aria-controls="offcanvasFilterScroll">Enable body
+                scrolling</button>
 
+            {% if searched_ingri_list|length != 0 %}
+            <div id="id_filter_items">
+                <ul>
+                    {% for iss in searched_ingri_list %}
+                    <li class="checked_item_search">{{ iss }}</li>
+                    {% endfor %}
+                </ul>  
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
     {% if query == False %}
-        {% if recipes_list == "car" %}
-            <p>you said car</p>
-        {% else %}
-            <p>{{ recipes_list }}</p>
-        {% endif %}
+    <p>{{ recipes_list }}</p>
+
     {% else %}
+
+  
     <div class="row">
 
         <!-- Blog Entries Column -->
-        <div class="col-12 mt-3 left">
+        <div class="col-12 left">
             <div class="row">
                 {% for recipe in recipes_list %}
                 <div class="col-md-4">
@@ -84,25 +95,76 @@
     {% endif %}
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
+    id="offcanvasFilterScroll" aria-labelledby="offcanvasFilterScrollLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasFilterScrollLabel">Colored with scrolling</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <p>Try scrolling the rest of the page to see this option in action.</p>
+
+        <form id="ingredients_bar" method="get" action="{% url 'recipes_filter' %}">
+            {% for object in filter_form %}
+            {{ object }}
+            {% endfor %}
+            <input type="submit" value="Go">
+        </form>
+
+        <button class="btn btn-primary" data-bs-dismiss="offcanvas" aria-label="Close">See Results</button>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+    integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 <script>
-$(document).ready(function() {
-    $('#search_query').keyup(function() {
-        $('#search_recipe_bar').submit();     
+    $(document).ready(function () {
+        $('#search_query').keyup(function () {
+            $('#search_recipe_bar').submit();
+        });
+
+
+        $('#search_query').focus();
+
+        var input = $('#search_query')[0];
+        var length = input.value.length;
+        input.setSelectionRange(length, length);
+        input.focus();
+
+
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(function (checkbox) {
+
+            let filter = checkbox.getAttribute('id');
+            let t1 = 'label[for="';
+            let t2 = filter;
+            let t3 = '"]';
+            let result = t1.concat(t2, t3);
+            let label = document.querySelector(result);
+            label.classList.add('unchecked');
+            checkbox.removeAttribute('checked');
+
+            // Add a change event listener to update sessionStorage
+            checkbox.addEventListener('change', function () {
+                // sessionStorage.setItem(filter, this.checked);
+
+                if (label.classList.contains('unchecked')) {
+                    // the element has the class-name class
+                    checkbox.setAttribute('checked', 'checked');
+                    label.classList.remove('unchecked');
+                    label.classList.add('checked');
+                } else {
+                    // the element does not have the class-name class
+                    label.classList.add('unchecked');
+                    label.classList.remove('checked');
+                    checkbox.removeAttribute('checked');
+                }
+            });
+        });
+
     });
-
-    $('#id_filter_query').change(function() {
-        $('#ingredients_bar').submit();
-    });
-    
-    $('#search_query').focus();
-    
-    var input = $('#search_query')[0];
-    var length = input.value.length;
-    input.setSelectionRange(length, length);
-    input.focus();
-});
-
-
 </script>
 {%endblock%}

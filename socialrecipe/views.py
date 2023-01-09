@@ -1,13 +1,14 @@
 # from itertools import chain
 from django.shortcuts import render, get_object_or_404, reverse,redirect
 from django.views import generic, View
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients
 from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm
 from django.db.models import Count, Avg, Q
 from django.urls import resolve
+from django.template import loader
 
 
 class HomeList(View):
@@ -61,6 +62,7 @@ class RecipesList(View):
         if filter_form.is_valid():
             recipe_elm = filter_form.cleaned_data['filter_query']
             recipes_list = RecipeFilterList(recipe_elm)
+
             
         if len(recipes_list) == 0:
             recipes_list = "No Recipes Match Your Search"
@@ -76,6 +78,7 @@ class RecipesList(View):
                 'form': form,
                 "query": query,
                 "filter_form": filter_form,
+                "searched_ingri_list": recipe_elm,
             }
         )
 

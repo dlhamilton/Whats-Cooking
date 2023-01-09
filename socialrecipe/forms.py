@@ -15,6 +15,8 @@ class SearchRecipeForm(forms.Form):
 class FilterRecipeForm(forms.Form):
     filter_query = forms.ModelMultipleChoiceField(
         queryset=Ingredients.objects.filter(approved=True).order_by('name'),
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple(
+            attrs={'data-filter': 'false'}
+            )
+
     )
-    
