@@ -24,10 +24,33 @@
     </div>
 
 
-    <div class="container-xxl d-flex flex-wrap justify-content-center">
-        <button class="btn btn-dark d-flex align-items-center mb-3 mb-lg-0 me-lg-auto" type="button"
-            data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilterScroll" aria-controls="offcanvasFilterScroll">
-            <i class="fa-solid fa-filter"></i> Filter</button>
+    <div class="d-flex flex-wrap justify-content-center">
+        <div class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto">
+
+            <div class="dropdown">
+                <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-arrow-down-wide-short"></i>Sort
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'name' %}">Name</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'rating' %}">Rating</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'favourite' %}">Favourites</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'date' %}">Newest</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'time' %}">Quickest</a></li>
+                </ul>
+            </div>
+            <button class="btn btn-dark" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasFilterScroll" aria-controls="offcanvasFilterScroll">
+                <i class="fa-solid fa-filter"></i> Filter</button>
+
+                
+
+            <button class="btn btn-secondary" type="button" onclick="window.location.href='{% url 'recipes' %}';">
+                <i class="fa-solid fa-rotate"></i> Reset</button>
+        </div>
+
+      
 
         <form class="col-12 col-lg-auto mb-3 mb-lg-0" id="search_recipe_bar" method="get"
             action="{% url 'recipes_search' %}">
@@ -37,10 +60,9 @@
                 {{ field }}
                 {% endfor %}
             </div>
-
-            <!-- <input class="btn btn-secondary float-right" type="submit" value="Search"> -->
-
         </form>
+
+
     </div>
 
     <div class="row">

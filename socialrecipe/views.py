@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients
 from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm
-from django.db.models import Count, Avg, Q
+from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
 from django.template import loader
 
@@ -44,8 +44,38 @@ def RecipeFilterList(search_list):
     
     return temp_recipes_list
 
+def get_average_rating(recipes_list):
+    for arecipe in recipes_list:
+        recipes_count = StarRating.objects.filter(recipe=arecipe).count()
+        recipes_avg = StarRating.get_average(arecipe.id)
+        arecipe.the_star_rating = recipes_avg
+        arecipe.the_star_rating_int = range(0, int(recipes_avg))
+        arecipe.the_star_rating_count = recipes_count
+    return recipes_list
 
+  
 class RecipesList(View):
+
+    def sort_functions(self, recipes_list, kwargs):
+        if 'sort_type' in kwargs:
+            sort_name = kwargs['sort_type']
+            if sort_name == "name":
+                sort_name = "A"
+                recipes_list = recipes_list.order_by('title')
+            elif sort_name == "rating":
+                sort_name = "B"
+                recipes_list = recipes_list.annotate(average_rating=Avg('star_rating__rating')).order_by('-average_rating')
+            elif sort_name == "favourite":
+                sort_name = "C"
+                recipes_list = recipes_list.annotate(num_favorites=Count('favourites')).order_by('-num_favorites')
+            elif sort_name == "date":
+                sort_name = "D"
+                recipes_list = recipes_list.order_by('-upload_date')
+            elif sort_name == "time":
+                sort_name = "E"
+                recipes_list = recipes_list.annotate(total_time=F('prep_time')+F('cook_time')).order_by('total_time')
+        return recipes_list
+
     def get(self, request, *args, **kwargs):
         recipes_list = Recipes.objects.filter(status=1).order_by('-upload_date')
         form = SearchRecipeForm(request.GET)
@@ -58,18 +88,15 @@ class RecipesList(View):
 
         recipe_elm=[]
         the_path_name = resolve(request.path_info).url_name
-
+        
         if filter_form.is_valid():
             recipe_elm = filter_form.cleaned_data['filter_query']
             recipes_list = RecipeFilterList(recipe_elm)
 
-        for arecipe in recipes_list:
-            recipes_avg = StarRating.objects.filter(recipe=arecipe).aggregate(Avg('rating')).get('rating__avg')
-            recipes_count = StarRating.objects.filter(recipe=arecipe).count()
-            arecipe.the_star_rating = recipes_avg
-            arecipe.the_star_rating_int = range(0, int(recipes_avg))
-            arecipe.the_star_rating_count = recipes_count
-           
+        sort_name = "no"
+        recipes_list = self.sort_functions(recipes_list, kwargs)
+
+        recipes_list = get_average_rating(recipes_list)
 
         if len(recipes_list) == 0:
             recipes_list = "No Recipes Match Your Search"

@@ -6,6 +6,7 @@ from cloudinary.models import CloudinaryField
 from allauth.account.signals import user_signed_up
 from django.contrib.auth.models import Group
 from django.dispatch import receiver
+from django.db.models import Avg
 
 RECIPE_STATUS = ((0, "Draft"), (1, "Published"), (2, "Hidden"), (3, "Removed"))
 USER_STATUS = ((0, "Suspended"), (1, "Standard"), (2, "Bronze"), (3, "Silver"), (4, "Gold"), (5, "Platnium"))
@@ -119,6 +120,10 @@ class StarRating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="star_rating")
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     date_given = models.DateTimeField(auto_now_add=True)
+
+    @classmethod
+    def get_average(cls, recipe_id):
+        return cls.objects.filter(recipe_id=recipe_id).aggregate(average=Avg('rating')).get('average')
 
 
 class Ingredients(models.Model):
