@@ -28,7 +28,7 @@
         <div class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto">
 
             <div class="dropdown">
-                <a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                <a class="btn btn-dark dropdown-toggle mx-1" href="#" role="button" id="dropdownMenuLink"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-arrow-down-wide-short"></i>Sort
                 </a>
@@ -40,13 +40,13 @@
                     <li><a class="dropdown-item" href="{% url 'recipes_sort' 'time' %}">Quickest</a></li>
                 </ul>
             </div>
-            <button class="btn btn-dark" type="button" data-bs-toggle="offcanvas"
+            <button class="btn btn-dark mx-1" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasFilterScroll" aria-controls="offcanvasFilterScroll">
                 <i class="fa-solid fa-filter"></i> Filter</button>
 
                 
 
-            <button class="btn btn-secondary" type="button" onclick="window.location.href='{% url 'recipes' %}';">
+            <button class="btn btn-secondary mx-1" type="button" onclick="window.location.href='{% url 'recipes' %}';">
                 <i class="fa-solid fa-rotate"></i> Reset</button>
         </div>
 
@@ -91,7 +91,7 @@
 
     {% else %}
 
-
+    <div class="container-fluid">
     <div class="row">
 
         <!-- Blog Entries Column -->
@@ -100,7 +100,7 @@
                 {% for recipe in recipes_list %}
                 <div class="col-md-4">
                     <div class="card mb-4">
-                        <div class="card-body">
+                        <div class="card-body index-card-body">
                             <div class="image-container">
                                 {% if "placeholder" in recipe.recipe_image.url %}
                                 <img class="card-img-top auto-img-h"
@@ -116,9 +116,10 @@
                                 </div>
                             </div>
                             <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
-                                <h2 class="card-title">{{ recipe.title }}</h2>
+                                <h2 class="card-title one-Line-ellipsis">{{ recipe.title }}</h2>
                                 <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
                             </a>
+                            <p class="card-text mb-0"><small>Meal Time: {{ recipe.total_time }} Minutes</small></p>
                             <hr />
                             <div class="d-flex">
                                 <div class="col-10 card-text text-muted h6">
@@ -158,7 +159,7 @@
     {% endif %}
     {% endif %}
 </div>
-
+</div>
 
 <div class="offcanvas offcanvas-start" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
     id="offcanvasFilterScroll" aria-labelledby="offcanvasFilterScrollLabel">
