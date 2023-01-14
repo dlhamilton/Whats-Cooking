@@ -216,6 +216,9 @@ class RecipeFavourite(View):
         return JsonResponse({'liked': True})
 
 
+
+
+
 def getAverageRecipeRating(a_user):
     page_name = get_object_or_404(User, username=a_user)
     recipe = Recipes.objects.filter(author=page_name.id).filter(status=1)

@@ -7,14 +7,14 @@
         <div class="row g-0">
             <div class="col-md-6 masthead-text">
                 <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'recipes' %}">
-                    <i class="fa-solid fa-chevron-left"></i>Back</a></span>
+                        <i class="fa-solid fa-chevron-left"></i>Back</a></span>
                 <!-- Post title goes in these h1 tags -->
                 <h1 class="post-title text-capitalize">
                     {{ recipe.title }}
                 </h1>
                 <!-- Post author goes before the | the post's created date goes after -->
                 <h2 class="post-subtitle post-link-green">
-            Recipe by:
+                    Recipe by:
                     <span class="text-uppercase">
                         <strong>
                             <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}">
@@ -60,13 +60,13 @@
             <div class="mb-2"><i class="fa-solid fa-mortar-pestle"></i> - Cook {{ recipe.cook_time }} Mins</div>
             <!-- The post content goes inside the card-text. -->
             <!-- Use the | safe filter inside the template tags -->
-           <h4 class="d-inline">Rating:{% if recipes_avg > 0 %}
+            <h4 class="d-inline">Rating:{% if recipes_avg > 0 %}
                 {{ recipes_avg }}</h4><small class="d-inline"> ({{ recipes_count }})</small>
-                {% else %}
-                No Ratings</h4>
-                {% endif %}
+            {% else %}
+            No Ratings</h4>
+            {% endif %}
             <p class="card-text mt-2">
-               {% for _ in star_loop %}
+                {% for _ in star_loop %}
                 <i class="fa-solid fa-star"></i>
                 {% endfor %}
                 {% for _ in empty_star_loop %}
@@ -108,20 +108,24 @@
 
         </div>
         <div class="col-4 col-md-2 text-center">
-            {% with methods.count as total_methods %}
-            <strong class="text-secondary"><i class="fas fa-list-ul"></i>
-                <!-- Our total_comments variable goes before the closing strong tag -->
-                {{ total_methods }}
-            </strong>
-            {% endwith %}
+            <a class="text-decoration-none text-reset" href="#the_methods">
+                {% with methods.count as total_methods %}
+                <strong class="text-secondary"><i class="fas fa-list-ul"></i>
+                    <!-- Our total_comments variable goes before the closing strong tag -->
+                    {{ total_methods }}
+                </strong>
+                {% endwith %}
+            </a>
         </div>
         <div class="col-4 col-md-2 text-center">
-            {% with comments.count as total_comments %}
-            <strong class="text-secondary"><i class="far fa-comments"></i>
-                <!-- Our total_comments variable goes before the closing strong tag -->
-                {{ total_comments }}
-            </strong>
-            {% endwith %}
+            <a class="text-decoration-none text-reset" href="#the_comments">
+                {% with comments.count as total_comments %}
+                <strong class="text-secondary"><i class="far fa-comments"></i>
+                    <!-- Our total_comments variable goes before the closing strong tag -->
+                    {{ total_comments }}
+                </strong>
+                {% endwith %}
+            </a>
         </div>
     </div>
     <div class="row">
@@ -136,11 +140,15 @@
             <ul>
                 {% for ingredients_item in ingredients %}
                 {% if ingredients_item.ingredients.approved == True %}
-                <li>{{ ingredients_item.ingredients.name }} - {{ ingredients_item.amount }}
-                    {{ ingredients_item.unit }}</li>
+                <li class="mb-2">{{ ingredients_item.amount|floatformat:"0"  }}
+                    {{ ingredients_item.unit }}
+                    <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span></li>
                 {% else %}
-                <li><strong>{{ ingredients_item.ingredients.name }}</strong> - {{ ingredients_item.amount }}
-                    {{ ingredients_item.unit }}</li>
+                <li class="mb-2">{{ ingredients_item.amount|floatformat:"0"  }}
+                    {{ ingredients_item.unit }}
+                    <span
+                        class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
+                </li>
                 {% endif %}
                 {% endfor %}
                 <!-- {{ ingredients }} -->
@@ -153,17 +161,15 @@
             <hr>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="the_methods">
         <div class="card-body">
             <h3>Methods:</h3>
             <ol>
                 {% for method_item in methods %}
-                <li>{{ method_item.method | safe }}</li>
+                <li class="mb-3">{{ method_item.method|safe }}</li>
                 {% endfor %}
             </ol>
-
         </div>
-
     </div>
     <div class="row">
         <div class="col">
@@ -174,32 +180,36 @@
     <div class="row">
         <div class="col-md-8 card mb-4  mt-3 ">
             <h3>Pictures:</h3>
-            <div class="card-body">
-                <!-- We want a for loop inside the tags to iterate through each comment in comments -->
-                {% for image in images %}
-                <div class="comments" style="padding: 10px;">
-                    <p class="font-weight-bold">
-                        <!-- The commenter's name goes here. Check the model if you're not sure what that is -->
-                        <span class=" text-muted font-weight-normal">
-                            <!-- The comment's created date goes here -->
-                            {{ image.user }} - {{ image.upload_date }}
-                        </span> wrote:
-                    </p>{{ image.headline }}
-                    <!-- The body of the comment goes before the | -->
-                    {% if "placeholder" in recipe.recipe_image.url %}
-                    <img src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg" width="100%">
-                    {% else %}
-                    <img src="{{ image.recipe_image.url }}" width="100%">
-                    {% endif %}
-                </div>
-                <!-- Our for loop ends here -->
-                {% endfor %}
-            </div>
         </div>
-        <div class="col-md-4 card mb-4  mt-3 ">
-            <div class="card-body">
-                <!-- For later -->
-            </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col">
+            <section id="image-main-carousel" class="splide" aria-label="Beautiful Images">
+                <div class="splide__track">
+                    <ul class="splide__list">
+                        {% for image in images %}
+                        <li class="splide__slide">
+                            <!-- <div class="splide__slide__container"> -->
+                            {% if "placeholder" in recipe.recipe_image.url %}
+                            <img class="rounded" src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg"
+                                width="100%">
+                            {% else %}
+                            <img class="rounded" src="{{ image.recipe_image.url }}" width="100%">
+                            {% endif %}
+                            <!-- </div> -->
+                            <div class="font-weight-bold">
+                                <!-- The commenter's name goes here. Check the model if you're not sure what that is -->
+                                <span class=" text-muted font-weight-normal">
+                                    <!-- The comment's created date goes here -->
+                                    <span class="text-capitalize">{{ image.user }}</span> -
+                                    {{ image.upload_date|date:"jS F Y" }}
+                                </span> wrote:
+                                <br>{{ image.headline }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -209,7 +219,7 @@
         </div>
     </div>
     <!-- Comments upload place -->
-    <div class="row">
+    <div class="row" id="the_comments">
         <div class="col-md-8 card mt-3 comments-section">
             <div class="headings d-flex justify-content-between align-items-center mb-3">
                 <h3>Comments:</h3>
@@ -217,9 +227,10 @@
                 <div class="buttons">
                     <span class="badge bg-white d-flex flex-row align-items-center">
                         <span class="text-primary">Comments "ON"</span>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="flexSwitchCheckChecked" checked>
+                            <span class="slider round"></span>
+                        </label>
                     </span>
                 </div>
                 {% endif %}
@@ -234,25 +245,27 @@
                 <div class="card p-3 mt-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="user d-flex flex-row align-items-center">
-                            <img src="https://i.imgur.com/hczKIze.jpg" width="30" class="user-img rounded-circle mr-2">
-                            <span class="font-weight-bold text-primary margin-l-name">{{ comment.user }}</span>
+                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' comment.user %}">
+                                <img src="{{ comment.user.user_details.user_image.url }}" width="30" height="30" class="user-img rounded-circle mr-2">
+                            <span class="font-weight-bold text-primary margin-l-name">{{ comment.user }}</span></a>
                         </div>
-                        <small>{{ comment.post_date }}</small>
+                        <small class="d-none d-sm-block">{{ comment.post_date|date:"jS F Y, P" }}</small>
+                        <small class="d-sm-none">{{ comment.post_date|date:"SHORT_DATE_FORMAT" }}</small>
                     </div>
                     <div class="font-weight-bold reply px-4">{{ comment.body | linebreaks }}</div>
+                    {% if user == comment.user %}
                     <div class="action d-flex justify-content-between mt-2 align-items-center">
-                        <div class="reply px-4">
+                        <div class="reply comment-remove px-4">
+                            <span class="dots"></span>
                             <small>Remove</small>
-                            <span class="dots"></span>
-                            <small>Reply</small>
-                            <span class="dots"></span>
-                            <small>Translate</small>
                         </div>
+                        
                         <div class="icons align-items-center">
-                            <i class="fa fa-star text-warning"></i>
                             <i class="fa fa-check-circle-o check-icon"></i>
                         </div>
+                        
                     </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>
@@ -278,7 +291,7 @@
                 <form method="post" style="margin-top: 1.3em;">
                     {{ comment_form | crispy }}
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-signup btn-lg">Submit Comment</button>
+                    <button type="submit" class="btn btn-wc-green btn-lg mt-1">Submit Comment</button>
                 </form>
 
                 {% endif %}
@@ -294,6 +307,7 @@
     <!-- new test content -->
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
 <script>
     const form = document.querySelector('#myForm');
     var button = form.querySelector('.btn-like');
@@ -332,11 +346,36 @@
     const comments_row = document.getElementById('comments_row')
     checkbox.addEventListener('change', (event) => {
         if (event.currentTarget.checked) {
-            comments_row.style.display = 'block';
+            comments_row.style.display = 'flex';
         } else {
             comments_row.style.display = 'none';
         }
     })
+
+    var main = new Splide('#image-main-carousel', {
+        gap: 20,
+        rewind: true,
+        perPage: 5,
+        type: 'loop',
+        autoplay: true,
+        pagination: false,
+        breakpoints: {
+            500: {
+                perPage: 1,
+            },
+            600: {
+                perPage: 2,
+            },
+            750: {
+                perPage: 3,
+            },
+            1000: {
+                perPage: 4,
+            }
+
+
+        }
+    }).mount();
 </script>
 
 {% endblock content %}
