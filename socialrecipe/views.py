@@ -36,7 +36,7 @@ class HomeList(View):
 #     paginate_by = 6
 #     # result_list = list(chain(recipes_list))
 def RecipeFilterList(search_list):
-    test=[]
+    test = []
     # for i in search_list:
         # test.append(i.name)
     temp_recipes_list = Recipes.objects.filter(status=1)
@@ -87,23 +87,15 @@ class RecipesList(View):
             if form.cleaned_data['search_query'] != "": 
                 recipes_list = form.cleaned_data['search_query']
                 recipes_list = Recipes.objects.filter(status=1).filter(Q(author__username__icontains=recipes_list) | Q(title__icontains=recipes_list)).order_by('-upload_date')
-
-        recipe_elm=[]
-        the_path_name = resolve(request.path_info).url_name
-        
+        recipe_elm = []
         if filter_form.is_valid():
             recipe_elm = filter_form.cleaned_data['filter_query']
             recipes_list = RecipeFilterList(recipe_elm)
-
-        sort_name = "no"
         recipes_list = self.sort_functions(recipes_list, kwargs)
-
         recipes_list = get_average_rating(recipes_list)
-
         if len(recipes_list) == 0:
             recipes_list = "No Recipes Match Your Search"
             query = False
-
         return render(
             request,
             "recipes.html",
@@ -338,6 +330,25 @@ class Profilerecipes(View):
             "user_recipes.html",
             p_details
         )
+
+
+class ProfilerecipesAdd(View):
+    def get(self, request, username, *args, **kwargs):
+        if username == request.user.username:
+            p_details = profile_details(self.request, username)
+            p_details.update({"logged_in_user": request.user, })
+            return render(
+                request,
+                "user_recipes_add.html",
+                p_details
+            )
+        else:
+            if request.user.is_authenticated:
+                return HttpResponseRedirect(
+                    reverse(
+                        'profile_page',
+                        kwargs={'username': request.user.username}))
+            return HttpResponseRedirect(reverse('home'))
 
 
 class ProfileFollowers(View):

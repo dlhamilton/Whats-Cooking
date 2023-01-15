@@ -32,6 +32,15 @@
 
   <div class="row">
     <div class="col">
+      {% if page_name == user %}
+      <a href="{% url 'profile_page_recipes_add' user.username %}" class="post-link">
+        <button type="button" class="btn btn-outline-primary"> 
+          <i class="fa-regular fa-square-plus"></i> Create New
+        </button>
+      </a>
+      {% endif %}
+      
+
       <p>Recipe count: {{ page_name.user_recipes.count }}</p>
 
       <p>
