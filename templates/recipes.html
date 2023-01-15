@@ -123,10 +123,14 @@
                             <hr />
                             <div class="d-flex">
                                 <div class="col-10 card-text text-muted h6">
+                                    {% if recipe.the_star_rating_count != 0 %}
                                     {% for _ in recipe.the_star_rating_int %}
                                     <i class="fa-solid fa-star"></i>
                                     {% endfor %}
                                     {{ recipe.the_star_rating }} ( {{ recipe.the_star_rating_count }} )
+                                    {% else %}
+                                    No Ratings
+                                    {% endif %}
                                 </div>
                                 <div class="col-2 text-end card-text text-muted h6">
                                     <i class="far fa-heart"></i> {{ recipe.number_of_favourites }}

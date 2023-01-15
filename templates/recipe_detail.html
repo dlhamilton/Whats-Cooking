@@ -137,6 +137,7 @@
         <div class="d-inline col-12 ">
 
             <h3>Ingredients:</h3>
+            {% if ingredients|length != 0 %}
             <ul>
                 {% for ingredients_item in ingredients %}
                 {% if ingredients_item.ingredients.approved == True %}
@@ -153,7 +154,11 @@
                 {% endfor %}
                 <!-- {{ ingredients }} -->
             </ul>
+            {% else %}
 
+            <h4>No Ingredients</h4>
+
+    {% endif %}
         </div>
     </div>
     <div class="row">
@@ -164,11 +169,17 @@
     <div class="row" id="the_methods">
         <div class="card-body">
             <h3>Methods:</h3>
+            {% if methods|length != 0 %}
             <ol>
                 {% for method_item in methods %}
                 <li class="mb-3">{{ method_item.method|safe }}</li>
                 {% endfor %}
             </ol>
+            {% else %}
+
+                    <h4>No Methods</h4>
+
+            {% endif %}
         </div>
     </div>
     <div class="row">

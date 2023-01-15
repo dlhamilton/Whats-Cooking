@@ -75,7 +75,12 @@
       <ul>
         {% for recipe in page_name.user_recipes.all %}
         <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
-          <li>{{ recipe }}</li>
+          <li>{{ recipe }}
+            {% if recipe.status == 0 %}
+            <i class="fa-solid fa-link-slash"></i>
+            {% endif %}
+
+          </li>
         </a>
         {% endfor %}
       </ul>

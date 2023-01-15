@@ -5,12 +5,13 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm
 from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
 from django.template import loader
 from django.contrib import messages
 import json
+from django.utils.text import slugify
 
 
 class HomeList(View):
@@ -51,7 +52,7 @@ def get_average_rating(recipes_list):
         recipes_count = StarRating.objects.filter(recipe=arecipe).count()
         recipes_avg = StarRating.get_average(arecipe.id)
         arecipe.the_star_rating = recipes_avg
-        arecipe.the_star_rating_int = range(0, int(recipes_avg))
+        arecipe.the_star_rating_int = range(0, int(recipes_avg or 0))
         arecipe.the_star_rating_count = recipes_count
     return recipes_list
 
@@ -113,40 +114,41 @@ class RecipesList(View):
 
 class RecipeDetail(View):
     def get(self, request, slug, *args, **kwargs):
-        queryset = Recipes.objects.filter(status=1)
+        queryset = Recipes.objects
         recipe = get_object_or_404(queryset, slug=slug)
-        recipe_methods = recipe.methods.order_by('order')
-        recipe_comments = recipe.comments.filter(status=1).order_by('-post_date')
-        recipe_ingredients = recipe.recipe_items.filter()
-        recipe_images = recipe.recipe_images.filter()
-        recipes_avg = StarRating.objects.filter(recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
-        recipes_count = StarRating.objects.filter(recipe=recipe).count()
-        star_loop = range(0, int(recipes_avg))
-        empty_star_loop = range(0, 5-int(recipes_avg))
-        favourited = False
-        if recipe.favourites.filter(id=self.request.user.id).exists():
-            favourited = True
+        if recipe.status == 1 or request.user == recipe.author:
+            recipe_methods = recipe.methods.order_by('order')
+            recipe_comments = recipe.comments.order_by('-post_date')
+            recipe_ingredients = recipe.recipe_items.filter()
+            recipe_images = recipe.recipe_images.filter()
+            recipes_avg = StarRating.objects.filter(recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
+            recipes_count = StarRating.objects.filter(recipe=recipe).count()
+            star_loop = range(0, int(recipes_avg or 0))
+            empty_star_loop = range(0, 5-int(recipes_avg or 0))
+            favourited = False
+            if recipe.favourites.filter(id=self.request.user.id).exists():
+                favourited = True
 
-        return render(
-            request,
-            "recipe_detail.html",
-            {
-                "recipe": recipe,
-                "methods": recipe_methods,
-                "favourited": favourited,
-                "comments": recipe_comments,
-                "ingredients": recipe_ingredients,
-                "images": recipe_images,
-                "page_name": recipe.title,
-                "commented": False,
-                "valid_comment": True,
-                "comment_form": CommentsForm(),
-                "recipes_avg": recipes_avg,
-                "recipes_count": recipes_count,
-                "star_loop": star_loop,
-                "empty_star_loop": empty_star_loop,
-            },
-        )
+            return render(
+                request,
+                "recipe_detail.html",
+                {
+                    "recipe": recipe,
+                    "methods": recipe_methods,
+                    "favourited": favourited,
+                    "comments": recipe_comments,
+                    "ingredients": recipe_ingredients,
+                    "images": recipe_images,
+                    "page_name": recipe.title,
+                    "commented": False,
+                    "valid_comment": True,
+                    "comment_form": CommentsForm(),
+                    "recipes_avg": recipes_avg,
+                    "recipes_count": recipes_count,
+                    "star_loop": star_loop,
+                    "empty_star_loop": empty_star_loop,
+                },
+            )
 
     def delete(self, request, *args, **kwargs):
         data = json.loads(request.body)
@@ -223,14 +225,17 @@ def getAverageRecipeRating(a_user):
     page_name = get_object_or_404(User, username=a_user)
     recipe = Recipes.objects.filter(author=page_name.id).filter(status=1)
     count = 0
+    num_of_ratings = 0
     recipes_avg = []
     total_rec = 0
     for i in recipe:
         recipes_avg.append(StarRating.objects.filter(recipe=i).aggregate(Avg('rating')))      
-        total_rec = total_rec + recipes_avg[count].get('rating__avg')
+        if recipes_avg[count].get('rating__avg') is not None:
+            total_rec = total_rec + recipes_avg[count].get('rating__avg')
+            num_of_ratings += 1
         count = count+1
-    if count != 0:
-        user_recipe_average = total_rec/count
+    if num_of_ratings != 0:
+        user_recipe_average = total_rec/num_of_ratings
     else:
         user_recipe_average = 0
     thisdict = { 
@@ -335,8 +340,50 @@ class Profilerecipes(View):
 class ProfilerecipesAdd(View):
     def get(self, request, username, *args, **kwargs):
         if username == request.user.username:
+
             p_details = profile_details(self.request, username)
-            p_details.update({"logged_in_user": request.user, })
+            p_details.update({"logged_in_user": request.user,
+                              "add_form": RecipesForm()})
+            return render(
+                request,
+                "user_recipes_add.html",
+                p_details
+            )
+        else:
+            if request.user.is_authenticated:
+                return HttpResponseRedirect(
+                    reverse(
+                        'profile_page',
+                        kwargs={'username': request.user.username}))
+            return HttpResponseRedirect(reverse('home'))
+
+    def post(self, request, username, *args, **kwargs):
+        if username == request.user.username:
+
+            recipe_form = RecipesForm(data=request.POST)
+            if recipe_form.is_valid():
+
+                recipe_form.instance.author = request.user
+
+                title = recipe_form.cleaned_data['title']
+                
+                slug = slugify(title)
+
+                if recipe_form.cleaned_data['publish'] == True:
+                    recipe_form.instance.status = 1
+                recipe = recipe_form.save(commit=False)
+                recipe.slug = slug
+                recipe.save()
+                messages.success(request, 'Recipe Added')
+                valid_recipe = True
+            else:
+                recipe_form = RecipesForm()
+                messages.error(request, 'Error With Recipe')
+                valid_recipe = False
+
+            p_details = profile_details(self.request, username)
+            p_details.update({"logged_in_user": request.user,
+                              "add_form": recipe_form})
             return render(
                 request,
                 "user_recipes_add.html",
