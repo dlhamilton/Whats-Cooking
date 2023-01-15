@@ -182,6 +182,7 @@
             <h3>Pictures:</h3>
         </div>
     </div>
+    {% if images|length != 0 %}
     <div class="row d-flex justify-content-center">
         <div class="col">
             <section id="image-main-carousel" class="splide" aria-label="Beautiful Images">
@@ -212,6 +213,13 @@
             </section>
         </div>
     </div>
+    {% else %}
+    <div class="row">
+        <div class="col">
+            <h4>No Pictures</h4>
+        </div>
+    </div>
+    {% endif %}
 
     <div class="row">
         <div class="col">
@@ -223,7 +231,7 @@
         <div class="col-md-8 card mt-3 comments-section">
             <div class="headings d-flex justify-content-between align-items-center mb-3">
                 <h3>Comments:</h3>
-                {% if user.is_authenticated %}
+                
                 <div class="buttons">
                     <span class="badge bg-white d-flex flex-row align-items-center">
                         <span class="text-primary">Comments "ON"</span>
@@ -233,7 +241,7 @@
                         </label>
                     </span>
                 </div>
-                {% endif %}
+                
             </div>
         </div>
     </div>
@@ -241,13 +249,15 @@
     <div class="row" id="comments_row">
         <div class="col-md-8 card mb-4  mt-3 comments-section">
             <div>
+                {% if comments|length != 0 %}
                 {% for comment in comments %}
-                <div class="card p-3 mt-2">
+                <div class="card p-3 mt-2 " data-comment_id="{{ comment.id }}">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="user d-flex flex-row align-items-center">
                             <a class="text-decoration-none text-reset" href="{% url 'profile_page' comment.user %}">
-                                <img src="{{ comment.user.user_details.user_image.url }}" width="30" height="30" class="user-img rounded-circle mr-2">
-                            <span class="font-weight-bold text-primary margin-l-name">{{ comment.user }}</span></a>
+                                <img src="{{ comment.user.user_details.user_image.url }}" width="30" height="30"
+                                    class="user-img rounded-circle mr-2">
+                                <span class="font-weight-bold text-primary margin-l-name">{{ comment.user }}</span></a>
                         </div>
                         <small class="d-none d-sm-block">{{ comment.post_date|date:"jS F Y, P" }}</small>
                         <small class="d-sm-none">{{ comment.post_date|date:"SHORT_DATE_FORMAT" }}</small>
@@ -257,17 +267,22 @@
                     <div class="action d-flex justify-content-between mt-2 align-items-center">
                         <div class="reply comment-remove px-4">
                             <span class="dots"></span>
-                            <small>Remove</small>
+                            <small id="demo" onclick="myFunction({{ comment.id }})"
+                                data-id="{{ comment.id }}">Remove</small>
+
                         </div>
-                        
+
                         <div class="icons align-items-center">
                             <i class="fa fa-check-circle-o check-icon"></i>
                         </div>
-                        
+
                     </div>
                     {% endif %}
                 </div>
                 {% endfor %}
+                {% else %}
+                    <h4>No Comments</h4>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-4 card mb-4  mt-3 ">
@@ -275,17 +290,6 @@
                 <!-- For comments -->
 
                 {% if user.is_authenticated %}
-                {% if commented %}
-                {% if valid_comment %}
-                <div class="alert alert-success" role="alert">
-                    Comment Submitted
-                </div>
-                {% else %}
-                <div class="alert alert-danger" role="alert">
-                    Error With Comment
-                </div>
-                {% endif %}
-                {% endif %}
                 <h3>Leave a comment:</h3>
                 <p>Posting as: {{ user.username }}</p>
                 <form method="post" style="margin-top: 1.3em;">
@@ -309,6 +313,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
 <script>
+    {% if user.is_authenticated %}
     const form = document.querySelector('#myForm');
     var button = form.querySelector('.btn-like');
     var element = document.querySelector('#fav_count');
@@ -340,7 +345,7 @@
             .then(() => {});
         return false;
     });
-
+    {% endif %}
 
     const checkbox = document.getElementById('flexSwitchCheckChecked')
     const comments_row = document.getElementById('comments_row')
@@ -376,6 +381,50 @@
 
         }
     }).mount();
+
+
+    function myFunction(id) {
+        let valid;
+        let recipe_slug = '{{ recipe.slug }}';
+        let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        fetch(`/recipes/${recipe_slug}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token,
+                },
+                body: JSON.stringify({
+                    'id': id
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    valid = response
+                    return response.json();
+                }
+                throw new Error(response.statusText);
+            })
+            .then(data => {
+                console.log(data.message);
+                console.log(valid);
+                if (valid.ok) {
+                    //find the comment element
+                    let comment = document.querySelector(`[data-comment_id="${id}"]`);
+                    //remove the comment element from the comments section
+                    comment.innerHTML = `<div class="alert alert-warning" role="alert">
+  This comment has been removed.
+</div>`;
+                    setTimeout(function () {
+                        comment.remove();
+                    }, 2500);
+
+                } else {
+                    // Handle other status codes
+                    console.log(data.message);
+                }
+            })
+            .catch(error => console.error(error));
+    }
 </script>
 
 {% endblock content %}

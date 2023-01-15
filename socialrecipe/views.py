@@ -4,11 +4,13 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients
+from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments
 from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm
 from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
 from django.template import loader
+from django.contrib import messages
+import json
 
 
 class HomeList(View):
@@ -154,6 +156,13 @@ class RecipeDetail(View):
             },
         )
 
+    def delete(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        id = data.get('id')
+        record = get_object_or_404(Comments, id=id)
+        record.delete()
+        return JsonResponse({"message": id}, status=200)
+
     def post(self, request, slug, *args, **kwargs):
         queryset = Recipes.objects.filter(status=1)
         recipe = get_object_or_404(queryset, slug=slug)
@@ -176,9 +185,11 @@ class RecipeDetail(View):
             comment = comment_form.save(commit=False)
             comment.recipe = recipe
             comment.save()
+            messages.success(request, 'Comment Added')
             valid_comment = True
         else:
             comment_form = CommentsForm()
+            messages.error(request, 'Error With Comment')
             valid_comment = False
 
         return render(
@@ -216,9 +227,6 @@ class RecipeFavourite(View):
         return JsonResponse({'liked': True})
 
 
-
-
-
 def getAverageRecipeRating(a_user):
     page_name = get_object_or_404(User, username=a_user)
     recipe = Recipes.objects.filter(author=page_name.id).filter(status=1)
@@ -241,153 +249,123 @@ def getAverageRecipeRating(a_user):
     return thisdict
 
 
+def profile_details(request, username):
+    page_name = get_object_or_404(User, username=username)
+
+    is_following_data = 0
+    if request.user.is_authenticated:
+        if page_name.user_follows.filter(user=request.user).exists():
+            is_following_data = 2
+        else:
+            is_following_data = 1
+
+    user_recipe_average = getAverageRecipeRating(username)
+
+    fav_recipes = []
+    all_recipes = Recipes.objects.filter(status=1)
+    for r in all_recipes:
+        if r.favourites.filter(id=page_name.id).exists():
+            fav_recipes.append(r)
+    items = {"page_name": page_name,
+             "fav_recipes_count": len(fav_recipes),
+             "is_following": is_following_data,
+             "average_recipe": user_recipe_average,
+             "fav_recipes": fav_recipes, }
+    return items
+
+
 class ProfilePage(View):
-    def get(self, request, username, *args, **kwargs):
-
-        # top_recipes = UserDetails.objects.filter(status=1)
-        page_name = get_object_or_404(User, username=username)
-        user_recipe_average = getAverageRecipeRating(username)
-        # page_name = get_object_or_404(queryset, username=username)
-        fav_recipes=[]
-        all_recipes = Recipes.objects.filter(status=1)
-        
-        for r in all_recipes:
-            if r.favourites.filter(id=page_name.id).exists():
-                fav_recipes.append(r)
-        is_following_data = 0
-        if request.user.is_authenticated:
-            is_following = page_name.user_details.get_followers()
-            if page_name.user_follows.filter(user=request.user).exists():
-                is_following_data = 2
-            else:
-                is_following_data = 1
-
-    # user is not in the list
+    def get(self, request, username, *args, **kwargs):        
+        p_details = profile_details(self.request, username)
+        p_details.update({
+                "logged_in_user": request.user.username,
+        })
         return render(
             request,
             "user_profile_page.html",
-            {
-                "page_name": page_name,
-                "fav_recipes": fav_recipes,
-                "fav_recipes_count": len(fav_recipes),
-                "logged_in_user": request.user.username,
-                "is_following": is_following_data,
-                "average_recipe": user_recipe_average,
-            }
+            p_details
         )
 
 
 class ProfileShoppingList(View):
     def get(self, request, username, *args, **kwargs):
-
         if username == request.user.username:
-            recipes_count = Recipes.objects.filter(author=request.user.id).filter(status=1).count()
-            user_recipe_average = getAverageRecipeRating(username)
+            p_details = profile_details(self.request, username)
+            p_details.update({"logged_in_user": request.user, })
             return render(
                 request,
                 "shopping_lists.html",
-                {
-                    "page_name": request.user,
-                    "logged_in_user": request.user,
-                    "fav_recipes_count": recipes_count,
-                    "average_recipe": user_recipe_average,
-                }
-            )
+                p_details)
         else:
             if request.user.is_authenticated:
-                return HttpResponseRedirect(reverse('profile_page', kwargs={'username': request.user.username}))
-            
+                return HttpResponseRedirect(
+                    reverse('profile_page',
+                            kwargs={'username': request.user.username}))
             return HttpResponseRedirect(reverse('home'))
 
 
 class ProfileSingleList(View):
     def get(self, request, username, list, *args, **kwargs):
-
         if username == request.user.username:
             shopping_list = get_object_or_404(ShoppingList, slug=list)
             user_list_items = shopping_list.shopping_list_items.filter()
-            recipes_count = Recipes.objects.filter(author=request.user.id).filter(status=1).count()
-            user_recipe_average = getAverageRecipeRating(username)
-            return render(
-                request,
-                "shopping_list.html",                
-                {
-                    "page_name": request.user,
+            p_details = profile_details(self.request, username)
+            p_details.update({
                     "logged_in_user": request.user,
                     "user_list": user_list_items,
                     "user_shopping_list": shopping_list,
-                    "fav_recipes_count": recipes_count,
-                    "average_recipe": user_recipe_average,
-                }
+            })
+            return render(
+                request,
+                "shopping_list.html",
+                p_details
             )
         else:
             if request.user.is_authenticated:
-                return HttpResponseRedirect(reverse('profile_page', kwargs={'username': request.user.username}))
+                return HttpResponseRedirect(
+                    reverse(
+                        'profile_page',
+                        kwargs={'username': request.user.username}))
             return HttpResponseRedirect(reverse('home'))
+
 
 class Profilerecipes(View):
     def get(self, request, username, *args, **kwargs):
-        page_name = get_object_or_404(User, username=username)
-        recipes_count = Recipes.objects.filter(author=page_name.id).filter(status=1).count()
-        recipe = Recipes.objects.filter(author=page_name.id).filter(status=1)
-        user_recipe_average = getAverageRecipeRating(username)
-
+        p_details = profile_details(self.request, username)
+        p_details.update({"logged_in_user": request.user, })
         return render(
             request,
             "user_recipes.html",
-            {
-                "page_name": page_name,
-                "logged_in_user": request.user,
-                "fav_recipes_count": recipes_count,
-                "average_recipe": user_recipe_average,
-            }
+            p_details
         )
 
 
 class ProfileFollowers(View):
     def get(self, request, username, *args, **kwargs):
-        page_name = get_object_or_404(User, username=username)
-        recipes_count = Recipes.objects.filter(author=page_name.id).filter(status=1).count()
-        user_recipe_average = getAverageRecipeRating(username)
+        p_details = profile_details(self.request, username)
+        p_details.update({"logged_in_user": request.user, })
         return render(
             request,
             "user_followers.html",
-            {
-                "page_name": page_name,
-                "logged_in_user": request.user,
-                "fav_recipes_count": recipes_count,
-                "average_recipe": user_recipe_average,
-            }
+            p_details
         )
 
 
 class ProfileFavourites(View):
     def get(self, request, username, *args, **kwargs):
-        user_recipe_average = getAverageRecipeRating(username)
-        page_name = get_object_or_404(User, username=username)
-        all_recipes = Recipes.objects.filter(status=1)
-        fav_recipes = []
-        for r in all_recipes:
-            if r.favourites.filter(id=page_name.id).exists():
-                fav_recipes.append(r)
-        
+        p_details = profile_details(self.request, username)
+        p_details.update({"logged_in_user": request.user, })
         return render(
             request,
             "user_favourites.html",
-            {
-                "page_name": page_name,
-                "logged_in_user": request.user,
-                "fav_recipes": fav_recipes,
-                "fav_recipes_count": len(fav_recipes),
-                "average_recipe": user_recipe_average,
-            }
+            p_details
         )
 
 
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
-
     def get_redirect_url(self, *args, **kwargs):
         if self.request.user.is_authenticated:
-            return reverse('profile_page', kwargs={'username': self.request.user.username})
-        #return redirect("profile_page", slug=username)  
+            return reverse(
+                'profile_page',
+                kwargs={'username': self.request.user.username})
         return HttpResponseRedirect(reverse('home'))
