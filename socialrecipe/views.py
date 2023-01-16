@@ -5,13 +5,14 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm
 from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
 from django.template import loader
 from django.contrib import messages
 import json
 from django.utils.text import slugify
+from django.core.paginator import Paginator
 
 
 class HomeList(View):
@@ -337,7 +338,7 @@ class Profilerecipes(View):
         )
 
 
-class ProfilerecipesAdd(View):
+class ProfileRecipesAdd(View):
     def get(self, request, username, *args, **kwargs):
         if username == request.user.username:
 
@@ -387,6 +388,43 @@ class ProfilerecipesAdd(View):
             return render(
                 request,
                 "user_recipes_add.html",
+                p_details
+            )
+        else:
+            if request.user.is_authenticated:
+                return HttpResponseRedirect(
+                    reverse(
+                        'profile_page',
+                        kwargs={'username': request.user.username}))
+            return HttpResponseRedirect(reverse('home'))
+
+
+class ProfileRecipesEdit(View):
+    form_class = AddToRecipeForm
+    paginate_by = 10  # Show 10 ingredients per page
+
+    def get(self, request, username, *args, **kwargs):
+        if username == request.user.username:
+
+            form = self.form_class(request.GET)
+            search_term = form.data.get('search_term')
+            page = request.GET.get('page') or 1
+            ingredients = Ingredients.objects.filter(approved=True)
+            if search_term:
+                ingredients = ingredients.filter(name__icontains=search_term)
+            paginator = Paginator(ingredients, self.paginate_by)
+            paginator = paginator.get_page(page)
+
+            # form.fields['filter_query'].queryset = ingredients  # set the queryset to the filtered queryset
+
+            p_details = profile_details(self.request, username)
+            p_details.update({"logged_in_user": request.user,
+                              'form': form,
+                              'paginator': paginator,
+                              'results_count': len(ingredients), })
+            return render(
+                request,
+                "user_recipes_edit.html",
                 p_details
             )
         else:

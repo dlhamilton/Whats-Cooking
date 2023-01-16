@@ -34,3 +34,11 @@ class FilterRecipeForm(forms.Form):
         widget=forms.CheckboxSelectMultiple
 
     )
+
+
+class AddToRecipeForm(forms.Form):
+    search_term = forms.CharField(required=False)
+    # filter_query = forms.ModelMultipleChoiceField(
+    #     queryset=Ingredients.objects.filter(approved=True).order_by('name'),
+    #     widget=forms.CheckboxSelectMultiple
+    # )

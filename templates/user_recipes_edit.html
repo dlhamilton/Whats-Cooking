@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      <div class="basic">
+        {% include "logged_in_user_card.html" %}
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h1>Edit Recipe</h1>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <div class="col-md-8 mt-3 offset-md-2 mb-4">
+
+        <form method="get">
+          {{ form.search_term }}
+          <input type="submit" value="Search">
+
+        </form>
+
+        <ul>
+          {{ results_count }}
+          {% for ingredients in paginator %}
+
+          <li>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="{{ ingredients }}">
+              {{ ingredients.id }} - {{ ingredients }}
+            </button> 
+            </li>
+          {% endfor %}
+        </ul>
+
+
+        <div class="pagination">
+          {% if paginator.has_previous %}
+          {% if form.search_term.value %}
+          <a href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}">Previous</a>
+          {% else %}
+          <a href="?page={{ paginator.previous_page_number }}">Previous</a>
+          {% endif %}
+          {% endif %}
+          <span class="current-page">Page {{ paginator.number }} of {{ paginator.paginator.num_pages }}</span>
+          {% if paginator.has_next %}
+          {% if form.search_term.value %}
+          <a href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}">Next</a>
+          {% else %}
+          <a href="?page={{ paginator.next_page_number }}">Next</a>
+          {% endif %}
+          {% endif %}
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!--  -->
+        <form>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+        <!--  -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var exampleModal = document.getElementById('staticBackdrop')
+exampleModal.addEventListener('show.bs.modal', function (event) {
+  // Button that triggered the modal
+  var button = event.relatedTarget
+  // Extract info from data-bs-* attributes
+  var recipient = button.getAttribute('data-bs-whatever')
+  // If necessary, you could initiate an AJAX request here
+  // and then do the updating in a callback.
+  //
+  // Update the modal's content.
+  var modalTitle = exampleModal.querySelector('.modal-title')
+  var modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+  modalTitle.textContent = 'New message to ' + recipient
+  modalBodyInput.value = recipient
+})
+</script>
+
+{%endblock%}

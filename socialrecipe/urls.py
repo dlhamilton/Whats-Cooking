@@ -15,7 +15,8 @@ urlpatterns = [
     path('users/<slug:username>/myshopping/', views.ProfileShoppingList.as_view(), name='profile_page_shopping'),
     path('users/<slug:username>/myshopping/<slug:list>', views.ProfileSingleList.as_view(), name='profile_single_shopping'),
     path('users/<slug:username>/myrecipes/', views.Profilerecipes.as_view(), name='profile_page_recipes'),
-    path('users/<slug:username>/myrecipes/new', views.ProfilerecipesAdd.as_view(), name='profile_page_recipes_add'),
+    path('users/<slug:username>/myrecipes/new', views.ProfileRecipesAdd.as_view(), name='profile_page_recipes_add'),
+    path('users/<slug:username>/myrecipes/edit', views.ProfileRecipesEdit.as_view(), name='profile_page_recipes_edit'),
     path('users/<slug:username>/myfollowers/', views.ProfileFollowers.as_view(), name='profile_page_followers'),
     path('users/<slug:username>/myfavourites/', views.ProfileFavourites.as_view(), name='profile_page_favourites'),
 ]

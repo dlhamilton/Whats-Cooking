@@ -389,15 +389,15 @@ background-color: #0dcaf0!important;
 /* 
 Check box design
 */
-#id_filter_query{
+.recipe-page #id_filter_query{
     padding: 0!important;
 }
 
-input[type="checkbox"] {
+.recipe-page input[type="checkbox"] {
     display: none;
 }
 
-#id_filter_query li {
+.recipe-page #id_filter_query li {
     display: inline;
     text-transform: capitalize;
 }
