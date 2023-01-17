@@ -49,9 +49,16 @@
       {% if page_name.user_recipes.count > 0 %}
       <ul>
         {% for recipe in page_name.user_recipes.all %}
-        <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
-        <li>{{ recipe }}</li>
-      </a>
+        <li>
+          <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+        {{ recipe }}
+          {% if recipe.status == 0 %}
+          <i class="fa-solid fa-link-slash"></i>
+          {% endif %}
+</a>
+          <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link"><div class="btn btn-primary">Edit</div></a>
+        </li>
+      
         {% endfor %}
       </ul>
       {% else %}

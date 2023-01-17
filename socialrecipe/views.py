@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm
 from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
 from django.template import loader
@@ -403,25 +403,73 @@ class ProfileRecipesEdit(View):
     form_class = AddToRecipeForm
     paginate_by = 10  # Show 10 ingredients per page
 
-    def get(self, request, username, *args, **kwargs):
+    def ingredientPaginate(self,request, search_term):
+        page = request.GET.get('page') or 1
+        ingredients = Ingredients.objects.filter(approved=True)
+        if search_term:
+            ingredients = ingredients.filter(name__icontains=search_term)
+        paginator = Paginator(ingredients, self.paginate_by)
+        paginator = paginator.get_page(page)
+        return {'paginator': paginator,
+                'results_count': len(ingredients), }
+
+    def get(self, request, username, recipe, *args, **kwargs):
         if username == request.user.username:
-
+            the_recipe = get_object_or_404(Recipes,slug=recipe)
             form = self.form_class(request.GET)
+            add_ingredients_form = RecipeItemsForm()
             search_term = form.data.get('search_term')
-            page = request.GET.get('page') or 1
-            ingredients = Ingredients.objects.filter(approved=True)
-            if search_term:
-                ingredients = ingredients.filter(name__icontains=search_term)
-            paginator = Paginator(ingredients, self.paginate_by)
-            paginator = paginator.get_page(page)
-
-            # form.fields['filter_query'].queryset = ingredients  # set the queryset to the filtered queryset
-
+            recipe_ingredients = the_recipe.recipe_items.filter()
             p_details = profile_details(self.request, username)
+            p_details.update(self.ingredientPaginate(self.request, search_term))
             p_details.update({"logged_in_user": request.user,
                               'form': form,
-                              'paginator': paginator,
-                              'results_count': len(ingredients), })
+                              'i_form': add_ingredients_form,
+                              'recipe_ingredients':recipe_ingredients,
+                              'recipe': the_recipe,
+                              })
+            return render(
+                request,
+                "user_recipes_edit.html",
+                p_details
+            )
+        else:
+            if request.user.is_authenticated:
+                return HttpResponseRedirect(
+                    reverse(
+                        'profile_page',
+                        kwargs={'username': request.user.username}))
+            return HttpResponseRedirect(reverse('home'))
+
+    def post(self, request, username, recipe, *args, **kwargs):
+        if username == request.user.username:
+            add_ingredients_form = RecipeItemsForm(data=request.POST)
+            # text = add_ingredients_form.fields['ingredients']
+            # the_ingredient = get_object_or_404(Ingredients, name=text)
+            the_recipe = get_object_or_404(Recipes, slug=recipe)
+            
+            if add_ingredients_form.is_valid():
+                add_ingredients_form.instance.recipe = the_recipe
+                # add_ingredients_form.instance.ingredients = the_ingredient
+                recipe_item = add_ingredients_form.save(commit=False)
+                recipe_item.save()
+                messages.success(request, 'Ingredient Added')
+            else:
+                add_ingredients_form = RecipeItemsForm()
+                messages.error(request, 'Error With Ingredient')
+
+            form = self.form_class(request.GET)
+            add_ingredients_form = RecipeItemsForm()
+            search_term = form.data.get('search_term')
+            recipe_ingredients = the_recipe.recipe_items.filter()
+            p_details = profile_details(self.request, username)
+            p_details.update(self.ingredientPaginate(self.request, search_term))
+            p_details.update({"logged_in_user": request.user,
+                              'form': form,
+                              'i_form': add_ingredients_form,
+                              'recipe_ingredients':recipe_ingredients,
+                              'recipe': the_recipe,
+                              })
             return render(
                 request,
                 "user_recipes_edit.html",

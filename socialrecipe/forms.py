@@ -1,4 +1,4 @@
-from .models import Comments, Ingredients, Recipes
+from .models import Comments, Ingredients, Recipes, RecipeItems, Units
 from django import forms
 
 
@@ -42,3 +42,19 @@ class AddToRecipeForm(forms.Form):
     #     queryset=Ingredients.objects.filter(approved=True).order_by('name'),
     #     widget=forms.CheckboxSelectMultiple
     # )
+
+
+class RecipeItemsForm(forms.ModelForm):
+    class Meta:
+        model = RecipeItems
+        fields = ['ingredients', 'amount', 'unit']
+        widgets = {
+        'ingredients': forms.TextInput(attrs={'id': 'recipient-name'}),
+        }
+
+    unit = forms.ModelChoiceField(queryset=Units.objects.all())
+   
+    def __init__(self, *args, **kwargs):
+        super(RecipeItemsForm, self).__init__(*args, **kwargs)
+        self.fields['unit'].empty_label = "Select Unit"
+        self.fields['ingredients'].widget.attrs.update({'id': 'ingredient-name'})

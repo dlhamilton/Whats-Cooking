@@ -20,7 +20,7 @@
 
   <div class="row">
     <div class="col">
-      <h1>Edit Recipe</h1>
+      <h1>Edit Recipe - {{ recipe }}</h1>
     </div>
   </div>
 
@@ -45,7 +45,7 @@
           {% for ingredients in paginator %}
 
           <li>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-whatever="{{ ingredients }}">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-ingredient_id="{{ ingredients.id }}" data-bs-ingredient="{{ ingredients }}">
               {{ ingredients.id }} - {{ ingredients }}
             </button> 
             </li>
@@ -75,6 +75,37 @@
       </div>
     </div>
   </div>
+
+  <div class="row">
+    <div class="d-inline col-12 ">
+
+        <h3>Ingredients:</h3>
+        {% if recipe_ingredients|length != 0 %}
+        <ul>
+            {% for ingredients_item in recipe_ingredients %}
+            {% if ingredients_item.ingredients.approved == True %}
+            <li class="mb-2">{{ ingredients_item.amount|floatformat:"0"  }}
+                {{ ingredients_item.unit }}
+                <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>  (test {{ ingredients_item.id }})</li>
+            {% else %}
+            <li class="mb-2">{{ ingredients_item.amount|floatformat:"0"  }}
+                {{ ingredients_item.unit }}
+                <span
+                    class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
+            </li>
+            {% endif %}
+            {% endfor %}
+            <!-- {{ ingredients }} -->
+        </ul>
+        {% else %}
+
+        <h4>No Ingredients</h4>
+
+{% endif %}
+    </div>
+</div>
+
+
 </div>
 
 <!-- Modal -->
@@ -83,27 +114,30 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <h5 class="modal-title text-capitalize" id="staticBackdropLabel">Modal title</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <form method="post">
       <div class="modal-body">
         <!--  -->
-        <form>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Recipient:</label>
-            <input type="text" class="form-control" id="recipient-name">
+        
+          <div class="mb-3 ingredient_input">
+            {{ i_form.ingredients }} 
           </div>
           <div class="mb-3">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
+            {{ i_form.amount }} 
           </div>
-        </form>
+          <div class="mb-3">
+            {{ i_form.unit }} 
+          </div>
+          {% csrf_token %}
         <!--  -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
+        <button type="submit" class="btn btn-primary">Add Ingredient</button>
       </div>
+    </form>
     </div>
   </div>
 </div>
@@ -114,16 +148,19 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
   // Button that triggered the modal
   var button = event.relatedTarget
   // Extract info from data-bs-* attributes
-  var recipient = button.getAttribute('data-bs-whatever')
+  var ingredients = button.getAttribute('data-bs-ingredient')
+  var ingredients_id = button.getAttribute('data-bs-ingredient_id')
   // If necessary, you could initiate an AJAX request here
   // and then do the updating in a callback.
   //
   // Update the modal's content.
   var modalTitle = exampleModal.querySelector('.modal-title')
-  var modalBodyInput = exampleModal.querySelector('.modal-body input')
+  var modalBodyInput = exampleModal.querySelector('.modal-body .ingredient_input input')
 
-  modalTitle.textContent = 'New message to ' + recipient
-  modalBodyInput.value = recipient
+  modalTitle.textContent = ingredients
+  modalBodyInput.value = ingredients_id
+  document.getElementById("id_amount").value = "";
+  document.getElementById("id_unit").selectedIndex = 0;
 })
 </script>
 
