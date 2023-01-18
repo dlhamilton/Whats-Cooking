@@ -7,8 +7,8 @@
   <div class="row">
     <div class="col">
       <div class="basic">
-        {% include "logged_in_user_card.html" %}    
-        </div>
+        {% include "logged_in_user_card.html" %}
+      </div>
     </div>
   </div>
 
@@ -33,12 +33,12 @@
   <div class="row">
     <div class="col">
       <div class="col-md-8 mt-3 offset-md-2 mb-4">
-      <form method="post" style="margin-top: 1.3em;">
-        {{ add_form | crispy }}
-        {% csrf_token %}
-        <button type="submit" class="btn btn-wc-green btn-lg mt-1">Submit Comment</button>
-    </form>
-  </div>
+        <form method="post" style="margin-top: 1.3em;">
+          {{ add_form | crispy }}
+          {% csrf_token %}
+          <button type="submit" class="btn btn-wc-green btn-lg mt-1">Submit Recipe</button>
+        </form>
+      </div>
     </div>
   </div>
 

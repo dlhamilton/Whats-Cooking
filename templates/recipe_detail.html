@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row g-0">
             <div class="col-md-6 masthead-text">
-                <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'recipes' %}">
+                <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{{ request.META.HTTP_REFERER }}">
                         <i class="fa-solid fa-chevron-left"></i>Back</a></span>
                 <!-- Post title goes in these h1 tags -->
                 <h1 class="post-title text-capitalize">
@@ -24,7 +24,15 @@
                     </span>
                 </h2>
                 <p class="post-subtitle">Uploaded: {{ recipe.upload_date|date:"d/m/Y" }}</p>
+                {% if user == recipe.author %}
+                <div class="post-subtitle">
+                    <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link">
+                        <div class="btn btn-primary">Edit</div>
+                    </a>
+                </div>
+                {% endif %}
             </div>
+            
             <div class="d-none d-md-block col-md-6 masthead-image">
                 <!-- The featured image URL goes in the src attribute -->
                 {% if "placeholder" in recipe.recipe_image.url %}

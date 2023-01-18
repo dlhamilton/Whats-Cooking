@@ -418,6 +418,7 @@ class ProfileRecipesEdit(View):
             the_recipe = get_object_or_404(Recipes,slug=recipe)
             form = self.form_class(request.GET)
             add_ingredients_form = RecipeItemsForm()
+            edit_form = RecipesForm(instance=the_recipe)
             search_term = form.data.get('search_term')
             recipe_ingredients = the_recipe.recipe_items.filter()
             p_details = profile_details(self.request, username)
@@ -425,7 +426,8 @@ class ProfileRecipesEdit(View):
             p_details.update({"logged_in_user": request.user,
                               'form': form,
                               'i_form': add_ingredients_form,
-                              'recipe_ingredients':recipe_ingredients,
+                              'edit_form': edit_form,
+                              'recipe_ingredients': recipe_ingredients,
                               'recipe': the_recipe,
                               })
             return render(
@@ -443,35 +445,65 @@ class ProfileRecipesEdit(View):
 
     def post(self, request, username, recipe, *args, **kwargs):
         if username == request.user.username:
-            add_ingredients_form = RecipeItemsForm(data=request.POST)
-            # text = add_ingredients_form.fields['ingredients']
-            # the_ingredient = get_object_or_404(Ingredients, name=text)
-            the_recipe = get_object_or_404(Recipes, slug=recipe)
-            
-            if add_ingredients_form.is_valid():
-                if RecipeItems.objects.filter(recipe=the_recipe,
-                                              ingredients=add_ingredients_form.instance.ingredients):
-                    
-                    id = RecipeItems.objects.filter(recipe=the_recipe,ingredients=add_ingredients_form.instance.ingredients).values('id').first()['id']
-                    record = get_object_or_404(RecipeItems, id=id)
-                    record.delete()
 
-                    add_ingredients_form.instance.recipe = the_recipe
+            the_recipe = get_object_or_404(Recipes, slug=recipe)
+            if 'the_recipe_form' in request.POST:
+                recipe_form = RecipesForm(data=request.POST, instance=the_recipe)
+                if recipe_form.is_valid():
+
+                    recipe_form.instance.author = request.user
+
+                    title = recipe_form.cleaned_data['title']
                     
-                    recipe_item = add_ingredients_form.save(commit=False)
-                    recipe_item.save()
-                    messages.warning(request, 'Ingredient Amount Updated')
-                    return HttpResponseRedirect(request.path)
+                    slug = slugify(title)
+
+                    if recipe_form.cleaned_data['publish'] is True:
+                        recipe_form.instance.status = 1
+                    else:
+                        recipe_form.instance.status = 0
+                    recipe = recipe_form.save(commit=False)
+                    recipe.slug = slug
+                    recipe.save()
+                    messages.success(request, 'Recipe Updated')
+                    return HttpResponseRedirect(reverse('profile_page_recipes_edit', kwargs={'username':recipe.author, 'recipe': recipe.slug}))
                 else:
-                    add_ingredients_form.instance.recipe = the_recipe
-                    # add_ingredients_form.instance.ingredients = the_ingredient
-                    recipe_item = add_ingredients_form.save(commit=False)
-                    recipe_item.save()
-                    messages.success(request, 'Ingredient Added')
-                    return HttpResponseRedirect(request.path)
+                    add_ingredients_form = RecipeItemsForm()
+                    recipe_form = RecipesForm(instance=the_recipe)
+                    messages.error(request, 'Error With Recipe')
             else:
-                add_ingredients_form = RecipeItemsForm()
-                messages.error(request, 'Error With Ingredient')
+                add_ingredients_form = RecipeItemsForm(data=request.POST)
+                if add_ingredients_form.is_valid():
+                    if RecipeItems.objects.filter(recipe=the_recipe,
+                                                ingredients=add_ingredients_form.instance.ingredients):
+                        
+                        id = RecipeItems.objects.filter(recipe=the_recipe,ingredients=add_ingredients_form.instance.ingredients).values('id').first()['id']
+                        record = get_object_or_404(RecipeItems, id=id)
+                        record.delete()
+
+                        add_ingredients_form.instance.recipe = the_recipe
+                        
+                        recipe_item = add_ingredients_form.save(commit=False)
+                        recipe_item.save()
+                        messages.warning(request, 'Ingredient Amount Updated')
+                        return HttpResponseRedirect(request.path)
+                    else:
+                        add_ingredients_form.instance.recipe = the_recipe
+                        # add_ingredients_form.instance.ingredients = the_ingredient
+                        recipe_item = add_ingredients_form.save(commit=False)
+                        recipe_item.save()
+                        messages.success(request, 'Ingredient Added')
+                        return HttpResponseRedirect(request.path)
+                else:
+                    add_ingredients_form = RecipeItemsForm()
+                    recipe_form = RecipesForm(instance=the_recipe)
+                    messages.error(request, 'Error With Ingredient')
+
+
+            
+            
+
+
+
 
             form = self.form_class(request.GET)
             add_ingredients_form = RecipeItemsForm()
@@ -482,6 +514,7 @@ class ProfileRecipesEdit(View):
             p_details.update({"logged_in_user": request.user,
                               'form': form,
                               'i_form': add_ingredients_form,
+                              'edit_form': recipe_form,
                               'recipe_ingredients':recipe_ingredients,
                               'recipe': the_recipe,
                               })

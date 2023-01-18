@@ -31,6 +31,20 @@
   </div>
 
   <div class="row">
+    <div class="col">
+      <div class="col-md-8 mt-3 offset-md-2 mb-4">
+        <form method="post" style="margin-top: 1.3em;">
+          {{ edit_form | crispy }}
+          {% csrf_token %}
+          <input type="hidden" name="the_recipe_form" value="the_recipe_form">
+          
+          <button type="submit" class="btn btn-wc-green btn-lg mt-1">Update Recipe</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-12 col-md-6 d-inline">
       <div class="col-md-10 offset-md-1 mb-4">
         <div class="row">
@@ -60,7 +74,7 @@
           {% for ingredients in paginator %}
 
           <li class="my-1 w-100 list-group-item">
-            <button type="button" class="btn btn-primary btn-block w-100 text-capitalize" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+            <button type="button" class="btn btn-primary btn-block w-100 text-capitalize" data-bs-toggle="modal" data-bs-target="#im_staticBackdrop"
               data-bs-ingredient_id="{{ ingredients.id }}" data-bs-ingredient="{{ ingredients }}">
               {{ ingredients }}
             </button>
@@ -132,12 +146,12 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade ingredient_modal" id="im_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="im_staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title text-capitalize" id="staticBackdropLabel">Modal title</h5>
+        <h5 class="modal-title text-capitalize" id="im_staticBackdropLabel">Modal title</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form method="post">
@@ -166,7 +180,7 @@
 </div>
 
 <script>
-  var exampleModal = document.getElementById('staticBackdrop')
+  var exampleModal = document.getElementById('im_staticBackdrop')
   exampleModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget
@@ -177,8 +191,8 @@
     // and then do the updating in a callback.
     //
     // Update the modal's content.
-    var modalTitle = exampleModal.querySelector('.modal-title')
-    var modalBodyInput = exampleModal.querySelector('.modal-body .ingredient_input input')
+    var modalTitle = exampleModal.querySelector('.ingredient_modal .modal-title')
+    var modalBodyInput = exampleModal.querySelector('.ingredient_modal .modal-body .ingredient_input input')
 
     modalTitle.textContent = ingredients
     modalBodyInput.value = ingredients_id
