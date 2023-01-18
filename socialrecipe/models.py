@@ -7,6 +7,8 @@ from allauth.account.signals import user_signed_up
 from django.contrib.auth.models import Group
 from django.dispatch import receiver
 from django.db.models import Avg
+from decimal import Decimal
+from django.core.validators import MinValueValidator
 
 RECIPE_STATUS = ((0, "Draft"), (1, "Published"), (2, "Hidden"), (3, "Removed"))
 USER_STATUS = ((0, "Suspended"), (1, "Standard"), (2, "Bronze"), (3, "Silver"), (4, "Gold"), (5, "Platnium"))
@@ -157,7 +159,7 @@ class RecipeItems(models.Model):
     '''
     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name="recipe_items")
     ingredients = models.ForeignKey(Ingredients, on_delete=models.CASCADE, related_name="recipe_items")
-    amount = models.DecimalField(max_digits=5, decimal_places=2)
+    amount = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(Decimal('0.01'))])
     unit = models.ForeignKey(Units, on_delete=models.CASCADE, related_name="recipe_items")
 
     def __str__(self):

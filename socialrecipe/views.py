@@ -4,7 +4,7 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments
+from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems
 from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm
 from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
@@ -449,11 +449,26 @@ class ProfileRecipesEdit(View):
             the_recipe = get_object_or_404(Recipes, slug=recipe)
             
             if add_ingredients_form.is_valid():
-                add_ingredients_form.instance.recipe = the_recipe
-                # add_ingredients_form.instance.ingredients = the_ingredient
-                recipe_item = add_ingredients_form.save(commit=False)
-                recipe_item.save()
-                messages.success(request, 'Ingredient Added')
+                if RecipeItems.objects.filter(recipe=the_recipe,
+                                              ingredients=add_ingredients_form.instance.ingredients):
+                    
+                    id = RecipeItems.objects.filter(recipe=the_recipe,ingredients=add_ingredients_form.instance.ingredients).values('id').first()['id']
+                    record = get_object_or_404(RecipeItems, id=id)
+                    record.delete()
+
+                    add_ingredients_form.instance.recipe = the_recipe
+                    
+                    recipe_item = add_ingredients_form.save(commit=False)
+                    recipe_item.save()
+                    messages.warning(request, 'Ingredient Amount Updated')
+                    return HttpResponseRedirect(request.path)
+                else:
+                    add_ingredients_form.instance.recipe = the_recipe
+                    # add_ingredients_form.instance.ingredients = the_ingredient
+                    recipe_item = add_ingredients_form.save(commit=False)
+                    recipe_item.save()
+                    messages.success(request, 'Ingredient Added')
+                    return HttpResponseRedirect(request.path)
             else:
                 add_ingredients_form = RecipeItemsForm()
                 messages.error(request, 'Error With Ingredient')
@@ -482,6 +497,13 @@ class ProfileRecipesEdit(View):
                         'profile_page',
                         kwargs={'username': request.user.username}))
             return HttpResponseRedirect(reverse('home'))
+
+    def delete(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        id = data.get('id')
+        record = get_object_or_404(RecipeItems, id=id)
+        record.delete()
+        return JsonResponse({"message": id}, status=200)
 
 
 class ProfileFollowers(View):

@@ -31,29 +31,45 @@
   </div>
 
   <div class="row">
-    <div class="col">
-      <div class="col-md-8 mt-3 offset-md-2 mb-4">
+    <div class="col-12 col-md-6 d-inline">
+      <div class="col-md-10 offset-md-1 mb-4">
+        <div class="row">
+          <h3 class="col">Search Ingredients:</h3>
+        </div>
 
-        <form method="get">
-          {{ form.search_term }}
-          <input type="submit" value="Search">
+        <div class="row mt-2 mb-3">
+          <div class="col">
+            <form class="col" method="get">
+              {{ form.search_term }}
+              <input type="submit" value="Search">
+            </form>
+        </div>
+        </div>
 
-        </form>
+        <div class="row mt-2 mb-3">
+          <div class="col">
+          [{{ results_count }}] search results found
+        </div>
+        </div>
 
-        <ul>
-          {{ results_count }}
+
+
+
+        <ul class="list-group">
+
           {% for ingredients in paginator %}
 
-          <li>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" data-bs-ingredient_id="{{ ingredients.id }}" data-bs-ingredient="{{ ingredients }}">
-              {{ ingredients.id }} - {{ ingredients }}
-            </button> 
-            </li>
+          <li class="my-1 w-100 list-group-item">
+            <button type="button" class="btn btn-primary btn-block w-100 text-capitalize" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+              data-bs-ingredient_id="{{ ingredients.id }}" data-bs-ingredient="{{ ingredients }}">
+              {{ ingredients }}
+            </button>
+          </li>
           {% endfor %}
         </ul>
 
 
-        <div class="pagination">
+        <div class="pagination d-flex justify-content-center">
           {% if paginator.has_previous %}
           {% if form.search_term.value %}
           <a href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}">Previous</a>
@@ -61,7 +77,7 @@
           <a href="?page={{ paginator.previous_page_number }}">Previous</a>
           {% endif %}
           {% endif %}
-          <span class="current-page">Page {{ paginator.number }} of {{ paginator.paginator.num_pages }}</span>
+          <span class="current-page mx-3">Page {{ paginator.number }} of {{ paginator.paginator.num_pages }}</span>
           {% if paginator.has_next %}
           {% if form.search_term.value %}
           <a href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}">Next</a>
@@ -74,36 +90,43 @@
 
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="d-inline col-12 ">
-
-        <h3>Ingredients:</h3>
-        {% if recipe_ingredients|length != 0 %}
-        <ul>
-            {% for ingredients_item in recipe_ingredients %}
-            {% if ingredients_item.ingredients.approved == True %}
-            <li class="mb-2">{{ ingredients_item.amount|floatformat:"0"  }}
-                {{ ingredients_item.unit }}
-                <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>  (test {{ ingredients_item.id }})</li>
-            {% else %}
-            <li class="mb-2">{{ ingredients_item.amount|floatformat:"0"  }}
-                {{ ingredients_item.unit }}
-                <span
-                    class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
-            </li>
-            {% endif %}
-            {% endfor %}
-            <!-- {{ ingredients }} -->
-        </ul>
+    <div class="col-12 col-md-6 text-center d-inline">
+      <div class="col-md-10 offset-md-1 mb-4">
+      <h3>Ingredients:</h3>
+      {% if recipe_ingredients|length != 0 %}
+      <ul class="list-group">
+        {% for ingredients_item in recipe_ingredients %}
+        {% if ingredients_item.ingredients.approved == True %}
+        <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">{{ ingredients_item.amount|floatformat:"0"  }}
+          {{ ingredients_item.unit }}
+          <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span> (test
+          {{ ingredients_item.id }}) <span class="post-link-green"><i class="fa-solid fa-ban "
+              onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
+        </li>
         {% else %}
+        <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">{{ ingredients_item.amount|floatformat:"0"  }}
+          {{ ingredients_item.unit }}
+          <span
+            class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
+          <span class="post-link-green"><i class="fa-solid fa-ban"
+              onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
+        </li>
+        {% endif %}
+        {% endfor %}
+        <!-- {{ ingredients }} -->
+      </ul>
+      {% else %}
 
-        <h4>No Ingredients</h4>
+      <h4>No Ingredients</h4>
 
-{% endif %}
+      {% endif %}
     </div>
+  </div>
 </div>
+  <div class="row">
+
+  </div>
 
 
 </div>
@@ -118,50 +141,92 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form method="post">
-      <div class="modal-body">
-        <!--  -->
-        
-          <div class="mb-3 ingredient_input">
-            {{ i_form.ingredients }} 
+        <div class="modal-body">
+          <!--  -->
+
+          <div class="mb-3 ingredient_input d-none">
+            {{ i_form.ingredients }}
           </div>
           <div class="mb-3">
-            {{ i_form.amount }} 
+            {{ i_form.amount }}
           </div>
           <div class="mb-3">
-            {{ i_form.unit }} 
+            {{ i_form.unit }}
           </div>
           {% csrf_token %}
-        <!--  -->
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Add Ingredient</button>
-      </div>
-    </form>
+          <!--  -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Add Ingredient</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
 <script>
   var exampleModal = document.getElementById('staticBackdrop')
-exampleModal.addEventListener('show.bs.modal', function (event) {
-  // Button that triggered the modal
-  var button = event.relatedTarget
-  // Extract info from data-bs-* attributes
-  var ingredients = button.getAttribute('data-bs-ingredient')
-  var ingredients_id = button.getAttribute('data-bs-ingredient_id')
-  // If necessary, you could initiate an AJAX request here
-  // and then do the updating in a callback.
-  //
-  // Update the modal's content.
-  var modalTitle = exampleModal.querySelector('.modal-title')
-  var modalBodyInput = exampleModal.querySelector('.modal-body .ingredient_input input')
+  exampleModal.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    var button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    var ingredients = button.getAttribute('data-bs-ingredient')
+    var ingredients_id = button.getAttribute('data-bs-ingredient_id')
+    // If necessary, you could initiate an AJAX request here
+    // and then do the updating in a callback.
+    //
+    // Update the modal's content.
+    var modalTitle = exampleModal.querySelector('.modal-title')
+    var modalBodyInput = exampleModal.querySelector('.modal-body .ingredient_input input')
 
-  modalTitle.textContent = ingredients
-  modalBodyInput.value = ingredients_id
-  document.getElementById("id_amount").value = "";
-  document.getElementById("id_unit").selectedIndex = 0;
-})
+    modalTitle.textContent = ingredients
+    modalBodyInput.value = ingredients_id
+    document.getElementById("id_amount").value = "";
+    document.getElementById("id_unit").selectedIndex = 0;
+  })
+
+  function removeIngredients(id) {
+    let valid;
+    let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+    fetch(`{% url 'profile_page_recipes_edit' user.username recipe.slug %}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrf_token,
+        },
+        body: JSON.stringify({
+          'id': id
+        })
+      })
+      .then(response => {
+        if (response.ok) {
+          valid = response
+          return response.json();
+        }
+        throw new Error(response.statusText);
+      })
+      .then(data => {
+        console.log(data.message);
+        console.log(valid);
+        if (valid.ok) {
+          //find the comment element
+          let comment = document.querySelector(`[data-comment_id="${id}"]`);
+          //remove the comment element from the comments section
+          comment.innerHTML = `<div class="alert alert-warning" role="alert">
+  This ingredient has been removed.
+</div>`;
+          setTimeout(function () {
+            comment.remove();
+          }, 2500);
+
+        } else {
+          // Handle other status codes
+          console.log(data.message);
+        }
+      })
+      .catch(error => console.error(error));
+  }
 </script>
 
 {%endblock%}
