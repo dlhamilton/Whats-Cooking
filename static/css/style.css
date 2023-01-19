@@ -351,6 +351,16 @@ background-color: #0dcaf0!important;
     color:white;
 }
 
+.btn-wc-orange{
+    background-color: #FF8156;
+    color:white;
+}
+
+.btn-wc-orange:hover{
+    background-color: #a35338;
+    color:white;
+}
+
 .card-img-top{
     width: 100%;
     

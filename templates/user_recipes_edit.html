@@ -20,8 +20,16 @@
 
   <div class="row">
     <div class="col">
-      <h1>Edit Recipe - {{ recipe }}</h1>
-    </div>
+        <div class="me-auto">
+          <h1>Edit Recipe - {{ recipe }}</h1>
+        </div>
+  </div>
+</div>
+<div class="row">
+<div class="col">
+  <a href="{% url 'recipe_detail' recipe.slug %}"><button class="btn btn-secondary mx-2">Show Recipe</button></a>
+  <a href="{% url 'profile_page_recipes' user.username %}"><button class="btn btn-wc-green mx-2">Finished</button></a>
+</div>
   </div>
 
   <div class="row">
@@ -29,18 +37,46 @@
       <hr>
     </div>
   </div>
+  <div class="row">
+    <div class="col-12 d-inline">
+      <div class="col-md-10 offset-md-1 mb-4">
+        <div class="row">
+          <!-- The post content goes inside the card-text. -->
+          <!-- Use the | safe filter inside the template tags -->
+          <h3>About:</h3>
+          <p class="card-text ">
+            {{ recipe.excerpt | safe }}
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="d-inline col-md-4 offset-md-1 mb-4">
+          <div><strong>Uploaded:</strong> {{ recipe.upload_date|date:"d/m/Y" }}</div>
+          <div><i class="fa-solid fa-utensils"></i> - Serves {{ recipe.serves }}</div>
+          <div><i class="fa-solid fa-fire-burner"></i> - Prep {{ recipe.prep_time }} Mins</div>
+          <div class="mb-2"><i class="fa-solid fa-mortar-pestle"></i> - Cook {{ recipe.cook_time }} Mins</div>
+
+          <button type="button" class="btn btn-wc-orange mt-1" data-bs-toggle="modal" data-bs-target="#r_staticBackdrop">
+            Update Recipe Details
+          </button>
+
+        </div>
+        <div class="d-inline col-md-4 offset-md-1 mb-4">
+          <!-- The featured image URL goes in the src attribute -->
+          {% if "placeholder" in recipe.recipe_image.url %}
+          <img src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg" width="100%" class="rounded-3">
+          {% else %}
+          <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col">
-      <div class="col-md-8 mt-3 offset-md-2 mb-4">
-        <form method="post" style="margin-top: 1.3em;">
-          {{ edit_form | crispy }}
-          {% csrf_token %}
-          <input type="hidden" name="the_recipe_form" value="the_recipe_form">
-          
-          <button type="submit" class="btn btn-wc-green btn-lg mt-1">Update Recipe</button>
-        </form>
-      </div>
+      <hr>
     </div>
   </div>
 
@@ -55,15 +91,15 @@
           <div class="col">
             <form class="col" method="get">
               {{ form.search_term }}
-              <input type="submit" value="Search">
+              <input type="submit" value="Search" class="btn btn-dark">
             </form>
-        </div>
+          </div>
         </div>
 
         <div class="row mt-2 mb-3">
           <div class="col">
-          [{{ results_count }}] search results found
-        </div>
+            [{{ results_count }}] search results found
+          </div>
         </div>
 
 
@@ -74,8 +110,9 @@
           {% for ingredients in paginator %}
 
           <li class="my-1 w-100 list-group-item">
-            <button type="button" class="btn btn-primary btn-block w-100 text-capitalize" data-bs-toggle="modal" data-bs-target="#im_staticBackdrop"
-              data-bs-ingredient_id="{{ ingredients.id }}" data-bs-ingredient="{{ ingredients }}">
+            <button type="button" class="btn btn-primary btn-block w-100 text-capitalize" data-bs-toggle="modal"
+              data-bs-target="#im_staticBackdrop" data-bs-ingredient_id="{{ ingredients.id }}"
+              data-bs-ingredient="{{ ingredients }}">
               {{ ingredients }}
             </button>
           </li>
@@ -86,17 +123,17 @@
         <div class="pagination d-flex justify-content-center">
           {% if paginator.has_previous %}
           {% if form.search_term.value %}
-          <a href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}">Previous</a>
+          <a class="btn btn-outline-dark" href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}">Previous</a>
           {% else %}
-          <a href="?page={{ paginator.previous_page_number }}">Previous</a>
+          <a class="btn btn-outline-dark" href="?page={{ paginator.previous_page_number }}">Previous</a>
           {% endif %}
           {% endif %}
           <span class="current-page mx-3">Page {{ paginator.number }} of {{ paginator.paginator.num_pages }}</span>
           {% if paginator.has_next %}
           {% if form.search_term.value %}
-          <a href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}">Next</a>
+          <a class="btn btn-outline-dark" href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}">Next</a>
           {% else %}
-          <a href="?page={{ paginator.next_page_number }}">Next</a>
+          <a class="btn btn-outline-dark" href="?page={{ paginator.next_page_number }}">Next</a>
           {% endif %}
           {% endif %}
         </div>
@@ -107,37 +144,39 @@
 
     <div class="col-12 col-md-6 text-center d-inline">
       <div class="col-md-10 offset-md-1 mb-4">
-      <h3>Ingredients:</h3>
-      {% if recipe_ingredients|length != 0 %}
-      <ul class="list-group">
-        {% for ingredients_item in recipe_ingredients %}
-        {% if ingredients_item.ingredients.approved == True %}
-        <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">{{ ingredients_item.amount|floatformat:"0"  }}
-          {{ ingredients_item.unit }}
-          <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span> (test
-          {{ ingredients_item.id }}) <span class="post-link-green"><i class="fa-solid fa-ban "
-              onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
-        </li>
+        <h3>Ingredients:</h3>
+        {% if recipe_ingredients|length != 0 %}
+        <ul class="list-group">
+          {% for ingredients_item in recipe_ingredients %}
+          {% if ingredients_item.ingredients.approved == True %}
+          <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">
+            {{ ingredients_item.amount|floatformat:"0"  }}
+            {{ ingredients_item.unit }}
+            <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span> (test
+            {{ ingredients_item.id }}) <span class="post-link-green"><i class="fa-solid fa-ban "
+                onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
+          </li>
+          {% else %}
+          <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">
+            {{ ingredients_item.amount|floatformat:"0"  }}
+            {{ ingredients_item.unit }}
+            <span
+              class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
+            <span class="post-link-green"><i class="fa-solid fa-ban"
+                onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
+          </li>
+          {% endif %}
+          {% endfor %}
+          <!-- {{ ingredients }} -->
+        </ul>
         {% else %}
-        <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">{{ ingredients_item.amount|floatformat:"0"  }}
-          {{ ingredients_item.unit }}
-          <span
-            class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
-          <span class="post-link-green"><i class="fa-solid fa-ban"
-              onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
-        </li>
+
+        <h4>No Ingredients</h4>
+
         {% endif %}
-        {% endfor %}
-        <!-- {{ ingredients }} -->
-      </ul>
-      {% else %}
-
-      <h4>No Ingredients</h4>
-
-      {% endif %}
+      </div>
     </div>
   </div>
-</div>
   <div class="row">
 
   </div>
@@ -146,8 +185,8 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade ingredient_modal" id="im_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="im_staticBackdropLabel" aria-hidden="true">
+<div class="modal fade ingredient_modal" id="im_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="im_staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -179,9 +218,33 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade recipe_modal" id="r_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="r_staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-capitalize" id="r_staticBackdropLabel">Update {{ recipe.title }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" style="margin-top: 1.3em;">
+        <div class="modal-body">
+          {{ edit_form | crispy }}
+          {% csrf_token %}
+          <input type="hidden" name="the_recipe_form" value="the_recipe_form">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-wc-green">Update Recipe</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
-  var exampleModal = document.getElementById('im_staticBackdrop')
-  exampleModal.addEventListener('show.bs.modal', function (event) {
+  var imModal = document.getElementById('im_staticBackdrop')
+  imModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget
     // Extract info from data-bs-* attributes
@@ -191,13 +254,18 @@
     // and then do the updating in a callback.
     //
     // Update the modal's content.
-    var modalTitle = exampleModal.querySelector('.ingredient_modal .modal-title')
-    var modalBodyInput = exampleModal.querySelector('.ingredient_modal .modal-body .ingredient_input input')
+    var modalTitle = imModal.querySelector('.ingredient_modal .modal-title')
+    var modalBodyInput = imModal.querySelector('.ingredient_modal .modal-body .ingredient_input input')
 
     modalTitle.textContent = ingredients
     modalBodyInput.value = ingredients_id
     document.getElementById("id_amount").value = "";
     document.getElementById("id_unit").selectedIndex = 0;
+  })
+
+  var rModal = document.getElementById('r_staticBackdrop')
+  rModal.addEventListener('show.bs.modal', function (event) {
+
   })
 
   function removeIngredients(id) {
