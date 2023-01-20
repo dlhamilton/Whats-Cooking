@@ -1,5 +1,7 @@
-from .models import Comments, Ingredients, Recipes, RecipeItems, Units
 from django import forms
+from cloudinary.forms import CloudinaryInput
+from cloudinary.models import CloudinaryField
+from .models import Comments, Ingredients, Recipes, RecipeItems, Units
 
 
 class CommentsForm(forms.ModelForm):
@@ -9,8 +11,9 @@ class CommentsForm(forms.ModelForm):
 
 
 class RecipesForm(forms.ModelForm):
-    publish = forms.BooleanField(initial=False, required=False, 
-                    widget=forms.CheckboxInput(attrs={'label': 'Publish'}))
+    publish = forms.BooleanField(initial=False, required=False, widget=forms.CheckboxInput(attrs={'label': 'Publish'}))
+    
+    recipe_image = CloudinaryField('image')
     
     class Meta:
         model = Recipes
@@ -20,6 +23,11 @@ class RecipesForm(forms.ModelForm):
                   'prep_time',
                   'cook_time',
                   'serves',)
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.status == 1:
+            self.fields['publish'].initial = True
 
 
 class SearchRecipeForm(forms.Form):

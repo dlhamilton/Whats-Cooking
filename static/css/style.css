@@ -447,6 +447,17 @@ Check box design
 }
 /* End Checkbox */
 
+
+/* 
+form checkbox recipe
+*/
+
+#div_id_publish{
+    margin-top: 1rem;
+}
+
+/*  */
+
 /* list of searchged items */
 
 #id_filter_items ul{

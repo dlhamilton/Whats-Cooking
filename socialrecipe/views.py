@@ -13,6 +13,7 @@ from django.contrib import messages
 import json
 from django.utils.text import slugify
 from django.core.paginator import Paginator
+from cloudinary.forms import cl_init_js_callbacks
 
 
 class HomeList(View):
@@ -361,7 +362,7 @@ class ProfileRecipesAdd(View):
     def post(self, request, username, *args, **kwargs):
         if username == request.user.username:
 
-            recipe_form = RecipesForm(data=request.POST)
+            recipe_form = RecipesForm(data=request.POST, files=request.FILES)
             if recipe_form.is_valid():
 
                 recipe_form.instance.author = request.user
@@ -374,6 +375,8 @@ class ProfileRecipesAdd(View):
                     recipe_form.instance.status = 1
                 recipe = recipe_form.save(commit=False)
                 recipe.slug = slug
+                if 'recipe_image' in request.FILES:
+                    recipe.recipe_image = request.FILES['recipe_image']
                 recipe.save()
                 messages.success(request, 'Recipe Added')
                 valid_recipe = True
@@ -448,7 +451,7 @@ class ProfileRecipesEdit(View):
 
             the_recipe = get_object_or_404(Recipes, slug=recipe)
             if 'the_recipe_form' in request.POST:
-                recipe_form = RecipesForm(data=request.POST, instance=the_recipe)
+                recipe_form = RecipesForm(data=request.POST, files=request.FILES, instance=the_recipe)
                 if recipe_form.is_valid():
 
                     recipe_form.instance.author = request.user
@@ -463,6 +466,8 @@ class ProfileRecipesEdit(View):
                         recipe_form.instance.status = 0
                     recipe = recipe_form.save(commit=False)
                     recipe.slug = slug
+                    if 'recipe_image' in request.FILES:
+                        recipe.recipe_image = request.FILES['recipe_image']
                     recipe.save()
                     messages.success(request, 'Recipe Updated')
                     return HttpResponseRedirect(reverse('profile_page_recipes_edit', kwargs={'username':recipe.author, 'recipe': recipe.slug}))
