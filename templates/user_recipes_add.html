@@ -37,7 +37,10 @@
         <form method="post" style="margin-top: 1.3em;" enctype="multipart/form-data">
           {{ add_form | crispy }}
           {% csrf_token %}
-          <button type="submit" class="btn btn-wc-green btn-lg mt-1">Submit Recipe</button>
+          <a class="text-decoration-none text-reset" href="{% url 'profile_page_recipes' page_name.username %}">
+            <button type="button" class="btn btn-secondary">Close</button>
+            </a>
+          <button type="submit" class="btn btn-wc-green mt-1">Submit Recipe</button>
         </form>
       </div>
     </div>

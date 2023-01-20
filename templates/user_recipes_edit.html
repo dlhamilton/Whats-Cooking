@@ -147,9 +147,9 @@
       </div>
     </div>
 
-    <div class="col-12 col-md-6 text-center d-inline">
+    <div class="col-12 col-md-6 text-center d-inline" id="ingredients_section">
       <div class="col-md-10 offset-md-1 mb-4">
-        <h3>Ingredients:</h3>
+        <h3>Ingredients: {{ go_to_id_id }}</h3>
         {% if recipe_ingredients|length != 0 %}
         <ul class="list-group">
           {% for ingredients_item in recipe_ingredients %}
@@ -314,6 +314,15 @@
       })
       .catch(error => console.error(error));
   }
+
+  {% if go_to_id_id %}
+  window.onload = function() {
+      var element = document.getElementById("{{ go_to_id_id }}");
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+  {% endif %}
 </script>
 
 {%endblock%}
