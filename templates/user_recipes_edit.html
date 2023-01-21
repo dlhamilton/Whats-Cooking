@@ -153,7 +153,7 @@
 
     <div class="col-12 col-md-6 text-center d-inline" id="ingredients_section">
       <div class="col-md-10 offset-md-1 mb-4">
-        <h3>Ingredients:</h3>
+        <h3>Ingredients:  {{ drop_to }}</h3>
         {% if recipe_ingredients|length != 0 %}
         <ul class="list-group">
           {% for ingredients_item in recipe_ingredients %}
@@ -193,7 +193,7 @@
     </div>
   </div>
   <!-- method section -->
-  <div class="row">
+  <div class="row" id="method_section_area">
     <div class="col-12 col-md-6 d-inline">
       <div class="col-md-10 offset-md-1 mb-4">
         <div class="row" id="method_section">
@@ -206,7 +206,7 @@
               {% csrf_token %}
               <input type="hidden" name="the_method_form" value="the_method_form">
 
-              <input type="submit" value="Add" class="btn btn-dark">
+              <input type="submit" value="Add" class="btn btn-wc-orange mt-2">
             </form>
           </div>
         </div>
@@ -222,11 +222,18 @@
         <ul class="list-group">
         {% for method in the_methods %}
         <li class="mb-2 list-group-item" data-method_id="{{ method.id }}">
-        {{ method.order }} {{ method.method }}
+        {{ method.order }} <p>{{ method.method|safe }}</p>
+        <!-- <p></p> -->
+          <button type="button" class="btn" data-bs-toggle="modal"
+              data-bs-target="#mm_staticBackdrop" data-bs-method_id="{{ method.id }}" data-bs-method="{{ method.method }}" data-bs-method_order="{{ method.order }}">
+              <span class="post-link-green">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </span>
+            </button>
       </li>
         {% endfor %}
       </ul>
-      <button class="btn btn-primary" id="remove-method">Click me</button>
+      <button class="btn btn-danger" id="remove-method">Remove Method</button>
         {% else %}
 
         <h4>No Methods</h4>
@@ -308,6 +315,31 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade method_modal" id="mm_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="mm_staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-capitalize" id="mm_staticBackdropLabel">Modal Title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" style="margin-top: 1.3em;" enctype="multipart/form-data">
+        <div class="modal-body">
+          {{ method_form | crispy }}
+          {% csrf_token %}
+          <input type="hidden" name="the_method_form" value="the_method_form">
+          <input type="hidden" name="the_method_form_id" id="the_method_form_id" value="">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-wc-green">Update Methods</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
   var imModal = document.getElementById('im_staticBackdrop')
   imModal.addEventListener('show.bs.modal', function (event) {
@@ -332,6 +364,24 @@
   var rModal = document.getElementById('r_staticBackdrop')
   rModal.addEventListener('show.bs.modal', function (event) {
 
+  })
+
+  var mmModal = document.getElementById('mm_staticBackdrop')
+  mmModal.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget
+
+    var methods_order = button.getAttribute('data-bs-method_order')
+    var methods = button.getAttribute('data-bs-method')
+    var methods_id = button.getAttribute('data-bs-method_id')
+   
+    
+    var modalTitle = mmModal.querySelector('.method_modal .modal-title')
+    var modalBodyInput = mmModal.querySelector('.method_modal .modal-body textarea')
+
+    document.getElementById("the_method_form_id").value = methods_id;
+
+    modalTitle.textContent = "{{ recipe.title }} method - "+ methods_order
+    modalBodyInput.value = methods
   })
 
   let remove_button = document.getElementById("remove-method");
@@ -402,7 +452,7 @@
 
   {% if go_to_id_id %}
   document.addEventListener("DOMContentLoaded", function() {
-    let element = document.getElementById("{{ go_to_id_id }}");
+    let element = document.getElementById("{{ go_to_id_id|safe }}");
     
     if (element) {
       element.scrollIntoView({

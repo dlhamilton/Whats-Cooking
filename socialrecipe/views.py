@@ -466,10 +466,11 @@ class ProfileRecipesEdit(View):
 
     def post(self, request, username, recipe, *args, **kwargs):
         if username == request.user.username:
-            go_to_id_id = None
+            
             the_recipe = get_object_or_404(Recipes, slug=recipe)
             recipe_form = RecipesForm(instance=the_recipe)
             if 'the_recipe_form' in request.POST:
+                go_to_id_id = None
                 recipe_form = RecipesForm(data=request.POST, files=request.FILES, instance=the_recipe)
                 if recipe_form.is_valid():
 
@@ -525,16 +526,25 @@ class ProfileRecipesEdit(View):
                     # recipe_form = RecipesForm(instance=the_recipe)
                     messages.error(request, 'Error With Ingredient')
 
-            elif "the_method_form" in request.POST:
+            elif "the_method_form" in request.POST and not "the_method_form_id" in request.POST:
                 add_methods_form = MethodsForm(data=request.POST)
-                go_to_id_id = 'method_section'
+                go_to_id_id = 'method_section_area'
                 if add_methods_form.is_valid():
                     add_methods_form.instance.recipe = the_recipe
                     add_methods_form.instance.order = Methods.number_of_methods(self,the_recipe.id)+1
                     method_item = add_methods_form.save(commit=False)
                     method_item.save()
                     messages.success(request, 'Method Added')
-
+            
+            elif "the_method_form_id" in request.POST:
+                add_methods_form = MethodsForm(data=request.POST)
+                go_to_id_id = 'method_section_area'
+                if add_methods_form.is_valid():
+                    method_id = add_methods_form.data.get('the_method_form_id')
+                    method_instance = Methods.objects.get(id=method_id)
+                    method_instance.method = add_methods_form.cleaned_data['method']
+                    method_instance.save()
+                    messages.success(request, 'Method Updated')
             # Methods
             method_form = MethodsForm()
             the_methods = Methods.objects.filter(recipe=the_recipe).order_by('order')
@@ -544,7 +554,7 @@ class ProfileRecipesEdit(View):
             search_term = form.data.get('search_term')
             recipe_ingredients = the_recipe.recipe_items.filter()
             p_details = profile_details(self.request, username)
-            p_details.update(self.ingredientPaginate(self.request, search_term))
+            p_details.update(self.ingredientPaginate(self.request, search_term,))
             p_details.update({"logged_in_user": request.user,
                               'form': form,
                               'i_form': add_ingredients_form,
@@ -555,12 +565,12 @@ class ProfileRecipesEdit(View):
                               'method_form': method_form,
                               'the_methods': the_methods,
                               })
-            # return render(
-            #     request,
-            #     "user_recipes_edit.html",
-            #     p_details
-            # )
-            return redirect(reverse('profile_page_recipes_edit', kwargs={'username':the_recipe.author, 'recipe': the_recipe.slug}), p_details)
+            return render(
+                request,
+                "user_recipes_edit.html",
+                p_details
+            )
+            # return redirect(reverse('profile_page_recipes_edit', kwargs={'username':the_recipe.author, 'recipe': the_recipe.slug}), p_details)
         else:
             if request.user.is_authenticated:
                 return HttpResponseRedirect(
@@ -584,6 +594,16 @@ class ProfileRecipesEdit(View):
             if Methods.objects.filter(recipe=temp_record.recipe).exists():
                 last = 1
         return JsonResponse({"message": id, "last": last}, status=200)
+
+    # def put(self, request, *args, **kwargs):
+    #     data = json.loads(request.body)
+    #     id = data.get('id')
+    #     edit_methods_form = MethodsForm(data=request.PUT)
+    #     if edit_methods_form.is_valid():
+    #         method_instance = Methods.objects.get(id=id)
+    #         self.get(request, username, recipe)
+    #     else:
+    #         self.get(request, username, recipe)
 
 
 class ProfileFollowers(View):
