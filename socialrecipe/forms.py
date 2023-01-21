@@ -1,7 +1,7 @@
 from django import forms
 from cloudinary.forms import CloudinaryInput
 from cloudinary.models import CloudinaryField
-from .models import Comments, Ingredients, Recipes, RecipeItems, Units
+from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods
 
 
 class CommentsForm(forms.ModelForm):
@@ -66,3 +66,12 @@ class RecipeItemsForm(forms.ModelForm):
         super(RecipeItemsForm, self).__init__(*args, **kwargs)
         self.fields['unit'].empty_label = "Select Unit"
         self.fields['ingredients'].widget.attrs.update({'id': 'ingredient-name'})
+
+
+class MethodsForm(forms.ModelForm):
+    class Meta:
+        model = Methods
+        fields = ('method',)
+        widgets = {
+            'method': forms.Textarea(attrs={'rows': 4, 'class': 'method-class-design'})
+        }

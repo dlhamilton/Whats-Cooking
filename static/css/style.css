@@ -489,7 +489,13 @@ form checkbox recipe
 }
 
 /* end of  */
-
+.method-class-design + label {
+    position: absolute;
+    top: 0;
+}
+.method-class-design {
+    height: 150px;
+}
 
 .splide__slide img {
  aspect-ratio: 1 / 1;

@@ -4,8 +4,8 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm
+from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm
 from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
 from django.template import loader
@@ -436,6 +436,10 @@ class ProfileRecipesEdit(View):
             edit_form = RecipesForm(instance=the_recipe)
             search_term = form.data.get('search_term')
             recipe_ingredients = the_recipe.recipe_items.filter()
+            # Methods
+            method_form = MethodsForm()
+            the_methods = Methods.objects.filter(recipe=the_recipe).order_by('order')
+
             p_details = profile_details(self.request, username)
             p_details.update(self.ingredientPaginate(self.request, search_term))
             p_details.update({"logged_in_user": request.user,
@@ -444,6 +448,8 @@ class ProfileRecipesEdit(View):
                               'edit_form': edit_form,
                               'recipe_ingredients': recipe_ingredients,
                               'recipe': the_recipe,
+                              'method_form': method_form,
+                              'the_methods': the_methods,
                               })
             return render(
                 request,
@@ -462,6 +468,7 @@ class ProfileRecipesEdit(View):
         if username == request.user.username:
             go_to_id_id = None
             the_recipe = get_object_or_404(Recipes, slug=recipe)
+            recipe_form = RecipesForm(instance=the_recipe)
             if 'the_recipe_form' in request.POST:
                 recipe_form = RecipesForm(data=request.POST, files=request.FILES, instance=the_recipe)
                 if recipe_form.is_valid():
@@ -485,14 +492,14 @@ class ProfileRecipesEdit(View):
                     return redirect(reverse('profile_page_recipes_edit', kwargs={'username':recipe.author, 'recipe': recipe.slug}), {'go_to_id_id': 'ingredients_section'})
                 else:
                     add_ingredients_form = RecipeItemsForm()
-                    recipe_form = RecipesForm(instance=the_recipe)
+                    # recipe_form = RecipesForm(instance=the_recipe)
                     messages.error(request, 'Error With Recipe')
-            else:
+            elif "the_ingredient_form" in request.POST:
                 add_ingredients_form = RecipeItemsForm(data=request.POST)
                 go_to_id_id = 'ingredients_section'
-                context = {'go_to_id_id': go_to_id_id}
+                # context = {'go_to_id_id': go_to_id_id}
                 if add_ingredients_form.is_valid():
-                    recipe_form = RecipesForm(instance=the_recipe)
+                    # recipe_form = RecipesForm(instance=the_recipe)
                     if RecipeItems.objects.filter(recipe=the_recipe,
                                                 ingredients=add_ingredients_form.instance.ingredients):
                         
@@ -515,15 +522,22 @@ class ProfileRecipesEdit(View):
                         # return redirect(reverse('profile_page_recipes_edit', kwargs={'username':the_recipe.author, 'recipe': the_recipe.slug}), context)
                 else:
                     add_ingredients_form = RecipeItemsForm()
-                    recipe_form = RecipesForm(instance=the_recipe)
+                    # recipe_form = RecipesForm(instance=the_recipe)
                     messages.error(request, 'Error With Ingredient')
 
+            elif "the_method_form" in request.POST:
+                add_methods_form = MethodsForm(data=request.POST)
+                go_to_id_id = 'method_section'
+                if add_methods_form.is_valid():
+                    add_methods_form.instance.recipe = the_recipe
+                    add_methods_form.instance.order = Methods.number_of_methods(self,the_recipe.id)+1
+                    method_item = add_methods_form.save(commit=False)
+                    method_item.save()
+                    messages.success(request, 'Method Added')
 
-            
-            
-
-
-
+            # Methods
+            method_form = MethodsForm()
+            the_methods = Methods.objects.filter(recipe=the_recipe).order_by('order')
 
             form = self.form_class(request.GET)
             add_ingredients_form = RecipeItemsForm()
@@ -535,15 +549,18 @@ class ProfileRecipesEdit(View):
                               'form': form,
                               'i_form': add_ingredients_form,
                               'edit_form': recipe_form,
-                              'recipe_ingredients':recipe_ingredients,
+                              'recipe_ingredients': recipe_ingredients,
                               'recipe': the_recipe,
                               'go_to_id_id': go_to_id_id,
+                              'method_form': method_form,
+                              'the_methods': the_methods,
                               })
-            return render(
-                request,
-                "user_recipes_edit.html",
-                p_details
-            )
+            # return render(
+            #     request,
+            #     "user_recipes_edit.html",
+            #     p_details
+            # )
+            return redirect(reverse('profile_page_recipes_edit', kwargs={'username':the_recipe.author, 'recipe': the_recipe.slug}), p_details)
         else:
             if request.user.is_authenticated:
                 return HttpResponseRedirect(
@@ -553,11 +570,20 @@ class ProfileRecipesEdit(View):
             return HttpResponseRedirect(reverse('home'))
 
     def delete(self, request, *args, **kwargs):
+        last = 0
         data = json.loads(request.body)
         id = data.get('id')
-        record = get_object_or_404(RecipeItems, id=id)
-        record.delete()
-        return JsonResponse({"message": id}, status=200)
+        model = data.get('model')
+        if model == 'RecipeItems':
+            record = get_object_or_404(RecipeItems, id=id)
+            record.delete()
+        elif model == 'Methods':
+            record = get_object_or_404(Methods, id=id)
+            temp_record = record
+            record.delete()
+            if Methods.objects.filter(recipe=temp_record.recipe).exists():
+                last = 1
+        return JsonResponse({"message": id, "last": last}, status=200)
 
 
 class ProfileFollowers(View):

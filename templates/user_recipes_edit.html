@@ -21,16 +21,17 @@
 
   <div class="row">
     <div class="col">
-        <div class="me-auto">
-          <h1>Edit Recipe - {{ recipe }}</h1>
-        </div>
+      <div class="me-auto">
+        <h1>Edit Recipe - {{ recipe }}</h1>
+      </div>
+    </div>
   </div>
-</div>
-<div class="row">
-<div class="col">
-  <a href="{% url 'recipe_detail' recipe.slug %}"><button class="btn btn-secondary mx-2">Show Recipe</button></a>
-  <a href="{% url 'profile_page_recipes' user.username %}"><button class="btn btn-wc-green mx-2">Finished</button></a>
-</div>
+  <div class="row">
+    <div class="col">
+      <a href="{% url 'recipe_detail' recipe.slug %}"><button class="btn btn-secondary mx-2">Show Recipe</button></a>
+      <a href="{% url 'profile_page_recipes' user.username %}"><button
+          class="btn btn-wc-green mx-2">Finished</button></a>
+    </div>
   </div>
 
   <div class="row">
@@ -62,7 +63,8 @@
           {% else %}
           <div class="h2 text-success">Published</div>
           {% endif %}
-          <button type="button" class="btn btn-wc-orange mt-1" data-bs-toggle="modal" data-bs-target="#r_staticBackdrop">
+          <button type="button" class="btn btn-wc-orange mt-1" data-bs-toggle="modal"
+            data-bs-target="#r_staticBackdrop">
             Update Recipe Details
           </button>
 
@@ -128,7 +130,8 @@
         <div class="pagination d-flex justify-content-center">
           {% if paginator.has_previous %}
           {% if form.search_term.value %}
-          <a class="btn btn-outline-dark" href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}">Previous</a>
+          <a class="btn btn-outline-dark"
+            href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}">Previous</a>
           {% else %}
           <a class="btn btn-outline-dark" href="?page={{ paginator.previous_page_number }}">Previous</a>
           {% endif %}
@@ -136,7 +139,8 @@
           <span class="current-page mx-3">Page {{ paginator.number }} of {{ paginator.paginator.num_pages }}</span>
           {% if paginator.has_next %}
           {% if form.search_term.value %}
-          <a class="btn btn-outline-dark" href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}">Next</a>
+          <a class="btn btn-outline-dark"
+            href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}">Next</a>
           {% else %}
           <a class="btn btn-outline-dark" href="?page={{ paginator.next_page_number }}">Next</a>
           {% endif %}
@@ -149,7 +153,7 @@
 
     <div class="col-12 col-md-6 text-center d-inline" id="ingredients_section">
       <div class="col-md-10 offset-md-1 mb-4">
-        <h3>Ingredients: {{ go_to_id_id }}</h3>
+        <h3>Ingredients:</h3>
         {% if recipe_ingredients|length != 0 %}
         <ul class="list-group">
           {% for ingredients_item in recipe_ingredients %}
@@ -159,7 +163,7 @@
             {{ ingredients_item.unit }}
             <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span> (test
             {{ ingredients_item.id }}) <span class="post-link-green"><i class="fa-solid fa-ban "
-                onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
+                onclick="removeIngredients({{ ingredients_item.id }},'RecipeItems')" data-id="{{ ingredients_item.id }}"></i></span>
           </li>
           {% else %}
           <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">
@@ -168,7 +172,7 @@
             <span
               class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
             <span class="post-link-green"><i class="fa-solid fa-ban"
-                onclick="removeIngredients({{ ingredients_item.id }})" data-id="{{ ingredients_item.id }}"></i></span>
+                onclick="removeIngredients({{ ingredients_item.id }},'RecipeItems')" data-id="{{ ingredients_item.id }}"></i></span>
           </li>
           {% endif %}
           {% endfor %}
@@ -182,8 +186,64 @@
       </div>
     </div>
   </div>
-  <div class="row">
 
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+  <!-- method section -->
+  <div class="row">
+    <div class="col-12 col-md-6 d-inline">
+      <div class="col-md-10 offset-md-1 mb-4">
+        <div class="row" id="method_section">
+          <h3 class="col">Add Method:</h3>
+        </div>
+        <div class="row mt-2 mb-3">
+          <div class="col">
+            <form class="col" method="post">
+              {{ method_form| crispy }}
+              {% csrf_token %}
+              <input type="hidden" name="the_method_form" value="the_method_form">
+
+              <input type="submit" value="Add" class="btn btn-dark">
+            </form>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 text-center d-inline" id="methods_section">
+      <div class="col-md-10 offset-md-1 mb-4">
+        <h3>Methods:</h3>
+        {% if the_methods|length != 0 %}
+        <ul class="list-group">
+        {% for method in the_methods %}
+        <li class="mb-2 list-group-item" data-method_id="{{ method.id }}">
+        {{ method.order }} {{ method.method }}
+      </li>
+        {% endfor %}
+      </ul>
+      <button class="btn btn-primary" id="remove-method">Click me</button>
+        {% else %}
+
+        <h4>No Methods</h4>
+
+          {% endif %}
+      </div>
+    </div>
+
+
+
+  </div>
+  <!-- end method section -->
+
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
   </div>
 
 
@@ -212,6 +272,7 @@
             {{ i_form.unit }}
           </div>
           {% csrf_token %}
+          <input type="hidden" name="the_ingredient_form" value="the_ingredient_form">
           <!--  -->
         </div>
         <div class="modal-footer">
@@ -273,7 +334,16 @@
 
   })
 
-  function removeIngredients(id) {
+  let remove_button = document.getElementById("remove-method");
+  if (remove_button){
+  remove_button.addEventListener("click",  function(){removeIngredients(-1,"Methods")});
+  }
+
+  function removeIngredients(id,model) {
+    if (id == -1){
+      id = document.querySelector("#methods_section ul li:last-child").dataset.method_id;
+    }
+
     let valid;
     let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
     fetch(`{% url 'profile_page_recipes_edit' user.username recipe.slug %}`, {
@@ -283,7 +353,8 @@
           'X-CSRFToken': csrf_token,
         },
         body: JSON.stringify({
-          'id': id
+          'id': id,
+          'model': model
         })
       })
       .then(response => {
@@ -297,6 +368,20 @@
         console.log(data.message);
         console.log(valid);
         if (valid.ok) {
+          if (model == "Methods"){
+            let method = document.querySelector(`[data-method_id="${id}"]`);
+            method.innerHTML = `<div class="alert alert-warning" role="alert">
+  This Method has been removed.
+</div>`;
+          setTimeout(function () {
+            method.remove();
+            if (data.last == 0){
+            location.reload();
+          }
+          }, 2500);
+          
+          }
+          else{
           //find the comment element
           let comment = document.querySelector(`[data-comment_id="${id}"]`);
           //remove the comment element from the comments section
@@ -306,7 +391,7 @@
           setTimeout(function () {
             comment.remove();
           }, 2500);
-
+        }
         } else {
           // Handle other status codes
           console.log(data.message);
@@ -316,12 +401,15 @@
   }
 
   {% if go_to_id_id %}
-  window.onload = function() {
-      var element = document.getElementById("{{ go_to_id_id }}");
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    };
+  document.addEventListener("DOMContentLoaded", function() {
+    let element = document.getElementById("{{ go_to_id_id }}");
+    
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+});
   {% endif %}
 </script>
 

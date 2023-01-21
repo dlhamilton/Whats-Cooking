@@ -112,6 +112,9 @@ class Methods(models.Model):
 
     class Meta:
         ordering = ['order', 'recipe']
+ 
+    def number_of_methods(self, recipe_id):
+        return Methods.objects.filter(recipe_id=recipe_id).count()
 
 
 class StarRating(models.Model):
