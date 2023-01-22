@@ -18,15 +18,14 @@ from cloudinary.forms import cl_init_js_callbacks
 
 class HomeList(View):
     def get(self, request, *args, **kwargs):
-        top_recipes = Recipes.objects.filter(status=1).order_by('favourites')
-        top_users = top_recipes.annotate(count=Count('author_id')).order_by('count')
+        top_recipes = Recipes.objects.filter(status=1).annotate(favourites_count=Count('favourites')).order_by('-favourites_count')[:3]
 
         return render(
             request,
             "index.html",
             {
                 # "top_recipes": top_recipes,
-                "top_users": top_users,
+                "top_users": top_recipes,
                 "page_name": "Home",
             }
         )

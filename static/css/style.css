@@ -163,6 +163,10 @@ body {
     color: #E84610 !important;
 }
 
+.text-green-color{
+    color: #8AA848 !important;
+}
+
 .profile_icons{
     font-size: medium;
 }
@@ -566,6 +570,46 @@ max-width: 500px;
   #id_publish {
     display: block!important;
   }
+/* Home page */
+
+#home_signup_list{
+    list-style: none;
+}
+
+#home_signup_list li::before{
+    content: "•";
+  color: #E84610;
+  font-weight: bold;
+  display: inline-block;
+  width: 15px;
+}
+
+.bg-orange{
+    background: rgba(232, 70, 16,0.7);
+    color: whitesmoke;
+}
+.bg_index_img-a{
+    background-image: url("../media/home_Image.jpg");
+}
+.bg_index_img-b{
+    background-image: url("../media/home_image_2.jpg");
+}
+.bg_index_img-c{
+    background-image: url("../media/home_image_3.jpg");
+}
+
+.bg_index_img{ 
+        /* Set a specific height */
+        min-height: 200px; 
+      
+        /* Create the parallax scrolling effect */
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        opacity: 0.5;
+}
+
 
 
 @media only screen and (max-width: 575px) {

@@ -180,4 +180,8 @@ Now you need to get the API credentials from the [Google Cloud Platform](https:/
 - For colour pallete 
 [Coolors](https://coolors.co/dac03e-b1b1b1-34d1a2-e63946-f1faee-a8dadc-457b9d-1d3557)
 
+
+
+Delphine Hourlay
+Adonyi Gábor
 ***
