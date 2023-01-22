@@ -1,7 +1,8 @@
 from django import forms
 from cloudinary.forms import CloudinaryInput
 from cloudinary.models import CloudinaryField
-from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods
+from django.contrib.auth.models import User
+from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails
 
 
 class CommentsForm(forms.ModelForm):
@@ -75,3 +76,27 @@ class MethodsForm(forms.ModelForm):
         widgets = {
             'method': forms.Textarea(attrs={'rows': 4, 'class': 'method-class-design'})
         }
+
+
+class UserDetailsForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    location = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    # user_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
+    user_image = CloudinaryField('image')
+
+    class Meta:
+        model = UserDetails
+        fields = ('first_name', 'last_name', 'location', 'user_image')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['first_name'].initial = self.instance.user.first_name
+        self.fields['last_name'].initial = self.instance.user.last_name
+
+    def save(self, commit=True):
+        user = self.instance.user
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        user.save()
+        return super().save(commit)

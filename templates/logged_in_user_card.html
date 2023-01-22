@@ -11,7 +11,8 @@
 
         <div class="user-profile-card border-{{ page_name.user_details.get_status_display|lower }}">
             <div class="user-profile-card-title-wrapper">
-                <a class="text-decoration-none text-reset hide_small" href="{% url 'profile_page' page_name.username %}">
+                <a class="text-decoration-none text-reset hide_small"
+                    href="{% url 'profile_page' page_name.username %}">
                     <img src="{{ page_name.user_details.user_image.url }}" class="user-profile-card-img"
                         alt="profile pic">
                 </a>
@@ -60,21 +61,21 @@
                 {% endif %}
             </div>
 
-<div class="mt-2">
-            {% if average_recipe.user_recipe_average != 0 %}
-            <p class="mb-0">Rating:
-                {% for number in average_recipe.user_recipe_average_star %}
-                <i class="fa-solid fa-star"></i>
-                {% endfor %}
-                {% for number in average_recipe.user_recipe_average_blank %}
-                <i class="fa-regular fa-star"></i>
-                {% endfor %}
-                {{ average_recipe.user_recipe_average }}
-            </p>
-            {% else %}
-            <p class="mb-0">No Recipe Ratings</p>
-            {% endif %}
-</div>
+            <div class="mt-2">
+                {% if average_recipe.user_recipe_average != 0 %}
+                <p class="mb-0">Rating:
+                    {% for number in average_recipe.user_recipe_average_star %}
+                    <i class="fa-solid fa-star"></i>
+                    {% endfor %}
+                    {% for number in average_recipe.user_recipe_average_blank %}
+                    <i class="fa-regular fa-star"></i>
+                    {% endfor %}
+                    {{ average_recipe.user_recipe_average }}
+                </p>
+                {% else %}
+                <p class="mb-0">No Recipe Ratings</p>
+                {% endif %}
+            </div>
 
             <div class="row">
                 <div class="col">

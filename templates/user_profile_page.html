@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+{% load cloudinary %}
 
 
 <div class="container-fluid">
@@ -20,10 +21,166 @@
 
   <div class="row">
     <div class="col">
-      <h1>My Profile</h1>
+      <div class="row">
+        <h1><u>Profile</u></h1>
+      </div>
+      <div class="row  justify-content-center">
+        <div class="col-12 col-lg-10">
+          <div class="row">
+            <div class="col">
+              <p><strong>Username:</strong> {{ page_name.username }}</p>
+              <p>
+                <strong>First Name:</strong>
+                {% if page_name.first_name %}
+                {{ page_name.first_name }}
+                {% else %}
+                <span class="text-danger">Not Set</span>
+                {% endif %}
+              </p>
+              <p>
+                <strong>Last Name:</strong>
+                {% if page_name.last_name %}
+                {{ page_name.last_name }}
+                {% else %}
+                <span class="text-danger">Not Set</span>
+                {% endif %}
+              </p>
+              <p><strong>Email:</strong> {{ page_name.email|default:"Not Set" }}</p>
+              <p>
+                <strong>Location:</strong>
+                {% if page_name.user_details.location %}
+                {{ page_name.user_details.location }}
+                {% else %}
+                <span class="text-danger">Not Set</span>
+                {% endif %}
+              </p>
+              <p>
+                <strong>Status:</strong>
+                <span class="color-slide bg-{{ page_name.user_details.get_status_display|lower }}">
+                  <span class="user-profile-card-title">
+                    <i class="fas fa-award"></i>
+                    <span>{{ page_name.user_details.get_status_display }}</span>
+                  </span>
+                </span>
+              </p>
+              <p><strong>Date Joined:</strong> {{ page_name.date_joined|date:"jS F Y" }}</p>
+
+              <div class="mt-2">
+                {% if average_recipe.user_recipe_average != 0 %}
+                <p><strong>Rating:</strong>
+                  {% for number in average_recipe.user_recipe_average_star %}
+                  <i class="fa-solid fa-star"></i>
+                  {% endfor %}
+                  {% for number in average_recipe.user_recipe_average_blank %}
+                  <i class="fa-regular fa-star"></i>
+                  {% endfor %}
+                  {{ average_recipe.user_recipe_average }}
+                </p>
+                {% else %}
+                <p class="mb-0">No Recipe Ratings</p>
+                {% endif %}
+              </div>
+
+
+
+
+
+
+            </div>
+
+            <div class="col-12 col-sm-4">
+
+              <p><strong>Profile Image:</strong> </p>
+              <img src="{{ page_name.user_details.user_image.url }}"
+                class="img-thumbnail img-fluid rounded profile_img_size" alt="profile pic">
+
+            </div>
+          </div>
+
+          
+{% if user.is_authenticated %}
+{% if page_name != user %}
+          <div class="row justify-content-center">
+            <div class="col-8 col-sm-4">
+              <div class="row">
+                
+                {% if is_following != 0 %}
+                {% if is_following == 1 %}
+                  <button class="btn btn-wc-green">Follow</button>
+                {% else %}
+                 
+                    <button class="btn btn-primary">Following</button>
+
+                {% endif %}
+                {% endif %}
+                
+              </div>
+            </div>
+          </div>
+          {% endif %}
+{% if page_name == user %}
+          <div class="row justify-content-center">
+            <div class="col-8 col-sm-4">
+              <div class="row">
+                
+                
+                {% if page_name.first_name and page_name.last_name and page_name.user_details.location %}
+                <button class="btn btn-wc-green" data-bs-toggle="modal" data-bs-target="#userProfileModal">
+                  Edit Account
+                </button>
+                {% else %}
+                <button class="btn btn-wc-yellow" data-bs-toggle="modal" data-bs-target="#userProfileModal">
+                  Complete Account
+                </button>
+                {% endif %}
+                
+                
+              </div>
+            </div>
+          </div>
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
     </div>
   </div>
 
+  <div class="row">
+    <div class="col">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-4 text-center d-inline">
+      <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
+        <strong>
+          <i class="fas fa-user-friends text-orange-color profile_icons"></i>
+        </strong>
+        <p><span class="d-none d-md-block">Follows</span>{{ page_name.user_details.number_of_follows }}
+        </p>
+      </a>
+    </div>
+  
+    <div class="col-4 text-center d-inline">
+      <a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
+        <strong>
+          <i class="fas fa-utensils text-orange-color profile_icons"></i>
+        </strong>
+        <p><span class="d-none d-md-block">Recipes</span>{{ page_name.user_recipes.count }}</p>
+      </a>
+    </div>
+
+    <div class="col-4 text-center d-inline">
+      <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
+        <strong>
+          <i class="fas fa-heart text-orange-color profile_icons"></i>
+        </strong>
+        <p><span class="d-none d-md-block">Favourites</span>{{ fav_recipes_count }}</p>
+      </a>
+    </div>
+    
+  </div>
 
   <div class="row">
     <div class="col">
@@ -203,6 +360,30 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="userProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="userProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="userProfileModalLabel">Edit {{ page_name.username }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {% csrf_token %}
+          {{ user_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" value="Save Changes" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
 <script>
   var splide = new Splide('.splide', {

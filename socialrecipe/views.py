@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm
 from django.db.models import Count, Avg, Q, F
 from django.urls import resolve
 from django.template import loader
@@ -273,16 +273,27 @@ def profile_details(request, username):
 
 
 class ProfilePage(View):
-    def get(self, request, username, *args, **kwargs):        
+
+    def get(self, request, username, *args, **kwargs):
+        user_details = request.user.user_details
+        user_form = UserDetailsForm(instance=user_details)      
         p_details = profile_details(self.request, username)
         p_details.update({
                 "logged_in_user": request.user.username,
+                "user_form": user_form,
         })
         return render(
             request,
             "user_profile_page.html",
             p_details
         )
+
+    def post(self, request, username, *args, **kwargs):
+        user_details = request.user.user_details
+        user_form = UserDetailsForm(request.POST, request.FILES, instance=user_details)
+        if user_form.is_valid():
+            user_form.save()
+            return redirect('profile_page', username=username)
 
 
 class ProfileShoppingList(View):

@@ -365,6 +365,16 @@ background-color: #0dcaf0!important;
     color:white;
 }
 
+.btn-wc-yellow{
+    background-color: #DAA520;
+    color:white;
+}
+
+.btn-wc-yellow:hover{
+    background-color: #B8860B;
+    color:white;
+}
+
 .card-img-top{
     width: 100%;
     
@@ -610,6 +620,12 @@ max-width: 500px;
         opacity: 0.5;
 }
 
+/* profile page  */
+
+.profile_img_size{
+max-height: 40vh;
+
+}
 
 
 @media only screen and (max-width: 575px) {
