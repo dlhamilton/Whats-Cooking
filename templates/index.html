@@ -2,8 +2,6 @@
 {% load static %}
 {% block content %}
 
-
-
 <!-- Carousel of 3 featured recipes-->
 <div id="recipe_carousel" class="carousel slide" data-bs-ride="carousel">
 
@@ -16,6 +14,7 @@
 
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
+    <!-- Image 1 -->
     <div class="carousel-item active h-50 carousel-max-vh-50">
       <img src="{% static 'media/pic1.webp' %}" alt="Los Angeles" class="d-block" style="width:100%">
       <div class="carousel-caption">
@@ -25,6 +24,7 @@
         </a>
       </div>
     </div>
+    <!-- Image 2 -->
     <div class="carousel-item h-50 carousel-max-vh-50">
       <img src="{% static 'media/pic2.webp' %}" alt="Chicago" class="d-block" style="width:100%">
       <div class="carousel-caption">
@@ -34,6 +34,7 @@
         </a>
       </div>
     </div>
+    <!-- Image 3 -->
     <div class="carousel-item h-50 carousel-max-vh-50">
       <img src="{% static 'media/pic3.webp' %}" alt="New York" class="d-block" style="width:100%">
       <div class="carousel-caption">
@@ -43,6 +44,7 @@
         </a>
       </div>
     </div>
+    <!-- Sign up button -->
     {% if not user.is_authenticated %}
     <div class="carousel-button">
       <a class="btn btn-outline-secondary btn-index" href="{% url 'account_login' %}"><strong>Login/ Sign
@@ -64,89 +66,94 @@
 <div class="container-fluid">
   <div class="col-12">
 
-
+    <!-- Whats Whats Cooking Section -->
     <div class="row py-4 justify-content-center">
       <div class="col-12 col-lg-8">
         <div class="row">
           <h1 class="text-center text-orange-color"><u>What's What's Cooking?</u></h1>
         </div>
         <div class="row text-center mt-4">
-          <p class="lh-lg fs-5">Welcome to Whats Cooking, the ultimate social recipe sharing website! We are a community of food
+          <p class="lh-lg fs-5">Welcome to Whats Cooking, the ultimate social recipe sharing website! We are a community
+            of food
             enthusiasts who come together to share our favorite recipes, cooking tips, and kitchen experiences. Our
             mission is to help users not waste food by providing an easy way to filter recipes by ingredients.</p>
         </div>
       </div>
     </div>
 
-    <!-- <div class="row">
-      <div class="col">
-        <hr>
-      </div>
-    </div> -->
-
+    <!-- Image C-->
     <div class="bg_index_img-c bg_index_img"></div>
 
-    
+    <!-- Why sign up Section -->
     <div class="row py-4 justify-content-center">
       <div class="col-12 col-lg-8" id="index_why">
-        
         <div class="row">
           <h1 class="text-center text-orange-color"><u>Why Sign Up?</u></h1>
         </div>
         <div class="row text-center mt-4">
-          <p class="lh-lg fs-5">Sign up for Whats Cooking today and join our community of food enthusiasts! By creating an account, you'll
+          <p class="lh-lg fs-5">Sign up for Whats Cooking today and join our community of food enthusiasts! By creating
+            an account, you'll
             have access to:</p>
-            <i class="fa-solid fa-ellipsis mb-3 text-green-color"></i>
+          <i class="fa-solid fa-ellipsis mb-3 text-green-color"></i>
           <ul id="home_signup_list">
-            <li class="fs-5 mb-4">Our extensive recipe database and be able to filter by ingredients to avoid food waste.</li>
+            <li class="fs-5 mb-4">Our extensive recipe database and be able to filter by ingredients to avoid food
+              waste.</li>
             <li class="fs-5 mb-4">Save your favorite recipes for easy reference.</li>
             <li class="fs-5 mb-4">Share your own creations with the community.</li>
-            <li class="fs-5 mb-4">You'll also have access to a variety of cooking resources and tools, including cooking videos, kitchen
+            <li class="fs-5 mb-4">You'll also have access to a variety of cooking resources and tools, including cooking
+              videos, kitchen
               gadget reviews.</li>
             <li class="fs-5 mb-4">A forum for sharing cooking tips and techniques.</li>
           </ul>
+          <div class="d-grid gap-2 d-md-block">
+            <button class="btn btn-outline-secondary">
+              <a class="text-decoration-none text-reset" href="{% url 'account_signup' %}">
+                <strong>Sign Up Here</strong>
+              </a>
+            </button>
+          </div>
         </div>
       </div>
-   </div>
-   
+    </div>
 
-    <!-- <div class="row">
-      <div class="col">
-        <hr>
-      </div>
-    </div> -->
+    <!-- Image B-->
     <div class="bg_index_img-b bg_index_img"></div>
 
-
+    <!-- About Us Section -->
     <div class="row bg-orange py-4 justify-content-center">
       <div class="col-12 col-lg-8">
         <div class="row">
           <h1 class="text-center brand-bar"><u>About Us</u></h1>
         </div>
         <div class="row text-center mt-4">
-          <p class="lh-lg fs-5">Our website features a wide variety of recipes for all occasions and skill levels. Whether you're a
+          <p class="lh-lg fs-5">Our website features a wide variety of recipes for all occasions and skill levels.
+            Whether you're a
             beginner cook just learning the basics, or a seasoned pro looking for new and exciting recipe ideas, we have
             something for everyone.</p>
-            <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
-          <p class="lh-lg fs-5">Our user-friendly interface makes it easy to search for recipes by ingredient, cuisine, or dietary
+          <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
+          <p class="lh-lg fs-5">Our user-friendly interface makes it easy to search for recipes by ingredient, cuisine,
+            or dietary
             restriction. This will help you to avoid food waste by using ingredients that you already have on hand or
             plan to purchase. You can also save your favorite recipes for quick and easy reference, and share your own
             creations with the community.</p>
-            <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
-          <p class="lh-lg fs-5">In addition to our recipe database, we also offer a variety of cooking resources and tools, including
+          <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
+          <p class="lh-lg fs-5">In addition to our recipe database, we also offer a variety of cooking resources and
+            tools, including
             cooking videos, kitchen gadget reviews, and a forum for sharing cooking tips and techniques.</p>
-            <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
-            <p class="lh-lg fs-5">We believe that cooking should be fun, inspiring, and accessible to everyone, and we are dedicated to
+          <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
+          <p class="lh-lg fs-5">We believe that cooking should be fun, inspiring, and accessible to everyone, and we are
+            dedicated to
             fostering a supportive and inclusive community of cooks. So join us today and discover the joys of home
             cooking with Whats Cooking!</p>
         </div>
       </div>
     </div>
 
+    <!-- Image A-->
     <div class="bg_index_img-a bg_index_img"></div>
 
-
-      <div class="row">
+    <!-- Line break -->
+    <div class="row">
       <div class="col">
         <hr>
       </div>
@@ -155,36 +162,46 @@
     <!-- Top 3 Recipes Column/Row -->
     <div class="col-12 mt-3">
       <div class="row">
-        <h1 class="text-center text-orange-color"><i class="fa-regular fa-star brand-bar"></i> User Favourites <i class="fa-regular fa-star brand-bar"></i></h1>
+        <h1 class="text-center text-orange-color"><i class="fa-regular fa-star brand-bar"></i> User Favourites <i
+            class="fa-regular fa-star brand-bar"></i></h1>
       </div>
     </div>
     <div class="col-12 mt-3 left">
       <div class="row">
-        {% for item in top_users %}
+        {% for recipe in top_users %}
         <div class="col-md-4">
           <div class="card mb-4">
-            <a href="{% url 'recipe_detail' item.slug %}" class="post-link">
+            <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
               <div class="index-card-body">
                 <div class="image-container">
-                  {% if "placeholder" in item.recipe_image.url %}
+                  {% if "placeholder" in recipe.recipe_image.url %}
                   <img class="card-img-top auto-img-h"
                     src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
                   {% else %}
-                  <img class="card-img-top auto-img-h" src="{{ item.recipe_image.url }}">
+                  <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
                   {% endif %}
                   <div class="image-flash">
-                    <p class="author">Author: {{ item.author }}</p>
+                    <p class="author">Recipe by: {{ recipe.author }}</p>
                   </div>
                 </div>
-
-
-                <h2 class="card-title one-Line-ellipsis">{{ item.title }}</h2>
-                <p class="card-text card-h">{{ item.excerpt }}</p>
-
-                <hr />
-                <p class="card-text text-muted h6">{{ item.upload_date}}
-                  <i class="far fa-heart"></i>{{ item.number_of_favourites }}
-                </p>
+                <h2 class="card-title one-Line-ellipsis">{{ recipe.title }}</h2>
+                <p class="card-text card-h">{{ recipe.excerpt }}</p>
+                <hr>
+                <div class="d-flex">
+                  <div class="col-10 card-text text-muted h6">
+                    {% if recipe.the_star_rating_count != 0 %}
+                    {% for _ in recipe.the_star_rating_int %}
+                    <i class="fa-solid fa-star"></i>
+                    {% endfor %}
+                    {{ recipe.the_star_rating }} ( {{ recipe.the_star_rating_count }} )
+                    {% else %}
+                    No Ratings
+                    {% endif %}
+                  </div>
+                  <div class="col-2 text-end card-text text-muted h6">
+                    <i class="far fa-heart"></i> {{ recipe.number_of_favourites }}
+                  </div>
+                </div>
               </div>
             </a>
           </div>
@@ -192,8 +209,8 @@
         {% endfor %}
       </div>
     </div>
-  </div>
 
+  </div>
 </div>
 
 {%endblock%}

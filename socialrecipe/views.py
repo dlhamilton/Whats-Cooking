@@ -19,7 +19,7 @@ from cloudinary.forms import cl_init_js_callbacks
 class HomeList(View):
     def get(self, request, *args, **kwargs):
         top_recipes = Recipes.objects.filter(status=1).annotate(favourites_count=Count('favourites')).order_by('-favourites_count')[:3]
-
+        top_recipes = get_average_rating(top_recipes)
         return render(
             request,
             "index.html",
