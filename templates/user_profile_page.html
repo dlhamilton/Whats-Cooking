@@ -141,109 +141,7 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <hr>
-    </div>
-  </div>
 
-  <div class="row justify-content-center">
-    <div class="col-4 text-center d-inline">
-      <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
-        <strong>
-          <i class="fas fa-user-friends text-orange-color profile_icons"></i>
-        </strong>
-        <p><span class="d-none d-md-block">Follows</span>{{ page_name.user_details.number_of_follows }}
-        </p>
-      </a>
-    </div>
-
-    <div class="col-4 text-center d-inline">
-      <a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
-        <strong>
-          <i class="fas fa-utensils text-orange-color profile_icons"></i>
-        </strong>
-        <p><span class="d-none d-md-block">Recipes</span>{{ showing_recipes.count }}</p>
-      </a>
-    </div>
-
-    <div class="col-4 text-center d-inline">
-      <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
-        <strong>
-          <i class="fas fa-heart text-orange-color profile_icons"></i>
-        </strong>
-        <p><span class="d-none d-md-block">Favourites</span>{{ fav_recipes_count }}</p>
-      </a>
-    </div>
-
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <hr>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col">
-
-      <h2>
-        <i class="fas fa-user-friends text-orange-color"></i> Followers:
-        </a>
-      </h2>
-
-      <p>Followers count: {{ page_name.user_details.number_of_follows }}</p>
-
-      {% if page_name.user_details.number_of_follows > 0 %}
-
-      <div id="splide1" class="splide">
-        <div class="splide__track">
-          <div class="splide__list">
-
-            {% for follow in page_name.user_details.get_followers %}
-
-            <div class="col-sm-4 splide__slide m-2">
-              <div class="card bg-{{ page_name.user_details.get_status_display|lower }} text-white">
-
-                <div class="card-body text-dark p-5">
-                  <h5 class="card-title text-capitalize text-truncate">{{ follow }}</h5>
-
-
-                  <p class="card-text">
-                    <strong>Status:</strong>
-                    <span class="color-slide bg-{{ page_name.user_details.get_status_display|lower }}">
-                      <span class="user-profile-card-title text-color-body">
-                        <i class="fas fa-award"></i>
-                        <span class="d-none d-sm-inline">{{ page_name.user_details.get_status_display }}</span>
-                      </span>
-                    </span>
-                  </p>
-
-
-
-
-
-                  <a class="" href="{% url 'profile_page' follow.username %}">
-                    <button class="btn btn-wc-green">View Page</button>
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {% endfor %}
-
-          </div>
-        </div>
-      </div>
-      <p class="mt-2 post-link"><a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
-          View All</a></p>
-
-      {% else %}
-      <p><strong>No Follows</strong></p>
-      {% endif %}
-
-
-    </div>
-  </div>
 
   <div class="row">
     <div class="col">
@@ -310,11 +208,11 @@
             </div>
           </div>
         </div>
-      {% else %}
-        <p><strong>No Recipes</strong></p>
-      {% endif %}
         <p class="mt-2 post-link"><a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
             View All</a></p>
+        {% else %}
+        <p><strong>No Recipes</strong></p>
+        {% endif %}
       </div>
     </div>
 
@@ -327,34 +225,133 @@
     <div class="row">
       <div class="col">
         <h2>
-          <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
-            <i class="fas fa-heart text-orange-color"></i> Favourite Recipes:
-          </a>
+          <i class="fas fa-heart text-orange-color"></i> Favourite Recipes:
         </h2>
-
         <p>Favourite Recipes Count: {{ fav_recipes_count }}</p>
-
         {% if fav_recipes_count > 0 %}
-        <ul>
-          {% for favourite in fav_recipes %}
-          <a href="{% url 'recipe_detail' favourite.slug %}" class="post-link">
-            <li>{{ favourite }}</li>
-          </a>
-          {% endfor %}
-        </ul>
+        <div id="splide3" class="splide">
+          <div class="splide__track">
+            <div class="splide__list">
+              {% for recipe in fav_recipes %}
+              <div class="col-md-4 splide__slide m-2">
+                <div class="card mb-4">
+                  <div class="card-body index-card-body">
+                    <div class="image-container">
+                      {% if "placeholder" in recipe.recipe_image.url %}
+                      <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
+                        src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
+                      {% else %}
+                      <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
+                        src="{{ recipe.recipe_image.url }}">
+                      {% endif %}
+                      <div class="image-flash">
+                        <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}">
+                          <p class="author">Recipe by: {{ recipe.author }}</p>
+                        </a>
+                      </div>
+                    </div>
+                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                      <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}
+                        {% if recipe.status == 0 %}
+                        <i class="fa-solid fa-link-slash"></i>
+                        {% endif %}
+                      </h2>
+                      <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
+                    </a>
+                    <p class="card-text mb-0"><small>Meal Time: {{ recipe.total_time }} Minutes</small></p>
+                    <hr />
+                    <div class="d-flex">
+                      <div class="col-10 card-text text-muted h6">
+                        {% if recipe.the_star_rating_count != 0 %}
+                        {% for _ in recipe.the_star_rating_int %}
+                        <i class="fa-solid fa-star"></i>
+                        {% endfor %}
+                        {{ recipe.the_star_rating|floatformat:1  }} ( {{ recipe.the_star_rating_count }} )
+                        {% else %}
+                        No Ratings
+                        {% endif %}
+                      </div>
+                      <div class="col-2 text-end card-text text-muted h6">
+                        <i class="far fa-heart"></i> {{ recipe.number_of_favourites }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 post-link"><a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
+            View All</a></p>
         {% else %}
         <p><strong>No Favourite Recipes</strong></p>
         {% endif %}
       </div>
     </div>
 
-    {% if page_name == user %}
+
+    <div class="row">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+  
+  
+  
+    <div class="row">
+      <div class="col">
+        <h2>
+          <i class="fas fa-user-friends text-orange-color"></i> Followers:
+          </a>
+        </h2>
+        <p>Followers count: {{ page_name.user_details.number_of_follows }}</p>
+        {% if page_name.user_details.number_of_follows > 0 %}
+        <div id="splide1" class="splide">
+          <div class="splide__track">
+            <div class="splide__list">
+              {% for follow in page_name.user_details.get_followers %}
+              <div class="col-sm-4 splide__slide m-2">
+                <div class="card bg-{{ page_name.user_details.get_status_display|lower }} text-white">
+                  <div class="card-body text-dark p-5">
+                    <h5 class="card-title text-capitalize text-truncate">{{ follow }}</h5>
+                    <p class="card-text">
+                      <strong>Status:</strong>
+                      <span class="color-slide bg-{{ page_name.user_details.get_status_display|lower }}">
+                        <span class="user-profile-card-title text-color-body">
+                          <i class="fas fa-award"></i>
+                          <span class="d-none d-sm-inline">{{ page_name.user_details.get_status_display }}</span>
+                        </span>
+                      </span>
+                    </p>
+                    <a class="" href="{% url 'profile_page' follow.username %}">
+                      <button class="btn btn-wc-green">View Page</button>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <p class="mt-2 post-link"><a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
+            View All</a></p>
+        {% else %}
+        <p><strong>No Follows</strong></p>
+        {% endif %}
+      </div>
+    </div>
+
+
     <div class="row">
       <div class="col">
         <hr>
       </div>
     </div>
 
+    
+
+    {% if page_name == user %}
     <div class="row">
       <div class="col">
         <h2>
@@ -450,6 +447,9 @@
 
     var splide2 = new Splide('#splide2', splide_settings_big);
     splide2.mount();
+
+    var splide3 = new Splide('#splide3', splide_settings_big);
+    splide3.mount();
   </script>
 
 

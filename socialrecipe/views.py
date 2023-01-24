@@ -270,6 +270,7 @@ def profile_details(request, username):
     for r in all_recipes:
         if r.favourites.filter(id=page_name.id).exists():
             fav_recipes.append(r)
+    fav_recipes = get_average_rating(fav_recipes)
     items = {"page_name": page_name,
              "fav_recipes_count": len(fav_recipes),
              "is_following": is_following_data,
@@ -282,8 +283,10 @@ def profile_details(request, username):
 class ProfilePage(View):
 
     def get(self, request, username, *args, **kwargs):
-        user_details = request.user.user_details
-        user_form = UserDetailsForm(instance=user_details)
+        user_form = None
+        if request.user.is_authenticated:
+            user_details = request.user.user_details
+            user_form = UserDetailsForm(instance=user_details)
         p_details = profile_details(self.request, username)
         p_details.update({
                 "logged_in_user": request.user.username,
