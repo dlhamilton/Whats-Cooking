@@ -263,7 +263,8 @@ def profile_details(request, username):
         showing_recipes = Recipes.objects.filter(author=page_name).order_by('title')
     else:
         showing_recipes = Recipes.objects.filter(status=1).filter(author=page_name).order_by('title')
-
+    showing_recipes = get_average_rating(showing_recipes)
+    
     fav_recipes = []
     all_recipes = Recipes.objects.filter(status=1)
     for r in all_recipes:

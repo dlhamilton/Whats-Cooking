@@ -260,24 +260,75 @@
         </a>
       </h2>
 
-      <p>recipe count: {{ showing_recipes.count }}</p>
+      <p>Recipe count: {{ showing_recipes.count }}</p>
+
+
 
       {% if showing_recipes.count > 0 %}
-      <ul>
-        {% for recipe in showing_recipes.all %}
-        <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
-          <li>{{ recipe }}
-            {% if recipe.status == 0 %}
+
+      <div id="splide2" class="splide">
+        <div class="splide__track">
+          <div class="splide__list">
+
+      {% for recipe in showing_recipes %}
+      <div class="col-md-4 splide__slide m-2">
+      <div class="card mb-4">
+        <div class="card-body index-card-body">
+          {% if recipe.status == 0 %}
+          <div class="image-container border border-danger border-5 rounded">
+          {% else %}
+          <div class="image-container border border-success border-5 rounded">
+          {% endif %}
+                {% if "placeholder" in recipe.recipe_image.url %}
+                <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
+                    src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
+                {% else %}
+                <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;" src="{{ recipe.recipe_image.url }}">
+                {% endif %}
+               
+            </div>
+            <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }} 
+                  {% if recipe.status == 0 %}
             <i class="fa-solid fa-link-slash"></i>
             {% endif %}
+                </h2>
+                <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
+            </a>
+            <p class="card-text mb-0"><small>Meal Time: {{ recipe.total_time }} Minutes</small></p>
+            <hr />
+            <div class="d-flex">
+                <div class="col-10 card-text text-muted h6">
+                    {% if recipe.the_star_rating_count != 0 %}
+                    {% for _ in recipe.the_star_rating_int %}
+                    <i class="fa-solid fa-star"></i>
+                    {% endfor %}
+                    {{ recipe.the_star_rating|floatformat:1  }} ( {{ recipe.the_star_rating_count }} )
+                    {% else %}
+                    No Ratings
+                    {% endif %}
+                </div>
+                <div class="col-2 text-end card-text text-muted h6">
+                    <i class="far fa-heart"></i> {{ recipe.number_of_favourites }}
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+    {% endfor %}
 
-          </li>
-        </a>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p><strong>No Recipes</strong></p>
-      {% endif %}
+  </div>
+</div>
+</div>
+
+    {% else %}
+    <p><strong>No Recipes</strong></p>
+    {% endif %}
+
+
+      <p class="mt-2 post-link"><a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
+        View All</a></p>
+
     </div>
   </div>
 
@@ -463,12 +514,35 @@
     },
   }
 
+  let splide_settings_big = {
+    type: 'loop',
+    perPage: 4,
+    drag: 'free',
+    breakpoints: {
+      1300:{
+        perPage: 3,
+        gap: '1rem',
+      },
+      990: {
+        perPage: 2,
+        gap: '1rem',
+      },
+      500: {
+        perPage: 1,
+        gap: '1rem',
+      },
+    },
+  }
+
 
   var splide = new Splide('#splide', splide_settings);
   splide.mount();
 
   var splide1 = new Splide('#splide1', splide_settings);
   splide1.mount();
+
+  var splide2 = new Splide('#splide2', splide_settings_big);
+  splide2.mount();
 </script>
 
 
