@@ -187,8 +187,7 @@
     <div class="col">
 
       <h2>
-        
-          <i class="fas fa-user-friends text-orange-color"></i> Followers:
+        <i class="fas fa-user-friends text-orange-color"></i> Followers:
         </a>
       </h2>
 
@@ -207,22 +206,22 @@
 
                 <div class="card-body text-dark p-5">
                   <h5 class="card-title text-capitalize text-truncate">{{ follow }}</h5>
-                  
-                    
-                      <p class="card-text">
-                        <strong>Status:</strong>
-                        <span class="color-slide bg-{{ page_name.user_details.get_status_display|lower }}">
-                          <span class="user-profile-card-title text-color-body">
-                            <i class="fas fa-award"></i>
-                            <span class="d-none d-sm-inline">{{ page_name.user_details.get_status_display }}</span>
-                          </span>
-                        </span>
-                      </p>
-                    
-                    
-                      
-                    
-                  
+
+
+                  <p class="card-text">
+                    <strong>Status:</strong>
+                    <span class="color-slide bg-{{ page_name.user_details.get_status_display|lower }}">
+                      <span class="user-profile-card-title text-color-body">
+                        <i class="fas fa-award"></i>
+                        <span class="d-none d-sm-inline">{{ page_name.user_details.get_status_display }}</span>
+                      </span>
+                    </span>
+                  </p>
+
+
+
+
+
                   <a class="" href="{% url 'profile_page' follow.username %}">
                     <button class="btn btn-wc-green">View Page</button>
                   </a>
@@ -236,13 +235,13 @@
         </div>
       </div>
       <p class="mt-2 post-link"><a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
-        View All</a></p>
+          View All</a></p>
 
       {% else %}
       <p><strong>No Follows</strong></p>
       {% endif %}
 
-      
+
     </div>
   </div>
 
@@ -255,295 +254,203 @@
   <div class="row">
     <div class="col">
       <h2>
-        <a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
-          <i class="fas fa-utensils text-orange-color"></i> Recipes:
-        </a>
+        <i class="fas fa-utensils text-orange-color"></i> Recipes:
       </h2>
-
       <p>Recipe count: {{ showing_recipes.count }}</p>
-
-
-
       {% if showing_recipes.count > 0 %}
-
       <div id="splide2" class="splide">
         <div class="splide__track">
           <div class="splide__list">
-
-      {% for recipe in showing_recipes %}
-      <div class="col-md-4 splide__slide m-2">
-      <div class="card mb-4">
-        <div class="card-body index-card-body">
-          {% if recipe.status == 0 %}
-          <div class="image-container border border-danger border-5 rounded">
-          {% else %}
-          <div class="image-container border border-success border-5 rounded">
-          {% endif %}
-                {% if "placeholder" in recipe.recipe_image.url %}
-                <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
-                    src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
-                {% else %}
-                <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;" src="{{ recipe.recipe_image.url }}">
-                {% endif %}
-               
-            </div>
-            <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
-                <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }} 
+            {% for recipe in showing_recipes %}
+            <div class="col-md-4 splide__slide m-2">
+              <div class="card mb-4">
+                <div class="card-body index-card-body">
                   {% if recipe.status == 0 %}
-            <i class="fa-solid fa-link-slash"></i>
-            {% endif %}
-                </h2>
-                <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
-            </a>
-            <p class="card-text mb-0"><small>Meal Time: {{ recipe.total_time }} Minutes</small></p>
-            <hr />
-            <div class="d-flex">
-                <div class="col-10 card-text text-muted h6">
-                    {% if recipe.the_star_rating_count != 0 %}
-                    {% for _ in recipe.the_star_rating_int %}
-                    <i class="fa-solid fa-star"></i>
-                    {% endfor %}
-                    {{ recipe.the_star_rating|floatformat:1  }} ( {{ recipe.the_star_rating_count }} )
+                  <div class="image-container border border-danger border-5 rounded">
                     {% else %}
-                    No Ratings
-                    {% endif %}
+                    <div class="image-container border border-success border-5 rounded">
+                      {% endif %}
+                      {% if "placeholder" in recipe.recipe_image.url %}
+                      <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
+                        src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
+                      {% else %}
+                      <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
+                        src="{{ recipe.recipe_image.url }}">
+                      {% endif %}
+                    </div>
+                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                      <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}
+                        {% if recipe.status == 0 %}
+                        <i class="fa-solid fa-link-slash"></i>
+                        {% endif %}
+                      </h2>
+                      <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
+                    </a>
+                    <p class="card-text mb-0"><small>Meal Time: {{ recipe.total_time }} Minutes</small></p>
+                    <hr />
+                    <div class="d-flex">
+                      <div class="col-10 card-text text-muted h6">
+                        {% if recipe.the_star_rating_count != 0 %}
+                        {% for _ in recipe.the_star_rating_int %}
+                        <i class="fa-solid fa-star"></i>
+                        {% endfor %}
+                        {{ recipe.the_star_rating|floatformat:1  }} ( {{ recipe.the_star_rating_count }} )
+                        {% else %}
+                        No Ratings
+                        {% endif %}
+                      </div>
+                      <div class="col-2 text-end card-text text-muted h6">
+                        <i class="far fa-heart"></i> {{ recipe.number_of_favourites }}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-2 text-end card-text text-muted h6">
-                    <i class="far fa-heart"></i> {{ recipe.number_of_favourites }}
-                </div>
+              </div>
+              {% endfor %}
             </div>
+          </div>
         </div>
+      {% else %}
+        <p><strong>No Recipes</strong></p>
+      {% endif %}
+        <p class="mt-2 post-link"><a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
+            View All</a></p>
+      </div>
     </div>
-  </div>
-    {% endfor %}
 
-  </div>
-</div>
-</div>
+    <div class="row">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
 
-    {% else %}
-    <p><strong>No Recipes</strong></p>
+    <div class="row">
+      <div class="col">
+        <h2>
+          <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
+            <i class="fas fa-heart text-orange-color"></i> Favourite Recipes:
+          </a>
+        </h2>
+
+        <p>Favourite Recipes Count: {{ fav_recipes_count }}</p>
+
+        {% if fav_recipes_count > 0 %}
+        <ul>
+          {% for favourite in fav_recipes %}
+          <a href="{% url 'recipe_detail' favourite.slug %}" class="post-link">
+            <li>{{ favourite }}</li>
+          </a>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p><strong>No Favourite Recipes</strong></p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if page_name == user %}
+    <div class="row">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h2>
+          <a href="{% url 'profile_page_shopping' page_name.username %}" class="post-link">
+            Shopping Lists:</a>
+        </h2>
+
+        <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
+
+        {% if page_name.shopping_list.count > 0 %}
+        <ul>
+          {% for lists in page_name.shopping_list.all %}
+          <a href="{% url 'profile_single_shopping' username=page_name.username list=lists.slug %}" class="post-link">
+            <li>{{ lists }}</li>
+          </a>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p><strong>No Shopping Lists</strong></p>
+        {% endif %}
+      </div>
+    </div>
     {% endif %}
 
-
-      <p class="mt-2 post-link"><a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
-        View All</a></p>
-
-    </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      <hr>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <h2>
-        <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
-          <i class="fas fa-heart text-orange-color"></i> Favourite Recipes:
-        </a>
-      </h2>
-
-      <p>Favourite Recipes Count: {{ fav_recipes_count }}</p>
-
-      {% if fav_recipes_count > 0 %}
-      <ul>
-        {% for favourite in fav_recipes %}
-        <a href="{% url 'recipe_detail' favourite.slug %}" class="post-link">
-          <li>{{ favourite }}</li>
-        </a>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p><strong>No Favourite Recipes</strong></p>
-      {% endif %}
-    </div>
-  </div>
-
-  {% if page_name == user %}
-  <div class="row">
-    <div class="col">
-      <hr>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      <h2>
-        <a href="{% url 'profile_page_shopping' page_name.username %}" class="post-link">
-          Shopping Lists:</a>
-      </h2>
-
-      <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
-
-      {% if page_name.shopping_list.count > 0 %}
-      <ul>
-        {% for lists in page_name.shopping_list.all %}
-        <a href="{% url 'profile_single_shopping' username=page_name.username list=lists.slug %}" class="post-link">
-          <li>{{ lists }}</li>
-        </a>
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p><strong>No Shopping Lists</strong></p>
-      {% endif %}
-    </div>
-  </div>
-  {% endif %}
-
-</div>
-
-<div class="container">
-  <div class="row">
-    <div id="splide" class="splide">
-      <div class="splide__track">
-        <div class="splide__list">
-          <div class="col-sm-4 splide__slide m-2">
-            <div class="card bg-dark text-white">
-              <div class="card-body">
-                <h5 class="card-title">Crad Slider 1 </h5>
-                <p class="card-text">With supporting text below as a natural lead-in to
-                  additional content.</p>
-                <a href="#" class="btn btn-primary">Read more</a>
-              </div>
-            </div>
+  <!-- Modal -->
+  <div class="modal fade" id="userProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="userProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="post" enctype="multipart/form-data">
+          <div class="modal-header">
+            <h5 class="modal-title" id="userProfileModalLabel">Edit {{ page_name.username }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="col-sm-4 splide__slide m-2">
-            <div class="card bg-dark text-white">
-              <div class="card-body">
-                <h5 class="card-title">Crad Slider 2</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to
-                  additional content.</p>
-                <a href="#" class="btn btn-primary">Read more</a>
-              </div>
-            </div>
+          <div class="modal-body">
+            {% csrf_token %}
+            {{ user_form.as_p }}
           </div>
-          <div class="col-sm-4 splide__slide m-2">
-            <div class="card bg-dark text-white">
-              <div class="card-body">
-                <h5 class="card-title">Crad Slider 3</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to
-                  additional content.</p>
-                <a href="#" class="btn btn-primary">Read more</a>
-              </div>
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" value="Save Changes" class="btn btn-primary">Save Changes</button>
           </div>
-          <div class="col-sm-4 splide__slide m-2">
-            <div class="card bg-dark text-white">
-              <div class="card-body">
-                <h5 class="card-title">Crad Slider 4</h5>
-                <p class="card-text">With supporting text below as a natural lead-in to
-                  additional content.</p>
-                <a href="#" class="btn btn-primary">Read more</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
-</div>
 
-<div class="container">
-  <div class="row">
-    <div id="splide1" class="splide">
-      <div class="splide__track">
-        <div class="splide__list">
-
-
-          <div class="col-sm-4 splide__slide m-2">
-            <div class="card bg-dark text-white">
-              <div class="card-body">
-                <h5 class="card-title">Crad Slider 1 </h5>
-                <p class="card-text">With supporting text below as a natural lead-in to
-                  additional content.</p>
-                <a href="#" class="btn btn-primary">Read more</a>
-              </div>
-            </div>
-          </div>
-
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="userProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="userProfileModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="post" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h5 class="modal-title" id="userProfileModalLabel">Edit {{ page_name.username }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          {% csrf_token %}
-          {{ user_form.as_p }}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" value="Save Changes" class="btn btn-primary">Save Changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
-<script>
-  let splide_settings = {
-    type: 'loop',
-    perPage: 3,
-    drag: 'free',
-    breakpoints: {
-      990: {
-        perPage: 2,
-        gap: '.7rem',
-        height: '12rem'
+  <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
+  <script>
+    let splide_settings = {
+      type: 'loop',
+      perPage: 3,
+      drag: 'free',
+      breakpoints: {
+        990: {
+          perPage: 2,
+          gap: '.7rem',
+          height: '12rem'
+        },
+        590: {
+          perPage: 1,
+          gap: '.7rem',
+          height: '12rem'
+        },
       },
-      590: {
-        perPage: 1,
-        gap: '.7rem',
-        height: '12rem'
+    }
+
+    let splide_settings_big = {
+      type: 'loop',
+      perPage: 4,
+      drag: 'free',
+      breakpoints: {
+        1300: {
+          perPage: 3,
+          gap: '1rem',
+        },
+        990: {
+          perPage: 2,
+          gap: '1rem',
+        },
+        500: {
+          perPage: 1,
+          gap: '1rem',
+        },
       },
-    },
-  }
-
-  let splide_settings_big = {
-    type: 'loop',
-    perPage: 4,
-    drag: 'free',
-    breakpoints: {
-      1300:{
-        perPage: 3,
-        gap: '1rem',
-      },
-      990: {
-        perPage: 2,
-        gap: '1rem',
-      },
-      500: {
-        perPage: 1,
-        gap: '1rem',
-      },
-    },
-  }
+    }
 
 
-  var splide = new Splide('#splide', splide_settings);
-  splide.mount();
+    var splide1 = new Splide('#splide1', splide_settings);
+    splide1.mount();
 
-  var splide1 = new Splide('#splide1', splide_settings);
-  splide1.mount();
-
-  var splide2 = new Splide('#splide2', splide_settings_big);
-  splide2.mount();
-</script>
+    var splide2 = new Splide('#splide2', splide_settings_big);
+    splide2.mount();
+  </script>
 
 
-{%endblock%}
+  {%endblock%}
