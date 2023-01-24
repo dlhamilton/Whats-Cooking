@@ -70,7 +70,7 @@
                     {% for number in average_recipe.user_recipe_average_blank %}
                     <i class="fa-regular fa-star"></i>
                     {% endfor %}
-                    {{ average_recipe.user_recipe_average }}
+                    {{ average_recipe.user_recipe_average|floatformat:1 }}
                 </p>
                 {% else %}
                 <p class="mb-0">No Recipe Ratings</p>
@@ -99,7 +99,7 @@
                         <strong>
                             <i class="fas fa-utensils text-orange-color profile_icons"></i>
                         </strong>
-                        <p><span class="d-none d-md-block">Recipes</span>{{ page_name.user_recipes.count }}</p>
+                        <p><span class="d-none d-md-block">Recipes</span>{{ showing_recipes.count }}</p>
                     </a>
                 </div>
                 <div class="col-4 text-center d-inline">

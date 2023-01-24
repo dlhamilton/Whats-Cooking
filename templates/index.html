@@ -193,7 +193,7 @@
                     {% for _ in recipe.the_star_rating_int %}
                     <i class="fa-solid fa-star"></i>
                     {% endfor %}
-                    {{ recipe.the_star_rating }} ( {{ recipe.the_star_rating_count }} )
+                    {{ recipe.the_star_rating|floatformat:1 }} ( {{ recipe.the_star_rating_count }} )
                     {% else %}
                     No Ratings
                     {% endif %}

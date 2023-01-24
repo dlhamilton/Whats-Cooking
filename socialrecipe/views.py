@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods
 from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm
-from django.db.models import Count, Avg, Q, F
+from django.db.models import Count, Avg, Q, F, Case, When
 from django.urls import resolve
 from django.template import loader
 from django.contrib import messages
@@ -68,7 +68,7 @@ class RecipesList(View):
                 recipes_list = recipes_list.order_by('title')
             elif sort_name == "rating":
                 sort_name = "B"
-                recipes_list = recipes_list.annotate(average_rating=Avg('star_rating__rating')).order_by('-average_rating')
+                recipes_list = recipes_list.annotate(average_rating=Avg('star_rating__rating')).order_by(Case(When(average_rating__isnull=True, then=1), default=0),'-average_rating')
             elif sort_name == "favourite":
                 sort_name = "C"
                 recipes_list = recipes_list.annotate(num_favorites=Count('favourites')).order_by('-num_favorites')
@@ -259,6 +259,11 @@ def profile_details(request, username):
 
     user_recipe_average = getAverageRecipeRating(username)
 
+    if username == request.user.username:
+        showing_recipes = Recipes.objects.filter(author=page_name).order_by('title')
+    else:
+        showing_recipes = Recipes.objects.filter(status=1).filter(author=page_name).order_by('title')
+
     fav_recipes = []
     all_recipes = Recipes.objects.filter(status=1)
     for r in all_recipes:
@@ -268,7 +273,8 @@ def profile_details(request, username):
              "fav_recipes_count": len(fav_recipes),
              "is_following": is_following_data,
              "average_recipe": user_recipe_average,
-             "fav_recipes": fav_recipes, }
+             "fav_recipes": fav_recipes,
+             "showing_recipes": showing_recipes, }
     return items
 
 
@@ -276,7 +282,7 @@ class ProfilePage(View):
 
     def get(self, request, username, *args, **kwargs):
         user_details = request.user.user_details
-        user_form = UserDetailsForm(instance=user_details)      
+        user_form = UserDetailsForm(instance=user_details)
         p_details = profile_details(self.request, username)
         p_details.update({
                 "logged_in_user": request.user.username,

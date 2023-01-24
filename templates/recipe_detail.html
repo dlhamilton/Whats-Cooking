@@ -69,7 +69,7 @@
             <!-- The post content goes inside the card-text. -->
             <!-- Use the | safe filter inside the template tags -->
             <h4 class="d-inline">Rating:{% if recipes_avg > 0 %}
-                {{ recipes_avg }}</h4><small class="d-inline"> ({{ recipes_count }})</small>
+                {{ recipes_avg|floatformat:1 }}</h4><small class="d-inline"> ({{ recipes_count }})</small>
             {% else %}
             No Ratings</h4>
             {% endif %}
