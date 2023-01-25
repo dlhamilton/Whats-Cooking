@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                             <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
-                                <h2 class="card-title one-Line-ellipsis">{{ recipe.title }}</h2>
+                                <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}</h2>
                                 <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
                             </a>
                             <p class="card-text mb-0"><small>Meal Time: {{ recipe.total_time }} Minutes</small></p>
@@ -148,19 +148,33 @@
             </div>
         </div>
     </div>
-    {% if is_paginated %}
+
+
+<div class="row p-0 my-3">
+        <span class="text-center">Page {{ recipes_list.number }} of {{ recipes_list.paginator.num_pages }}</span>
+    </div>
+
+    
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
+            {% if recipes_list.has_previous %}
+            <li><a href="?page={{ recipes_list.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
             {% endif %}
-            {% if page_obj.has_next %}
-            <li><a href="?page={{ page_obj.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
+            
+            {% if recipes_list.has_next %}
+            <li><a href="?page={{ recipes_list.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
 
             {% endif %}
         </ul>
     </nav>
-    {% endif %}
+
+
+ 
+
+
+
+
+
     {% endif %}
 </div>
 </div>

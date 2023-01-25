@@ -48,6 +48,7 @@ def RecipeFilterList(search_list):
     
     return temp_recipes_list
 
+
 def get_average_rating(recipes_list):
     for arecipe in recipes_list:
         recipes_count = StarRating.objects.filter(recipe=arecipe).count()
@@ -57,7 +58,15 @@ def get_average_rating(recipes_list):
         arecipe.the_star_rating_count = recipes_count
     return recipes_list
 
-  
+
+def paginate_recipes(request, recipes):
+    paginate_by = 6
+    page = request.GET.get('page') or 1
+    paginator = Paginator(recipes, paginate_by)
+    paginator = paginator.get_page(page)
+    return paginator
+
+
 class RecipesList(View):
 
     def sort_functions(self, recipes_list, kwargs):
@@ -95,6 +104,7 @@ class RecipesList(View):
             recipes_list = RecipeFilterList(recipe_elm)
         recipes_list = self.sort_functions(recipes_list, kwargs)
         recipes_list = get_average_rating(recipes_list)
+        recipes_list = paginate_recipes(request,recipes_list)
         if len(recipes_list) == 0:
             recipes_list = "No Recipes Match Your Search"
             query = False

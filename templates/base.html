@@ -36,13 +36,9 @@
                     <span class="brand-text">what's cooking</span>
                     <span class="brand-text-short">wc</span>
                 </a>
-                {% if user.is_authenticated %}
-                <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
-                    <span class="thin brand-bar ">| {{ user.username }}</span>
-                </a>
-                {% else %}
+   
                 <span class="thin brand-bar ">| Community Cooking</span>
-                {% endif %}
+             
             </span>
 
             <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"

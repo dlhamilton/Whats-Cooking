@@ -163,11 +163,15 @@
             <div class="col-md-4 splide__slide m-2">
               <div class="card mb-4">
                 <div class="card-body index-card-body">
+                  {% if page_name == user %}
                   {% if recipe.status == 0 %}
                   <div class="image-container border border-danger border-5 rounded">
-                    {% else %}
-                    <div class="image-container border border-success border-5 rounded">
-                      {% endif %}
+                  {% else %}
+                  <div class="image-container border border-success border-5 rounded">
+                  {% endif %}
+                  {% else %}
+                  <div class="image-container">
+                  {% endif %}
                       {% if "placeholder" in recipe.recipe_image.url %}
                       <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
                         src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
