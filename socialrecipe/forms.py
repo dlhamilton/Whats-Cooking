@@ -100,3 +100,11 @@ class UserDetailsForm(forms.ModelForm):
         user.last_name = self.cleaned_data.get('last_name')
         user.save()
         return super().save(commit)
+
+
+class FollowForm(forms.Form):
+    follow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=False)
+
+
+class UnfollowForm(forms.Form):
+    unfollow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=False)

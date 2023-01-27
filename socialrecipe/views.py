@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm
 from django.db.models import Count, Avg, Q, F, Case, When
 from django.urls import resolve
 from django.template import loader
@@ -294,13 +294,19 @@ class ProfilePage(View):
 
     def get(self, request, username, *args, **kwargs):
         user_form = None
+        follow_form = None
+        unfollow_form = None
         if request.user.is_authenticated:
             user_details = request.user.user_details
             user_form = UserDetailsForm(instance=user_details)
+            follow_form = FollowForm()
+            unfollow_form = UnfollowForm()
         p_details = profile_details(self.request, username)
         p_details.update({
                 "logged_in_user": request.user.username,
                 "user_form": user_form,
+                "follow_form": follow_form,
+                "unfollow_form": unfollow_form,
         })
         return render(
             request,
@@ -311,9 +317,21 @@ class ProfilePage(View):
     def post(self, request, username, *args, **kwargs):
         user_details = request.user.user_details
         user_form = UserDetailsForm(request.POST, request.FILES, instance=user_details)
-        if user_form.is_valid():
+        page_name = get_object_or_404(User, username=username)
+        follow_form = FollowForm(request.POST)
+        unfollow_form = UnfollowForm(request.POST)
+        if 'follow' in request.POST:
+            if follow_form.is_valid():
+                request.user.user_details.follows.add(page_name)
+                user_details.save()
+        elif 'unfollow' in request.POST:
+            if unfollow_form.is_valid():
+                request.user.user_details.follows.remove(page_name)
+                user_details.save()
+        elif user_form.is_valid():
             user_form.save()
-            return redirect('profile_page', username=username)
+        
+        return redirect('profile_page', username=username)
 
 
 class ProfileShoppingList(View):
