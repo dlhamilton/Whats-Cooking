@@ -360,8 +360,19 @@ class ProfileSingleList(View):
 
 class Profilerecipes(View):
     def get(self, request, username, *args, **kwargs):
+        the_name = get_object_or_404(User, username=username)
         p_details = profile_details(self.request, username)
-        p_details.update({"logged_in_user": request.user, })
+        p_details.update({"logged_in_user": the_name, })
+        if username != request.user.username:
+            recipes = Recipes.objects.filter(status=1).filter(author=the_name).order_by('title')
+        else:
+            recipes = Recipes.objects.filter(author=the_name).order_by('title')
+        recipes = get_average_rating(recipes)
+        recipes_len = len(recipes)
+        recipes = paginate_recipes(request, recipes)
+        if len(recipes) == 0:
+            recipes_list = "No Recipes"
+        p_details.update({"recipe_list": recipes, "recipe_list_count": recipes_len,})
         return render(
             request,
             "user_recipes.html",

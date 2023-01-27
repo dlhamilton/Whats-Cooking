@@ -646,6 +646,31 @@ max-height: 40vh;
     color:#212529;
 }
 
+/* profile recipe page */
+
+.edit_button_img_flash{
+    position: absolute;
+    bottom: 5%;
+    min-width: 30%;
+    left: -2px;
+}
+.pub_button_img_flash{
+    position: absolute;
+    top: 5%;
+    min-width: 30%;
+    left: -2px;
+    padding: 5px;
+    color:whitesmoke;
+
+}
+
+.pub{
+    background-color: #8AA848;
+}
+.hid{
+    background-color: rgb(219, 70, 70);
+}
+
 
 @media only screen and (max-width: 575px) {
     .carousel-caption h3{

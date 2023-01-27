@@ -7,8 +7,8 @@
   <div class="row">
     <div class="col">
       <div class="basic">
-        {% include "logged_in_user_card.html" %}    
-        </div>
+        {% include "logged_in_user_card.html" %}
+      </div>
     </div>
   </div>
 
@@ -20,7 +20,7 @@
 
   <div class="row">
     <div class="col">
-      <h1>My Recipes</h1>
+      <h1 class="text-capitalize"><span class="fw-bold">{{ page_name }}</span> - Recipes</h1>
     </div>
   </div>
 
@@ -34,39 +34,111 @@
     <div class="col">
       {% if page_name == user %}
       <a href="{% url 'profile_page_recipes_add' user.username %}" class="post-link">
-        <button type="button" class="btn btn-outline-primary"> 
+        <button type="button" class="btn btn-outline-primary">
           <i class="fa-regular fa-square-plus"></i> Create New
         </button>
       </a>
-      {% endif %}
-      
 
-      <p>Recipe count: {{ page_name.user_recipes.count }}</p>
+      <div class="row">
+        <div class="col">
+          <hr>
+        </div>
+      </div>
+
+      {% endif %}
+
+      <p>Recipe count: {{ recipe_list_count }}</p>
 
       <p>
-        Recipes: 
+        Recipes:
       </p>
-      {% if page_name.user_recipes.count > 0 %}
-      <ul>
-        {% for recipe in page_name.user_recipes.all %}
-        <li>
-          <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
-        {{ recipe }}
-          {% if recipe.status == 0 %}
-          <i class="fa-solid fa-link-slash"></i>
-          {% endif %}
-</a>
-          <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link"><div class="btn btn-primary">Edit</div></a>
-        </li>
-      
-        {% endfor %}
-      </ul>
-      {% else %}
-      <p><strong>No Recipes</strong></p>
-      {% endif %}
+
+        <div class="row">
+     
+          {% for recipe in recipe_list %}
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-body index-card-body">
+                  <div class="image-container">
+                    {% if "placeholder" in recipe.recipe_image.url %}
+                      <img class="card-img-top auto-img-h"
+                          src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
+                    {% else %}
+                      <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
+                    {% endif %}
+                    {% if page_name == user %}
+                      {% if recipe.status == 1 %}
+                        <div class="pub_button_img_flash pub rounded">
+                          Published
+                      {% else %}
+                        <div class="pub_button_img_flash hid rounded">
+                          Hidden
+                      {% endif %}
+                        </div>
+
+                        <div class="edit_button_img_flash">
+                          <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link">
+                            <div class="btn btn-primary">Edit</div>
+                          </a>
+                        </div>
+                    {% endif %}
+                  </div>
+                  <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                    <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}</h2>
+                    <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
+                  </a>
+                  <p class="card-text mb-0"><small>Meal Time: {{ recipe.total_time }} Minutes</small></p>
+                  <hr />
+                  <div class="d-flex">
+                    <div class="col-10 card-text text-muted h6">
+                      {% if recipe.the_star_rating_count != 0 %}
+                        {% for _ in recipe.the_star_rating_int %}
+                          <i class="fa-solid fa-star"></i>
+                        {% endfor %}
+                        {{ recipe.the_star_rating|floatformat:1  }} ( {{ recipe.the_star_rating_count }} )
+                      {% else %}
+                        No Ratings
+                      {% endif %}
+                    </div>
+                    <div class="col-2 text-end card-text text-muted h6">
+                      <i class="far fa-heart"></i> {{ recipe.number_of_favourites }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 %}
+            </div>
+            <div class="row">
+            {% endif %}
+          {% endfor %}
+     
+        </div>
+
+
+        <div class="row p-0 my-3">
+        <span class="text-center">Page {{ recipe_list.number }} of {{ recipe_list.paginator.num_pages }}</span>
+    </div>
+
+    
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if recipe_list.has_previous %}
+            <li><a href="?page={{ recipe_list.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
+            {% endif %}
+            
+            {% if recipe_list.has_next %}
+            <li><a href="?page={{ recipe_list.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
+
+            {% endif %}
+        </ul>
+    </nav>
+
+
+
     </div>
   </div>
 
 </div>
 
-{%endblock%}
+  {%endblock%}
