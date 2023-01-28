@@ -59,6 +59,21 @@ def get_average_rating(recipes_list):
     return recipes_list
 
 
+def following_change(request, username):
+    user_details = request.user.user_details
+    follow_form = FollowForm(request.POST)
+    unfollow_form = UnfollowForm(request.POST)
+    page_name = get_object_or_404(User, username=username)
+    if 'follow' in request.POST:
+        if follow_form.is_valid():
+            request.user.user_details.follows.add(page_name)
+            user_details.save()
+    elif 'unfollow' in request.POST:
+        if unfollow_form.is_valid():
+            request.user.user_details.follows.remove(page_name)
+            user_details.save()
+
+
 def paginate_recipes(request, recipes):
     paginate_by = 6
     page = request.GET.get('page') or 1
@@ -259,13 +274,16 @@ def getAverageRecipeRating(a_user):
 
 def profile_details(request, username):
     page_name = get_object_or_404(User, username=username)
-
+    follow_form = None
+    unfollow_form = None
     is_following_data = 0
     if request.user.is_authenticated:
         if page_name.user_follows.filter(user=request.user).exists():
             is_following_data = 2
         else:
             is_following_data = 1
+        follow_form = FollowForm()
+        unfollow_form = UnfollowForm()
 
     user_recipe_average = getAverageRecipeRating(username)
 
@@ -286,7 +304,9 @@ def profile_details(request, username):
              "is_following": is_following_data,
              "average_recipe": user_recipe_average,
              "fav_recipes": fav_recipes,
-             "showing_recipes": showing_recipes, }
+             "showing_recipes": showing_recipes,
+             "follow_form": follow_form,
+             "unfollow_form": unfollow_form, }
     return items
 
 
@@ -317,20 +337,10 @@ class ProfilePage(View):
     def post(self, request, username, *args, **kwargs):
         user_details = request.user.user_details
         user_form = UserDetailsForm(request.POST, request.FILES, instance=user_details)
-        page_name = get_object_or_404(User, username=username)
-        follow_form = FollowForm(request.POST)
-        unfollow_form = UnfollowForm(request.POST)
-        if 'follow' in request.POST:
-            if follow_form.is_valid():
-                request.user.user_details.follows.add(page_name)
-                user_details.save()
-        elif 'unfollow' in request.POST:
-            if unfollow_form.is_valid():
-                request.user.user_details.follows.remove(page_name)
-                user_details.save()
+        if 'follow' in request.POST or 'unfollow' in request.POST:
+            following_change(request, username)
         elif user_form.is_valid():
             user_form.save()
-        
         return redirect('profile_page', username=username)
 
 
@@ -349,6 +359,11 @@ class ProfileShoppingList(View):
                     reverse('profile_page',
                             kwargs={'username': request.user.username}))
             return HttpResponseRedirect(reverse('home'))
+        
+    # def post(self, request, username, *args, **kwargs):
+    #     if 'follow' in request.POST or 'unfollow' in request.POST:
+    #         following_change(request, username)
+    #     return redirect('profile_page_shopping', username=username)
 
 
 class ProfileSingleList(View):
@@ -374,6 +389,11 @@ class ProfileSingleList(View):
                         'profile_page',
                         kwargs={'username': request.user.username}))
             return HttpResponseRedirect(reverse('home'))
+    
+    # def post(self, request, username, list, *args, **kwargs):
+    #     if 'follow' in request.POST or 'unfollow' in request.POST:
+    #         following_change(request, username)
+    #     return redirect('profile_single_shopping', username=username, list=list)
 
 
 class Profilerecipes(View):
@@ -396,6 +416,11 @@ class Profilerecipes(View):
             "user_recipes.html",
             p_details
         )
+    
+    def post(self, request, username, *args, **kwargs):
+        if 'follow' in request.POST or 'unfollow' in request.POST:
+            following_change(request, username)
+        return redirect('profile_page_recipes', username=username)
 
 
 class ProfileRecipesAdd(View):
@@ -675,6 +700,11 @@ class ProfileFollowers(View):
             p_details
         )
 
+    def post(self, request, username, *args, **kwargs):
+        if 'follow' in request.POST or 'unfollow' in request.POST:
+            following_change(request, username)
+        return redirect('profile_page_followers', username=username)
+
 
 class ProfileFavourites(View):
     def get(self, request, username, *args, **kwargs):
@@ -685,6 +715,11 @@ class ProfileFavourites(View):
             "user_favourites.html",
             p_details
         )
+
+    def post(self, request, username, *args, **kwargs):
+        if 'follow' in request.POST or 'unfollow' in request.POST:
+            following_change(request, username)
+        return redirect('profile_page_favourites', username=username)
 
 
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):

@@ -40,23 +40,34 @@
 
 
                 </div>
+                {% if page_name != user %}
                 {% if is_following != 0 %}
                 {% if is_following == 1 %}
-                <div class="user-profile-card-meeting-action ms-auto user-profile-card-lrg">
-                    <a href="#" class="btn btn-wc-green">Follow</a>
-                </div>
-                <div
-                    class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide">
-                    <a href="#" class="btn btn-wc-green"><i class="fas fa-user-plus"></i></a>
-                </div>
+
+                <form name="follow_submit" method="post">
+                    {% csrf_token %}
+                    {{ follow_form }}
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-wc-green">
+                    Follow
+                    </button>
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-wc-green">
+                        <i class="fas fa-user-plus"></i>
+                        </button>
+                </form>
                 {% else %}
-                <div class="user-profile-card-meeting-action ms-auto user-profile-card-lrg">
-                    <a href="#" class="btn btn-primary">Following</a>
-                </div>
-                <div
-                    class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide">
-                    <a href="#" class="btn btn-primary"><i class="fas fa-user"></i></a>
-                </div>
+
+                <form name="follow_submit" method="post">
+                    {% csrf_token %}
+                    {{ unfollow_form }}
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary">
+                    Following
+                    </button>
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary">
+                        <i class="fas fa-user"></i>
+                        </button>
+                </form>
+
+                {% endif %}
                 {% endif %}
                 {% endif %}
             </div>
