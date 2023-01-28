@@ -293,11 +293,13 @@ def profile_details(request, username):
         showing_recipes = Recipes.objects.filter(status=1).filter(author=page_name).order_by('title')
     showing_recipes = get_average_rating(showing_recipes)
     
-    fav_recipes = []
-    all_recipes = Recipes.objects.filter(status=1)
-    for r in all_recipes:
-        if r.favourites.filter(id=page_name.id).exists():
-            fav_recipes.append(r)
+    # fav_recipes = []
+    # all_recipes = Recipes.objects.filter(status=1)
+    # for r in all_recipes:
+    #     if r.favourites.filter(id=page_name.id).exists():
+    #         fav_recipes.append(r)
+    
+    fav_recipes = Recipes.objects.filter(favourites=page_name).filter(status=1)
     fav_recipes = get_average_rating(fav_recipes)
     items = {"page_name": page_name,
              "fav_recipes_count": len(fav_recipes),

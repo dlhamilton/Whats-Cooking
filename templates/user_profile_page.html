@@ -453,15 +453,18 @@
       },
     }
 
-
+    if (document.getElementById("splide1")) {
     var splide1 = new Splide('#splide1', splide_settings);
     splide1.mount();
-
+    }
+    if (document.getElementById("splide2")) {
     var splide2 = new Splide('#splide2', splide_settings_big);
     splide2.mount();
-
+    }
+    if (document.getElementById("splide3")) {
     var splide3 = new Splide('#splide3', splide_settings_big);
     splide3.mount();
+    }
   </script>
 
 
