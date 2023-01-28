@@ -11,6 +11,11 @@
                 <!-- Post title goes in these h1 tags -->
                 <h1 class="post-title text-capitalize">
                     {{ recipe.title }}
+                    {% if user == recipe.author %}    
+                    <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link">
+                        <div class="btn btn-primary">Edit</div>
+                    </a>
+                    {% endif %}
                 </h1>
                 <!-- Post author goes before the | the post's created date goes after -->
                 <h2 class="post-subtitle post-link-green">
@@ -22,15 +27,12 @@
                             </a>
                         </strong>
                     </span>
+
+                    
+
                 </h2>
                 <p class="post-subtitle">Uploaded: {{ recipe.upload_date|date:"d/m/Y" }}</p>
-                {% if user == recipe.author %}
-                <div class="post-subtitle">
-                    <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link">
-                        <div class="btn btn-primary">Edit</div>
-                    </a>
-                </div>
-                {% endif %}
+                
             </div>
             
             <div class="d-none d-md-block col-md-6 masthead-image">
@@ -75,10 +77,10 @@
             {% endif %}
             <p class="card-text mt-2">
                 {% for _ in star_loop %}
-                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star" data-num="{{ forloop.counter0 }}"></i>          
                 {% endfor %}
-                {% for _ in empty_star_loop %}
-                <i class="fa-regular fa-star"></i>
+                {% for i in empty_star_loop %}
+                <i class="fa-regular fa-star" data-num="{{ i }}"></i>
                 {% endfor %}
             </p>
         </div>
@@ -375,7 +377,7 @@
             comments_row.style.display = 'none';
         }
     })
-
+    if (document.getElementById("image-main-carousel")) {
     var main = new Splide('#image-main-carousel', {
         gap: 20,
         rewind: true,
@@ -400,7 +402,7 @@
 
         }
     }).mount();
-
+    }
 
     function myFunction(id) {
         let valid;

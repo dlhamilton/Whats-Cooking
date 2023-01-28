@@ -18,9 +18,24 @@
     </div>
   </div>
 
+
   <div class="row">
     <div class="col">
-      <h1>My Favourites</h1>
+  <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}">
+    <i class="fa-solid fa-chevron-left"></i>Back</a></span>
+  </div>
+</div>
+
+    <div class="row">
+      <div class="col">
+        <hr>
+      </div>
+    </div>
+
+
+  <div class="row">
+    <div class="col">
+      <h1 class="text-capitalize"><span class="fw-bold">{{ page_name }}</span> - Favourites</h1>
     </div>
   </div>
   

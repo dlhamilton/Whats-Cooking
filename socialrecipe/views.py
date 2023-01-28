@@ -150,7 +150,7 @@ class RecipeDetail(View):
             recipes_avg = StarRating.objects.filter(recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
             recipes_count = StarRating.objects.filter(recipe=recipe).count()
             star_loop = range(0, int(recipes_avg or 0))
-            empty_star_loop = range(0, 5-int(recipes_avg or 0))
+            empty_star_loop = range(int(recipes_avg or 0),5)
             favourited = False
             if recipe.favourites.filter(id=self.request.user.id).exists():
                 favourited = True

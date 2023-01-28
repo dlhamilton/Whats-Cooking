@@ -59,10 +59,10 @@
                 <form name="follow_submit" method="post">
                     {% csrf_token %}
                     {{ unfollow_form }}
-                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary">
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary" id="following_btn_blue">
                     Following
                     </button>
-                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary">
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary" id="following_btn_blue_sm">
                         <i class="fas fa-user"></i>
                         </button>
                 </form>
@@ -126,3 +126,21 @@
         </div>
     </div>
 </div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+$("#following_btn_blue").hover(function(){
+    $(this).text("Unfollow");
+}, function(){
+    $(this).text("Following");
+});
+
+$("#following_btn_blue_sm").hover(function(){
+    $(this).html('<i class="fa-solid fa-user-xmark"></i>');
+}, function(){
+    $(this).html('<i class="fas fa-user"></i>');
+});
+
+
+</script>

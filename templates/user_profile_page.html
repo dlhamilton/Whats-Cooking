@@ -117,7 +117,7 @@
                 <form name="follow_submit" method="post" action="{% url 'profile_page' page_name %}">
                   {% csrf_token %}
                   {{ unfollow_form }}
-                  <input class="btn btn-primary w-100" type="submit" value="Following">
+                  <input class="btn btn-primary w-100" type="submit" value="Following" id="following_id">
               </form>
 
                 {% endif %}
@@ -162,6 +162,16 @@
       <h2>
         <i class="fas fa-utensils text-orange-color"></i> Recipes:
       </h2>
+
+      {% if page_name == user %}
+      <p><a href="{% url 'profile_page_recipes_add' user.username %}" class="post-link">
+        <button type="button" class="btn btn-outline-primary">
+          <i class="fa-regular fa-square-plus"></i> Create New
+        </button>
+      </a></p>
+
+      {% endif %}
+
       <p>Recipe count: {{ showing_recipes.count }}</p>
       {% if showing_recipes.count > 0 %}
       <div id="splide2" class="splide">
@@ -412,7 +422,7 @@
       </div>
     </div>
   </div>
-
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
   <script>
     let splide_settings = {
@@ -465,6 +475,12 @@
     var splide3 = new Splide('#splide3', splide_settings_big);
     splide3.mount();
     }
+
+    $("#following_id").hover(function(){
+    $(this).attr("value", "Unfollow");
+}, function(){
+    $(this).attr("value", "Following");
+});
   </script>
 
 
