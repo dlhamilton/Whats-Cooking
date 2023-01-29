@@ -71,11 +71,9 @@
         </div>
         <div class="d-inline col-md-4 offset-md-1 mb-4">
           <!-- The featured image URL goes in the src attribute -->
-          {% if "placeholder" in recipe.recipe_image.url %}
-          <img src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg" width="100%" class="rounded-3">
-          {% else %}
+     
           <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3">
-          {% endif %}
+         
         </div>
       </div>
     </div>

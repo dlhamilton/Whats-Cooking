@@ -174,12 +174,9 @@
             <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
               <div class="index-card-body">
                 <div class="image-container">
-                  {% if "placeholder" in recipe.recipe_image.url %}
-                  <img class="card-img-top auto-img-h"
-                    src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
-                  {% else %}
+               
                   <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
-                  {% endif %}
+
                   <div class="image-flash">
                     <p class="author">Recipe by: {{ recipe.author }}</p>
                   </div>

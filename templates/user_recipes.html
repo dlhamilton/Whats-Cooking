@@ -73,12 +73,9 @@
               <div class="card mb-4">
                 <div class="card-body index-card-body">
                   <div class="image-container">
-                    {% if "placeholder" in recipe.recipe_image.url %}
-                      <img class="card-img-top auto-img-h"
-                          src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg">
-                    {% else %}
+      
                       <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
-                    {% endif %}
+                
                     {% if page_name == user %}
                       {% if recipe.status == 1 %}
                         <div class="pub_button_img_flash pub rounded">

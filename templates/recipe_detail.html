@@ -37,11 +37,9 @@
             
             <div class="d-none d-md-block col-md-6 masthead-image">
                 <!-- The featured image URL goes in the src attribute -->
-                {% if "placeholder" in recipe.recipe_image.url %}
-                <img src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg" width="100%">
-                {% else %}
+              
                 <img src="{{ recipe.recipe_image.url }}" width="100%">
-                {% endif %}
+            
             </div>
         </div>
     </div>
@@ -86,11 +84,9 @@
         </div>
         <div class="d-inline d-md-none col-6">
             <!-- The featured image URL goes in the src attribute -->
-            {% if "placeholder" in recipe.recipe_image.url %}
-            <img src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg" width="100%" class="rounded-3">
-            {% else %}
+         
             <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3">
-            {% endif %}
+         
         </div>
     </div>
     <div class="row recipe_icons mt-4">
@@ -212,12 +208,9 @@
                         {% for image in images %}
                         <li class="splide__slide">
                             <!-- <div class="splide__slide__container"> -->
-                            {% if "placeholder" in recipe.recipe_image.url %}
-                            <img class="rounded" src="https://codeinstitute.s3.amazonaws.com/fullstack/blog/default.jpg"
-                                width="100%">
-                            {% else %}
+                          
                             <img class="rounded" src="{{ image.recipe_image.url }}" width="100%">
-                            {% endif %}
+                        
                             <!-- </div> -->
                             <div class="font-weight-bold">
                                 <!-- The commenter's name goes here. Check the model if you're not sure what that is -->
