@@ -671,6 +671,10 @@ max-height: 40vh;
     background-color: rgb(219, 70, 70);
 }
 
+/* recipe detail page */
+/* .star_click:hover {
+    color: #ffc107;
+  } */
 
 @media only screen and (max-width: 575px) {
     .carousel-caption h3{

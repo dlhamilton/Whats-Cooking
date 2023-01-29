@@ -73,6 +73,16 @@
             {% else %}
             No Ratings</h4>
             {% endif %}
+            {% if user.is_authenticated %}
+            <p class="card-text mt-2">
+                {% for _ in star_loop %}
+                <i class="fa-solid fa-star star_click" data-fill="fill" data-num="{{ forloop.counter0 }}"></i>          
+                {% endfor %}
+                {% for i in empty_star_loop %}
+                <i class="fa-regular fa-star star_click" data-fill="clear" data-num="{{ i }}"></i>
+                {% endfor %}
+            </p>
+            {% else %}
             <p class="card-text mt-2">
                 {% for _ in star_loop %}
                 <i class="fa-solid fa-star" data-num="{{ forloop.counter0 }}"></i>          
@@ -81,6 +91,7 @@
                 <i class="fa-regular fa-star" data-num="{{ i }}"></i>
                 {% endfor %}
             </p>
+            {% endif %}
         </div>
         <div class="d-inline d-md-none col-6">
             <!-- The featured image URL goes in the src attribute -->
@@ -324,7 +335,10 @@
     </div>
     <!-- new test content -->
 </div>
-
+<script
+  src="https://code.jquery.com/jquery-3.6.3.js"
+  integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+  crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
 <script>
     {% if user.is_authenticated %}
@@ -439,6 +453,37 @@
             })
             .catch(error => console.error(error));
     }
+
+
+    $('.star_click').hover(function() {
+  let num = $(this).data("num");
+  $('.star_click[data-num]').each(function() {
+    if ($(this).data("num") <= num) {
+      $(this).css("color", "#ffc107");
+      if ($(this).data("fill") == "clear") {
+      $(this).addClass("fa-solid");
+      $(this).removeClass("fa-regular");
+      }
+    }
+  });
+}, function() {
+  $('.star_click[data-num]').css("color", "");
+  
+  $('.star_click[data-num]').each(function() {
+
+  if ($(this).data("fill") == "clear") {
+    $(this).removeClass("fa-solid");
+    $(this).addClass("fa-regular");
+  }
+  });
+
+});
+
+$('.star_click').click(function() {
+    let num = $(this).data("num")+1;
+  console.log(num);
+});
+
 </script>
 
 {% endblock content %}
