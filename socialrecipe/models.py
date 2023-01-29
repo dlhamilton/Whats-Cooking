@@ -51,7 +51,7 @@ class Recipes(models.Model):
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_recipes")
-    recipe_image = CloudinaryField('image', default='placeholder')
+    recipe_image = CloudinaryField('image', default='v1675027391/placeholder-recipe.png')
     excerpt = models.TextField(blank=True)
     status = models.IntegerField(choices=RECIPE_STATUS, default=0)
     favourites = models.ManyToManyField(User, related_name='user_favourites', blank=True)
