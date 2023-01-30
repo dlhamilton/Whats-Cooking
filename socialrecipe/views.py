@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm, RatingForm
 from django.db.models import Count, Avg, Q, F, Case, When
 from django.urls import resolve
 from django.template import loader
@@ -141,6 +141,7 @@ class RecipesList(View):
 class RecipeDetail(View):
     def get(self, request, slug, *args, **kwargs):
         queryset = Recipes.objects
+        rated = False
         recipe = get_object_or_404(queryset, slug=slug)
         if recipe.status == 1 or request.user == recipe.author:
             recipe_methods = recipe.methods.order_by('order')
@@ -154,6 +155,13 @@ class RecipeDetail(View):
             favourited = False
             if recipe.favourites.filter(id=self.request.user.id).exists():
                 favourited = True
+
+            if request.user.is_authenticated:
+                if StarRating.objects.filter(user=request.user).filter(recipe=recipe).exists():
+                    the_rating=StarRating.objects.filter(user=request.user).filter(recipe=recipe).first()
+                    star_loop = range(0, int(the_rating.rating))
+                    empty_star_loop = range(int(the_rating.rating), 5)
+                    rated = True
 
             return render(
                 request,
@@ -173,6 +181,8 @@ class RecipeDetail(View):
                     "recipes_count": recipes_count,
                     "star_loop": star_loop,
                     "empty_star_loop": empty_star_loop,
+                    "rating_form": RatingForm(),
+                    "rated": rated,
                 },
             )
 
@@ -184,6 +194,9 @@ class RecipeDetail(View):
         return JsonResponse({"message": id}, status=200)
 
     def post(self, request, slug, *args, **kwargs):
+        commented = False
+        rated = False
+        valid_comment=True
         queryset = Recipes.objects.filter(status=1)
         recipe = get_object_or_404(queryset, slug=slug)
         recipe_methods = recipe.methods.order_by('order')
@@ -192,26 +205,50 @@ class RecipeDetail(View):
         recipe_images = recipe.recipe_images.filter()
         recipes_avg = StarRating.objects.filter(recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
         recipes_count = StarRating.objects.filter(recipe=recipe).count()
-        star_loop = range(0, int(recipes_avg))
-        empty_star_loop = range(0, 5-int(recipes_avg))
+        star_loop = range(0, int(recipes_avg or 0))
+        empty_star_loop = range(int(recipes_avg or 0),5)
+
+        if request.user.is_authenticated:
+            if StarRating.objects.filter(user=request.user).filter(recipe=recipe).exists():
+                the_rating=StarRating.objects.filter(user=request.user).filter(recipe=recipe).first()
+                star_loop = range(0, int(the_rating.rating))
+                empty_star_loop = range(int(the_rating.rating), 5)
+                rated = True
+            
         favourited = False
         if recipe.favourites.filter(id=self.request.user.id).exists():
             favourited = True
 
-        comment_form = CommentsForm(data=request.POST)
+        if 'the_comment_form' in request.POST:
+            comment_form = CommentsForm(data=request.POST)
 
-        if comment_form.is_valid():
-            comment_form.instance.user = request.user
-            comment = comment_form.save(commit=False)
-            comment.recipe = recipe
-            comment.save()
-            messages.success(request, 'Comment Added')
-            valid_comment = True
-        else:
-            comment_form = CommentsForm()
-            messages.error(request, 'Error With Comment')
-            valid_comment = False
-
+            if comment_form.is_valid():
+                comment_form.instance.user = request.user
+                comment = comment_form.save(commit=False)
+                comment.recipe = recipe
+                comment.save()
+                messages.success(request, 'Comment Added')
+                valid_comment = True
+            else:
+                comment_form = CommentsForm()
+                messages.error(request, 'Error With Comment')
+                valid_comment = False
+        elif 'the_like_form' in request.POST:
+            return makeALike(request, slug)
+        elif 'the_rating_form' in request.POST:
+            rating_form = RatingForm(data=request.POST)
+            if rating_form.is_valid():
+                if StarRating.objects.filter(user=request.user).filter(recipe=recipe).exists():
+                    the_rating = StarRating.objects.filter(user=request.user).filter(recipe=recipe).first()
+                    the_rating.delete()
+                rating_form.instance.user = request.user
+                rating = rating_form.save(commit=False)
+                rating.recipe = recipe
+                rating.save()
+                messages.success(request, 'Rating Added')
+                return JsonResponse({'status': True})
+            else:
+                return JsonResponse({'status': False})
         return render(
             request,
             "recipe_detail.html",
@@ -223,28 +260,29 @@ class RecipeDetail(View):
                 "ingredients": recipe_ingredients,
                 "images": recipe_images,
                 "page_name": recipe.title,
-                "commented": True,
+                "commented": valid_comment,
                 "valid_comment": valid_comment,
                 "comment_form": CommentsForm(),
                 "recipes_avg": recipes_avg,
                 "recipes_count": recipes_count,
                 "star_loop": star_loop,
                 "empty_star_loop": empty_star_loop,
+                "rating_form": RatingForm(),
+                "rated": rated,
             },
         )
 
 
-class RecipeFavourite(View):
-    def post(self, request, slug):
-        recipe = get_object_or_404(Recipes,slug=slug)
+def makeALike(request, slug):
+    recipe = get_object_or_404(Recipes, slug=slug)
 
-        if recipe.favourites.filter(id=request.user.id).exists():
-            recipe.favourites.remove(request.user)
-            return JsonResponse({'liked': False})
-        else:
-            recipe.favourites.add(request.user)
-        # return HttpResponseRedirect(reverse('recipe_detail', args=[slug]))
-        return JsonResponse({'liked': True})
+    if recipe.favourites.filter(id=request.user.id).exists():
+        recipe.favourites.remove(request.user)
+        return JsonResponse({'liked': False})
+    else:
+        recipe.favourites.add(request.user)
+    # return HttpResponseRedirect(reverse('recipe_detail', args=[slug]))
+    return JsonResponse({'liked': True})
 
 
 def getAverageRecipeRating(a_user):

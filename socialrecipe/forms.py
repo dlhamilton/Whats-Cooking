@@ -2,13 +2,22 @@ from django import forms
 from cloudinary.forms import CloudinaryInput
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
-from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails
+from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails, StarRating
 
 
 class CommentsForm(forms.ModelForm):
     class Meta:
         model = Comments
         fields = ('body',)
+
+
+class RatingForm(forms.ModelForm):
+    class Meta:
+        model = StarRating
+        fields = ('rating',)
+        widgets = {
+                    'rating': forms.HiddenInput(attrs={'class': 'd-none'}),
+        }
 
 
 class RecipesForm(forms.ModelForm):

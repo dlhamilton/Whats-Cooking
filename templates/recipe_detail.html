@@ -74,13 +74,28 @@
             No Ratings</h4>
             {% endif %}
             {% if user.is_authenticated %}
+           
+            
             <p class="card-text mt-2">
+                <form method="post" id="the_rating_form_form" name="the_rating_form_form">
                 {% for _ in star_loop %}
+                <button type="submit" class="btn-no-style" data-num="{{ forloop.counter0 }}">
+                    {% if rated == False %}
                 <i class="fa-solid fa-star star_click" data-fill="fill" data-num="{{ forloop.counter0 }}"></i>          
+            {% else %}
+            <i class="fa-solid fa-star star_click" style="color: #8AA848;" data-fill="fill" data-num="{{ forloop.counter0 }}"></i>          
+            {% endif %}
+            </button>
                 {% endfor %}
                 {% for i in empty_star_loop %}
+                <button type="submit" class="btn-no-style">
                 <i class="fa-regular fa-star star_click" data-fill="clear" data-num="{{ i }}"></i>
+            </button>
                 {% endfor %}
+                <input type="hidden" name="the_rating_form" value="the_rating_form">
+{{ rating_form }}
+{% csrf_token %}
+                </form>
             </p>
             {% else %}
             <p class="card-text mt-2">
@@ -105,7 +120,7 @@
         <div class="col-4 col-md-2 text-center">
             <strong>
                 {% if user.is_authenticated %}
-                <form id="myForm" class="d-inline" action="{% url 'recipe_favourite' recipe.slug %}" method="POST">
+                <form id="myForm" class="d-inline" method="POST">
                     {% csrf_token %}
                     {% if favourited %}
                     <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
@@ -116,6 +131,7 @@
                         <i class="far fa-heart"></i>
                     </button>
                     {% endif %}
+                    <input type="hidden" name="the_like_form" value="the_like_form">
                 </form>
                 {% else %}
                 <span class="text-secondary"><i class="far fa-heart"></i></span>
@@ -321,6 +337,7 @@
                     {{ comment_form | crispy }}
                     {% csrf_token %}
                     <button type="submit" class="btn btn-wc-green btn-lg mt-1">Submit Comment</button>
+                    <input type="hidden" name="the_comment_form" value="the_comment_form">
                 </form>
 
                 {% endif %}
@@ -349,7 +366,9 @@
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        fetch("{% url 'recipe_favourite' recipe.slug %}", {
+        let recipe_slug = '{{ recipe.slug }}';
+        let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        fetch(`/recipes/${recipe_slug}/`, {
                 method: 'POST',
                 body: formData,
             })
@@ -454,7 +473,7 @@
             .catch(error => console.error(error));
     }
 
-
+    {% if user.is_authenticated %}
     $('.star_click').hover(function() {
   let num = $(this).data("num");
   $('.star_click[data-num]').each(function() {
@@ -475,15 +494,47 @@
     $(this).removeClass("fa-solid");
     $(this).addClass("fa-regular");
   }
+
+  {% if rated == True %}
+    if ($(this).data("fill") != "clear") {
+        $(this).css("color", "#8AA848");
+    }
+    {% endif %}
   });
 
 });
-
-$('.star_click').click(function() {
+// const ratingForm = document.querySelector('#the_rating_form_form');
+$('.star_click').click( function(){
+    // ratingForm.addEventListener('submit', (event) => {
+    event.preventDefault();
     let num = $(this).data("num")+1;
-  console.log(num);
+
+    document.getElementById("id_rating").value = num;
+
+
+    
+        let formDataRating = new FormData(the_rating_form_form);
+
+        let recipe_slug = '{{ recipe.slug }}';
+        let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        
+
+
+        fetch(`/recipes/${recipe_slug}/`, {
+                method: 'POST',
+                body: formDataRating,
+            })
+            .then((response) => response.json())
+            .then((data) => {
+
+            location.reload();
+          
+            })
+            .then(() => {});
+        return false;
 });
 
+{% endif %}
 </script>
 
 {% endblock content %}
