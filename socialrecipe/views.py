@@ -695,6 +695,11 @@ class ProfileRecipesEdit(View):
                     method_instance.method = add_methods_form.cleaned_data['method']
                     method_instance.save()
                     messages.success(request, 'Method Updated')
+            elif "the_delete_form" in request.POST:
+                id = request.POST.get('id')
+                record = get_object_or_404(Recipes, id=id)
+                record.delete()
+                return redirect(reverse('profile_page_recipes', kwargs={'username':request.user.username}))
             # Methods
             method_form = MethodsForm()
             the_methods = Methods.objects.filter(recipe=the_recipe).order_by('order')
@@ -754,6 +759,7 @@ class ProfileRecipesEdit(View):
     #         self.get(request, username, recipe)
     #     else:
     #         self.get(request, username, recipe)
+
 
 
 class ProfileFollowers(View):

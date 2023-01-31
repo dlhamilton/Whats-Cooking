@@ -31,6 +31,7 @@
       <a href="{% url 'recipe_detail' recipe.slug %}"><button class="btn btn-secondary mx-2">Show Recipe</button></a>
       <a href="{% url 'profile_page_recipes' user.username %}"><button
           class="btn btn-wc-green mx-2">Finished</button></a>
+          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_staticBackdrop">Delete</button>
     </div>
   </div>
 
@@ -271,7 +272,7 @@
 <!-- Modal -->
 <div class="modal fade ingredient_modal" id="im_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
   tabindex="-1" aria-labelledby="im_staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title text-capitalize" id="im_staticBackdropLabel">Modal title</h5>
@@ -306,7 +307,7 @@
 <!-- Modal -->
 <div class="modal fade recipe_modal" id="r_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
   tabindex="-1" aria-labelledby="r_staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title text-capitalize" id="r_staticBackdropLabel">Update {{ recipe.title }}</h5>
@@ -330,7 +331,7 @@
 <!-- Modal -->
 <div class="modal fade method_modal" id="mm_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
   tabindex="-1" aria-labelledby="mm_staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title text-capitalize" id="mm_staticBackdropLabel">Modal Title</h5>
@@ -348,6 +349,31 @@
           <button type="submit" class="btn btn-wc-green">Update Methods</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="delete_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+  tabindex="-1" aria-labelledby="delete_staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-capitalize" id="delete_staticBackdropLabel">{{ recipe }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Please confirm that you want to delete the recipe.
+      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="{{ recipe.id }}">
+          <input type="hidden" name="the_delete_form" value="the_delete_form">
+          <button type="submit" class="btn btn-danger">Delete Recipe</button>
+        </form>
+        </div>
     </div>
   </div>
 </div>
