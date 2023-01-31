@@ -60,6 +60,7 @@ body {
     position: relative;
     display: inline-block;
     max-height: 25vh;
+    max-height: 300px;
     width: 100%;
 }
 
@@ -681,6 +682,17 @@ max-height: 40vh;
 /* .star_click:hover {
     color: #ffc107;
   } */
+
+  .max_width_recipe_img{
+    max-width: 400px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .modal-dialog {
+    max-width: 800px
+  }
 
 @media only screen and (max-width: 575px) {
     .carousel-caption h3{

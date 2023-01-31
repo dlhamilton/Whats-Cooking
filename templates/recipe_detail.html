@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <div class="row g-0">
             <div class="col-md-6 masthead-text">
-                <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{{ request.META.HTTP_REFERER }}">
+                <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'recipes' %}">
                         <i class="fa-solid fa-chevron-left"></i>Back</a></span>
                 <!-- Post title goes in these h1 tags -->
                 <h1 class="post-title text-capitalize">
@@ -38,7 +38,7 @@
             <div class="d-none d-md-block col-md-6 masthead-image">
                 <!-- The featured image URL goes in the src attribute -->
               
-                <img src="{{ recipe.recipe_image.url }}" width="100%">
+                <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675121604/site_images/banner.webp" width="100%">
             
             </div>
         </div>
@@ -49,7 +49,7 @@
 
     </div>
 </div>
-<div class="container-fluid">
+<div class="container-xxl">
     <div class="row mb-3">
         <div class="d-inline col-12">
             <!-- The post content goes inside the card-text. -->
@@ -108,11 +108,10 @@
             </p>
             {% endif %}
         </div>
-        <div class="d-inline d-md-none col-6">
+        <div class="d-inline col-6">
             <!-- The featured image URL goes in the src attribute -->
          
-            <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3">
-         
+            <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3 max_width_recipe_img" data-bs-toggle="modal" data-bs-target="#exampleModal">
         </div>
     </div>
     <div class="row recipe_icons mt-4">
@@ -352,6 +351,24 @@
     </div>
     <!-- new test content -->
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-capitalize" id="exampleModalLabel">{{ recipe.title }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <img src="{{ recipe.recipe_image.url }}" width="100%">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 <script
   src="https://code.jquery.com/jquery-3.6.3.js"
   integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
