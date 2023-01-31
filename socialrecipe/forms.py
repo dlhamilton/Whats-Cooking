@@ -2,7 +2,7 @@ from django import forms
 from cloudinary.forms import CloudinaryInput
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
-from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails, StarRating
+from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails, StarRating, RecipeImages
 
 
 class CommentsForm(forms.ModelForm):
@@ -18,6 +18,15 @@ class RatingForm(forms.ModelForm):
         widgets = {
                     'rating': forms.HiddenInput(attrs={'class': 'd-none'}),
         }
+
+
+class RecipeImagesForm(forms.ModelForm):
+    recipe_image = CloudinaryField('image')
+    headline = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
+
+    class Meta:
+        model = RecipeImages
+        fields = ('recipe_image', 'headline',)
 
 
 class RecipesForm(forms.ModelForm):

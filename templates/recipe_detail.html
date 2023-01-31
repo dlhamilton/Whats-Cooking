@@ -1,6 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 
 {% load crispy_forms_tags %}
+{% load cloudinary %}
 
 <div class="masthead mb-2">
     <div class="container-fluid">
@@ -223,6 +224,8 @@
     <div class="row">
         <div class="col-md-8 card mb-4  mt-3 ">
             <h3>Pictures:</h3>
+        <div class="col-sm-2 card mb-4  mt-3 ">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_image_upload">Upload</button>
         </div>
     </div>
     {% if images|length != 0 %}
@@ -232,7 +235,7 @@
                 <div class="splide__track">
                     <ul class="splide__list">
                         {% for image in images %}
-                        <li class="splide__slide">
+                        <li class="splide__slide" data-image_id="{{ image.id }}">
                             <!-- <div class="splide__slide__container"> -->
                           
                             <img class="rounded" src="{{ image.recipe_image.url }}" width="100%">
@@ -242,10 +245,23 @@
                                 <!-- The commenter's name goes here. Check the model if you're not sure what that is -->
                                 <span class=" text-muted font-weight-normal">
                                     <!-- The comment's created date goes here -->
-                                    <span class="text-capitalize">{{ image.user }}</span> -
+                                    <span class="text-capitalize text-green-color"><strong>{{ image.user }}</strong></span>
+                                    
+                                    {% if user.is_authenticated %}
+                                    {% if user == image.user %}
+                                    <button id="remove_image_button" onclick="removeImageFunction({{ image.id }})"
+                                    data-id="{{ image.id }}" class="btn-no-style">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </button> 
+                                    {% endif %}
+                                    {% endif %}
+                                    -
+                                    
+                                    
                                     {{ image.upload_date|date:"jS F Y" }}
-                                </span> wrote:
-                                <br>{{ image.headline }}</div>
+                                </span> 
+                                <p class="text-capitalize">wrote:</p>
+                                <p class="text-capitalize">{{ image.headline }}</p></div>
                         </li>
                         {% endfor %}
                     </ul>
@@ -355,7 +371,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title text-capitalize" id="exampleModalLabel">{{ recipe.title }}</h5>
@@ -364,6 +380,31 @@
         <div class="modal-body">
             <img src="{{ recipe.recipe_image.url }}" width="100%">
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+<div class="modal fade" id="staticBackdrop_image_upload" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop_image_uploadLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Upload Image</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+ <form method="post" enctype="multipart/form-data">
+        <div class="modal-body">
+           
+                {{ image_form | crispy }}
+                {% csrf_token %}
+                
+                <input type="hidden" name="the_image_form" value="the_image_form">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-wc-green">Submit Image</button>
+        </div>
+    </form>
       </div>
     </div>
   </div>
@@ -458,7 +499,8 @@
                     'X-CSRFToken': csrf_token,
                 },
                 body: JSON.stringify({
-                    'id': id
+                    'id': id,
+                    'model': "comment"
                 })
             })
             .then(response => {
@@ -489,6 +531,39 @@
             })
             .catch(error => console.error(error));
     }
+
+
+
+    function removeImageFunction(id) {
+        let valid;
+        let recipe_slug = '{{ recipe.slug }}';
+        let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        fetch(`/recipes/${recipe_slug}/`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrf_token,
+                },
+                body: JSON.stringify({
+                    'id': id,
+                    'model': "image"
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    valid = response
+                    return response.json();
+                }
+                throw new Error(response.statusText);
+            })
+            .then(data => {
+                location.reload();
+            })
+            .catch(error => console.error(error));
+    }
+
+
+
 
     {% if user.is_authenticated %}
     $('.star_click').hover(function() {

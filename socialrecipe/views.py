@@ -4,8 +4,8 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm, RatingForm
+from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods, RecipeImages
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm, RatingForm, RecipeImagesForm
 from django.db.models import Count, Avg, Q, F, Case, When
 from django.urls import resolve
 from django.template import loader
@@ -183,14 +183,21 @@ class RecipeDetail(View):
                     "empty_star_loop": empty_star_loop,
                     "rating_form": RatingForm(),
                     "rated": rated,
+                    "image_form": RecipeImagesForm(),
                 },
             )
 
     def delete(self, request, *args, **kwargs):
         data = json.loads(request.body)
+        model = data.get('model')
         id = data.get('id')
-        record = get_object_or_404(Comments, id=id)
+        if model == "comment":
+            record = get_object_or_404(Comments, id=id)     
+        else:
+            record = get_object_or_404(RecipeImages, id=id)
+            messages.success(request, 'Removed Image')
         record.delete()
+        
         return JsonResponse({"message": id}, status=200)
 
     def post(self, request, slug, *args, **kwargs):
@@ -248,7 +255,25 @@ class RecipeDetail(View):
                 messages.success(request, 'Rating Added')
                 return JsonResponse({'status': True})
             else:
+                messages.error(request, 'Error With Rating')
                 return JsonResponse({'status': False})
+        elif 'the_image_form' in request.POST:
+            image_form = RecipeImagesForm(data=request.POST)
+            if image_form.is_valid():
+                image_form.instance.user = request.user
+                image = image_form.save(commit=False)
+                image.recipe = recipe
+                if 'recipe_image' in request.FILES:
+                    image.recipe_image = request.FILES['recipe_image']
+                image.save()
+                messages.success(request, 'Image Added')
+                return HttpResponseRedirect(
+                    reverse(
+                        'recipe_detail',
+                        kwargs={'slug': recipe.slug}))
+            else:
+                messages.error(request, 'Error With Image Upload')
+
         return render(
             request,
             "recipe_detail.html",
@@ -269,6 +294,7 @@ class RecipeDetail(View):
                 "empty_star_loop": empty_star_loop,
                 "rating_form": RatingForm(),
                 "rated": rated,
+                "image_form": RecipeImagesForm(),
             },
         )
 
