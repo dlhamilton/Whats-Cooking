@@ -327,14 +327,21 @@
           <div class="splide__track">
             <div class="splide__list">
               {% for follow in page_name.user_details.get_followers %}
-              <div class="col-sm-4 splide__slide m-2">
+              <div class="col-sm-4 splide__slide m-2 mh-100 overflow-hidden">
                 <div class="card bg-{{ page_name.user_details.get_status_display|lower }} text-white">
-                  <div class="card-body text-dark p-5">
-                    <h5 class="card-title text-capitalize text-truncate">{{ follow }}</h5>
+                  <div class="card-body text-dark px-5 py-3">
+                    <h5 class="card-title text-capitalize text-truncate text-center">{{ follow }}</h5>
+                    <div class="row">
+                    <div class="col-4 p-0">
+                      <img src="{{ follow.user_details.user_image.url }}" class="rounded w-100" alt="profile pic">
+                    </div>
+                    <div class="col-6 mx-auto my-auto">
+
+                    
                     <p class="card-text">
                       <strong>Status:</strong>
                       <span class="color-slide bg-{{ page_name.user_details.get_status_display|lower }}">
-                        <span class="user-profile-card-title text-color-body">
+                        <span class="user-profile-card-title text-color-body text-nowrap">
                           <i class="fas fa-award"></i>
                           <span class="d-none d-sm-inline">{{ page_name.user_details.get_status_display }}</span>
                         </span>
@@ -343,6 +350,10 @@
                     <a class="" href="{% url 'profile_page' follow.username %}">
                       <button class="btn btn-wc-green">View Page</button>
                     </a>
+
+                  </div>
+                </div>
+
                   </div>
                 </div>
               </div>
@@ -424,15 +435,15 @@
       perPage: 3,
       drag: 'free',
       breakpoints: {
-        990: {
+        1020: {
           perPage: 2,
           gap: '.7rem',
-          height: '12rem'
+      
         },
-        590: {
+        700: {
           perPage: 1,
           gap: '.7rem',
-          height: '12rem'
+
         },
       },
     }
