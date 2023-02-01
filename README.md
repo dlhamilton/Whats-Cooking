@@ -94,6 +94,26 @@ Desktop
 
 ## Features
 ### Existing Features
+
+#### Base
+
+##### NavBar
+- A logo image and brand name link to the home page, with two variations of the brand name text (full and shortened).
+- A toggle button to expand/collapse the navigation links in a dropdown menu.
+- Links for the home and recipes pages, which are active if the current page is the respective one.
+- Conditional links for user authentication: profile page or profile toggle button if the user is logged in, or register and login links if the user is not logged in.
+
+##### Messages
+- A container with a row and a column that takes up 8 of 12 columns on medium-sized screens and is offset by 2 columns.
+- A loop that iterates over the messages passed from the views.
+- An alert for each message, with a class assigned based on the message's tags (e.g., success, warning, error). The message is displayed in a safe manner to prevent malicious content.
+- A close button for each alert using Bootstrap's data-bs-dismiss attribute.
+
+##### Footer
+- The footer contains two paragraphs of text and icons.
+- The first paragraph displays a link to the author's Github account, and the second paragraph displays social media icons.
+- The footer has a background color of "footer-bg" and uses font awesome icons to display the social media icons.
+
 ### Future Features
 
 ***
