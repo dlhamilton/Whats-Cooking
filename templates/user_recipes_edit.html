@@ -108,18 +108,23 @@
           </div>
         </div>
 
-
-
-
+        {% if results_count < 9  %}
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#new_ingredient_staticBackdrop">Add New Ingredient</button>
+        {% endif %}
         <ul class="list-group">
 
           {% for ingredients in paginator %}
 
           <li class="my-1 w-100 list-group-item">
+            
             <button type="button" class="btn btn-primary btn-block w-100 text-capitalize" data-bs-toggle="modal"
               data-bs-target="#im_staticBackdrop" data-bs-ingredient_id="{{ ingredients.id }}"
               data-bs-ingredient="{{ ingredients }}">
               {{ ingredients }}
+              {% if ingredients.approved == False %}
+              <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-content="Waiting to be approved">
+                <i class="fa-solid fa-hourglass-half"></i></span>
+              {% endif %}
             </button>
           </li>
           {% endfor %}
@@ -160,19 +165,22 @@
           <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">
             {{ ingredients_item.amount|floatformat:"0"  }}
             {{ ingredients_item.unit }}
-            <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span> (test
-            {{ ingredients_item.id }}) <span class="post-link-green"><i class="fa-solid fa-ban "
+            <span class="text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span> 
+            <span class="post-link-green"><i class="fa-solid fa-ban "
                 onclick="removeIngredients({{ ingredients_item.id }},'RecipeItems')" data-id="{{ ingredients_item.id }}"></i></span>
           </li>
           {% else %}
+
           <li class="mb-2 list-group-item" data-comment_id="{{ ingredients_item.id }}">
             {{ ingredients_item.amount|floatformat:"0"  }}
             {{ ingredients_item.unit }}
-            <span
-              class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span>
+            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-content="Waiting to be approved">
+              <span
+              class="text-decoration-underline text-capitalize"><strong>{{ ingredients_item.ingredients.name }}</strong></span></span>
             <span class="post-link-green"><i class="fa-solid fa-ban"
                 onclick="removeIngredients({{ ingredients_item.id }},'RecipeItems')" data-id="{{ ingredients_item.id }}"></i></span>
           </li>
+        
           {% endif %}
           {% endfor %}
           <!-- {{ ingredients }} -->
@@ -378,6 +386,30 @@
   </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="new_ingredient_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="new_ingredient_staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Add New Ingredient</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post">
+      <div class="modal-body">
+        {% csrf_token %}
+        {{ ingredients_form | crispy }}
+        <input type="hidden" name="the_ingredients_form" value="the_ingredients_form">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+
 <script>
   var imModal = document.getElementById('im_staticBackdrop')
   imModal.addEventListener('show.bs.modal', function (event) {
@@ -499,6 +531,11 @@
     }
 });
   {% endif %}
+
+  var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+  return new bootstrap.Popover(popoverTriggerEl)
+});
 </script>
 
 {%endblock%}

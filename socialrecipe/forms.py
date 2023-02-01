@@ -2,7 +2,7 @@ from django import forms
 from cloudinary.forms import CloudinaryInput
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
-from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails, StarRating, RecipeImages
+from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails, StarRating, RecipeImages, Ingredients
 
 
 class CommentsForm(forms.ModelForm):
@@ -69,6 +69,13 @@ class AddToRecipeForm(forms.Form):
     #     queryset=Ingredients.objects.filter(approved=True).order_by('name'),
     #     widget=forms.CheckboxSelectMultiple
     # )
+
+
+class IngredientsForm(forms.ModelForm):
+    class Meta:
+        model=Ingredients
+        fields = ('name',)
+
 
 
 class RecipeItemsForm(forms.ModelForm):

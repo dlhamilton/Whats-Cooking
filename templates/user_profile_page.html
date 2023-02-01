@@ -389,13 +389,17 @@
         <p>Shopping list count: {{ page_name.shopping_list.count }}</p>
 
         {% if page_name.shopping_list.count > 0 %}
-        <ul>
+        <div class="list-group">
           {% for lists in page_name.shopping_list.all %}
-          <a href="{% url 'profile_single_shopping' username=page_name.username list=lists.slug %}" class="post-link">
-            <li>{{ lists }}</li>
+          <a href="{% url 'profile_single_shopping' username=page_name.username list=lists.slug %}" class="list-group-item list-group-item-action list-group-item d-flex justify-content-between align-items-center">
+
+              {{ lists }}
+
           </a>
           {% endfor %}
-        </ul>
+        </div>
+        <p class="mt-2 post-link mb-4"><a href="{% url 'profile_page_shopping' page_name.username %}" class="post-link">
+          View All</a></p>
         {% else %}
         <p><strong>No Shopping Lists</strong></p>
         {% endif %}

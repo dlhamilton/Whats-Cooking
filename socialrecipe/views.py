@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
 from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods, RecipeImages
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm, RatingForm, RecipeImagesForm
+from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm, RatingForm, RecipeImagesForm, IngredientsForm
 from django.db.models import Count, Avg, Q, F, Case, When
 from django.urls import resolve
 from django.template import loader
@@ -566,7 +566,8 @@ class ProfileRecipesEdit(View):
     def ingredientPaginate(self,request, search_term):
         go_to_id_id = None
         page = request.GET.get('page') or 1
-        ingredients = Ingredients.objects.filter(approved=True)
+        # ingredients = Ingredients.objects.filter(approved=True)
+        ingredients = Ingredients.objects.filter()
         if page != 1:
             go_to_id_id = 'ingredients_section'
         if search_term:
@@ -600,6 +601,7 @@ class ProfileRecipesEdit(View):
                               'recipe': the_recipe,
                               'method_form': method_form,
                               'the_methods': the_methods,
+                              'ingredients_form': IngredientsForm(),
                               })
             return render(
                 request,
@@ -700,6 +702,13 @@ class ProfileRecipesEdit(View):
                 record = get_object_or_404(Recipes, id=id)
                 record.delete()
                 return redirect(reverse('profile_page_recipes', kwargs={'username':request.user.username}))
+            elif "the_ingredients_form" in request.POST:
+                the_form = IngredientsForm(data=request.POST)
+                go_to_id_id = 'ingredients_section'
+                if the_form.is_valid():
+                    item = the_form.save(commit=False)
+                    item.save()
+                    messages.success(request, 'Ingredient Added')
             # Methods
             method_form = MethodsForm()
             the_methods = Methods.objects.filter(recipe=the_recipe).order_by('order')
@@ -719,6 +728,7 @@ class ProfileRecipesEdit(View):
                               'go_to_id_id': go_to_id_id,
                               'method_form': method_form,
                               'the_methods': the_methods,
+                              'ingredients_form': IngredientsForm(),
                               })
             return render(
                 request,
