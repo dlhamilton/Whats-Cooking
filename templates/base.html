@@ -216,7 +216,7 @@
             </div>
 
             <div class="row my-3 justify-content-center">
-                <div class="col-3 text-center d-inline">
+                <div class="col-4 text-center d-inline">
                     <a href="{% url 'profile_page_favourites' user.username %}" class="post-link">
                         <strong>
                             <i class="fas fa-heart text-orange-color profile_icons"></i>
@@ -224,7 +224,7 @@
                         <p><span class="d-none d-md-block">My </span>Favourites</p>
                     </a>
                 </div>
-                <div class="col-3 text-center d-inline">
+                <div class="col-4 text-center d-inline">
                     <a href="{% url 'profile_page_recipes' user.username %}" class="post-link">
                         <strong>
                             <i class="fas fa-utensils text-orange-color profile_icons"></i>
@@ -232,20 +232,12 @@
                         <p><span class="d-none d-md-block">My </span>Recipes</p>
                     </a>
                 </div>
-                <div class="col-3 text-center d-inline">
+                <div class="col-4 text-center d-inline">
                     <a href="{% url 'profile_page_followers' user.username %}" class="post-link">
                         <strong>
                             <i class="fas fa-user-friends text-orange-color profile_icons"></i>
                         </strong>
                         <p><span class="d-none d-md-block">My </span>Follows</p>
-                    </a>
-                </div>
-                <div class="col-3 text-center d-inline">
-                    <a href="{% url 'profile_page_shopping' user.username %}" class="post-link">
-                        <strong>
-                            <i class="fas fa-list text-orange-color profile_icons"></i>
-                        </strong>
-                        <p><span class="d-none d-md-block">My </span>Shopping</p>
                     </a>
                 </div>
             </div>

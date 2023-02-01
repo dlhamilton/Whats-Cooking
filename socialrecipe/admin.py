@@ -51,18 +51,18 @@ class IngredientsAdmin(admin.ModelAdmin):
         queryset.update(approved=True)
 
 
-@admin.register(socialrecipe.models.ShoppingList)
-class ShoppingListAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user', 'date_made')
-    search_fields = ['name', 'user__first_name', 'user__last_name', 'user__email']
-    list_filter = ('user__username', 'date_made')
-    prepopulated_fields = {'slug': ('user','name')}
+# @admin.register(socialrecipe.models.ShoppingList)
+# class ShoppingListAdmin(admin.ModelAdmin):
+#     list_display = ('name', 'user', 'date_made')
+#     search_fields = ['name', 'user__first_name', 'user__last_name', 'user__email']
+#     list_filter = ('user__username', 'date_made')
+#     prepopulated_fields = {'slug': ('user','name')}
 
 
-@admin.register(socialrecipe.models.ShoppingListItems)
-class ShoppingListItemsAdmin(admin.ModelAdmin):
-    list_display = ('list', 'ingredients', 'amount', 'unit')
-    search_fields = ['list__name', 'ingredients']
+# @admin.register(socialrecipe.models.ShoppingListItems)
+# class ShoppingListItemsAdmin(admin.ModelAdmin):
+#     list_display = ('list', 'ingredients', 'amount', 'unit')
+#     search_fields = ['list__name', 'ingredients']
 
 
 @admin.register(socialrecipe.models.StarRating)

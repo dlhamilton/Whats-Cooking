@@ -169,35 +169,35 @@ class RecipeItems(models.Model):
         return self.ingredients.name
 
 
-class ShoppingList(models.Model):
-    '''
-    stores the users shopping list
-    '''
-    name = models.CharField(max_length=150)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shopping_list")
-    date_made = models.DateTimeField(auto_now_add=True)
-    last_update = models.DateTimeField(auto_now=True)
-    slug = models.SlugField(max_length=150, unique=True)
+# class ShoppingList(models.Model):
+#     '''
+#     stores the users shopping list
+#     '''
+#     name = models.CharField(max_length=150)
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="shopping_list")
+#     date_made = models.DateTimeField(auto_now_add=True)
+#     last_update = models.DateTimeField(auto_now=True)
+#     slug = models.SlugField(max_length=150, unique=True)
 
-    class Meta:
-        ordering = ['-last_update']
+#     class Meta:
+#         ordering = ['-last_update']
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
 
-class ShoppingListItems(models.Model):
-    '''
-    stores the items in the shopping list
-    '''
-    list = models.ForeignKey(ShoppingList, on_delete=models.CASCADE, related_name="shopping_list_items")
-    ingredients = models.ForeignKey(Ingredients, on_delete=models.CASCADE, related_name="shopping_list_items")
-    amount = models.DecimalField(max_digits=5, decimal_places=2)
-    unit = models.ForeignKey(Units, on_delete=models.CASCADE, related_name="shopping_list_items")
-    collected = models.BooleanField(default=False)
+# class ShoppingListItems(models.Model):
+#     '''
+#     stores the items in the shopping list
+#     '''
+#     list = models.ForeignKey(ShoppingList, on_delete=models.CASCADE, related_name="shopping_list_items")
+#     ingredients = models.ForeignKey(Ingredients, on_delete=models.CASCADE, related_name="shopping_list_items")
+#     amount = models.DecimalField(max_digits=5, decimal_places=2)
+#     unit = models.ForeignKey(Units, on_delete=models.CASCADE, related_name="shopping_list_items")
+#     collected = models.BooleanField(default=False)
 
-    class Meta:
-        ordering = ['list']
+#     class Meta:
+#         ordering = ['list']
 
 'Add more user details'
 @receiver(user_signed_up)

@@ -4,7 +4,7 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, ShoppingList, StarRating, Ingredients, Comments, RecipeItems, Methods, RecipeImages
+from .models import Recipes, User, UserDetails, StarRating, Ingredients, Comments, RecipeItems, Methods, RecipeImages
 from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm, RatingForm, RecipeImagesForm, IngredientsForm
 from django.db.models import Count, Avg, Q, F, Case, When
 from django.urls import resolve
@@ -437,11 +437,20 @@ class ProfileSingleList(View):
         if username == request.user.username:
             shopping_list = get_object_or_404(ShoppingList, slug=list)
             user_list_items = shopping_list.shopping_list_items.filter()
+
+            check_forms = []
+            for item in user_list_items:
+                pk = item.id
+                instance = ShoppingListItems.objects.get(id=pk)
+                form = ListItemForm(instance=instance)
+                check_forms.append(form)
+
             p_details = profile_details(self.request, username)
             p_details.update({
                     "logged_in_user": request.user,
                     "user_list": user_list_items,
                     "user_shopping_list": shopping_list,
+                    "check_forms": check_forms,
             })
             return render(
                 request,
@@ -456,6 +465,24 @@ class ProfileSingleList(View):
                         kwargs={'username': request.user.username}))
             return HttpResponseRedirect(reverse('home'))
     
+    def post(self, request, username, list, *args, **kwargs):
+        if username == request.user.username:
+            shopping_list = get_object_or_404(ShoppingList, slug=list)
+            user_list_items = shopping_list.shopping_list_items.filter()
+
+            check_forms = []
+            for item in user_list_items:
+                pk = item.id
+                instance = ShoppingListItems.objects.get(id=pk)
+                form = ListItemForm(request.POST, instance=instance)
+                if form.is_valid():
+                    form.save()
+            messages.success(request, 'Changed')
+            return redirect('profile_single_shopping', username=username, list=list)
+        else:
+            messages.error(request, 'Error')
+      
+        
     # def post(self, request, username, list, *args, **kwargs):
     #     if 'follow' in request.POST or 'unfollow' in request.POST:
     #         following_change(request, username)
