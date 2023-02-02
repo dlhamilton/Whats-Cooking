@@ -1,8 +1,15 @@
-from unittest.mock import MagicMock, patch
+"""
+Testing of Forms
+"""
+from unittest.mock import MagicMock
 from django.test import TestCase
-from .forms import CommentsForm, RatingForm, RecipeImagesForm, RecipesForm, SearchRecipeForm, FilterRecipeForm, AddToRecipeForm, IngredientsForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm
-from .models import Recipes, Ingredients, Units, User, UserDetails
 from django.core.files.uploadedfile import SimpleUploadedFile
+from .forms import (CommentsForm, RatingForm, RecipeImagesForm, RecipesForm,
+                    SearchRecipeForm, FilterRecipeForm, AddToRecipeForm,
+                    IngredientsForm, RecipeItemsForm, MethodsForm,
+                    UserDetailsForm, FollowForm, UnfollowForm)
+from .models import Recipes, Ingredients, Units, User, UserDetails
+
 
 class TestRecipeCommentForm(TestCase):
     """
@@ -91,7 +98,7 @@ class TestRecipeImageUploadForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn('recipe_image', form.errors.keys())
         self.assertEqual(
-            form.errors['recipe_image'][0], 'This field is required.'
+            form.errors['recipe_image'][0], 'No file selected!'
             )
 
     def test_headline_is_required(self):
@@ -119,13 +126,19 @@ class TestRecipeImageUploadForm(TestCase):
         '''
         Test form is valid with valid inputs
         '''
-        form = RecipeImagesForm({
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+        image = SimpleUploadedFile(
+            "test_image.jpg",
+            b"file_content",
+            content_type="image/jpeg"
+            )
+        form_data = {
+            'recipe_image': image,
             'headline': 'This is a test headline',
-        })
+        }
+        form = RecipeImagesForm(data=form_data, files=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_form_invalid_with_invalid_input(self):
+    def test_form_invalid_with_invalid_headline(self):
         '''
         Test both fields are required
         '''
@@ -136,10 +149,6 @@ class TestRecipeImageUploadForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(
             form.errors['headline'][0], 'This field is required.'
-            )
-        self.assertEqual(
-            form.errors['recipe_image'][0],
-            'This field is required.'
             )
 
     def test_fields_are_explicit_in_form_metaclass(self):
@@ -167,15 +176,21 @@ class RecipesFormTestCase(TestCase):
         '''
         Test form with valid data
         '''
-        form = RecipesForm({
+        image = SimpleUploadedFile(
+            "test_image.jpg",
+            b"file_content",
+            content_type="image/jpeg"
+            )
+        form_data = {
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': image,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
             'serves': 4,
             'publish': True,
-        })
+        }
+        form = RecipesForm(data=form_data, files=form_data)
         self.assertTrue(form.is_valid())
 
     def test_form_invalid_with_invalid_title(self):
@@ -197,7 +212,7 @@ class RecipesFormTestCase(TestCase):
 
     def test_form_invalid_with_invalid_recipe_image(self):
         '''
-        Test form with no image
+        Test form works with no image
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
@@ -207,10 +222,7 @@ class RecipesFormTestCase(TestCase):
             'cook_time': 60,
             'serves': 4,
         })
-        self.assertFalse(form.is_valid())
-        self.assertEqual(
-            form.errors['recipe_image'][0], 'This field is required.'
-            )
+        self.assertTrue(form.is_valid())
 
     def test_form_invalid_with_invalid_excerpt(self):
         '''

@@ -27,13 +27,21 @@ class RecipeImagesForm(forms.ModelForm):
     class Meta:
         model = RecipeImages
         fields = ('recipe_image', 'headline',)
+        
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        recipe_image = cleaned_data.get('recipe_image')
+
+        if not recipe_image:
+            self.add_error('recipe_image', 'This field is required bam.')
 
 
 class RecipesForm(forms.ModelForm):
     publish = forms.BooleanField(initial=False, required=False, widget=forms.CheckboxInput(attrs={'label': 'Publish'}))
-    
+
     recipe_image = CloudinaryField('image')
-    
+
     class Meta:
         model = Recipes
         fields = ('title',
@@ -42,7 +50,10 @@ class RecipesForm(forms.ModelForm):
                   'prep_time',
                   'cook_time',
                   'serves',)
-    
+        widgets = {
+            'excerpt': forms.Textarea(attrs={'required': True}),
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.status == 1:
@@ -50,9 +61,12 @@ class RecipesForm(forms.ModelForm):
 
 
 class SearchRecipeForm(forms.Form):
-    search_query = forms.CharField(max_length=100, required=False,
-    widget = forms.TextInput(attrs={'id':'search_query',
-    'placeholder': 'Search...' , 'class': 'form-control'}))
+    search_query = forms.CharField(
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(
+            attrs={'id': 'search_query',
+                   'placeholder': 'Search...', 'class': 'form-control'}))
 
 
 class FilterRecipeForm(forms.Form):
@@ -121,9 +135,9 @@ class UserDetailsForm(forms.ModelForm):
 
 
 class FollowForm(forms.Form):
-    follow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=False)
+    follow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=True)
 
 
 class UnfollowForm(forms.Form):
-    unfollow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=False)
+    unfollow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=True)
 

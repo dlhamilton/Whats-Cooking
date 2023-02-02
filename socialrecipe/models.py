@@ -52,7 +52,7 @@ class Recipes(models.Model):
     slug = models.SlugField(max_length=150, unique=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_recipes")
     recipe_image = CloudinaryField('image', default='v1675027391/placeholder-recipe.png')
-    excerpt = models.TextField(blank=True)
+    excerpt = models.TextField()
     status = models.IntegerField(choices=RECIPE_STATUS, default=0)
     favourites = models.ManyToManyField(User, related_name='user_favourites', blank=True)
     upload_date = models.DateTimeField(auto_now_add=True)
@@ -79,7 +79,7 @@ class RecipeImages(models.Model):
     store the images of the recipe
     '''
     recipe = models.ForeignKey(Recipes, on_delete=models.CASCADE, related_name="recipe_images")
-    recipe_image = CloudinaryField('image', default='placeholder')
+    recipe_image = CloudinaryField('image', null=False)
     headline = models.TextField(blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipe_images")
     upload_date = models.DateTimeField(auto_now_add=True)
