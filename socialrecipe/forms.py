@@ -59,16 +59,11 @@ class FilterRecipeForm(forms.Form):
     filter_query = forms.ModelMultipleChoiceField(
         queryset=Ingredients.objects.filter(approved=True).order_by('name'),
         widget=forms.CheckboxSelectMultiple
-
     )
 
 
 class AddToRecipeForm(forms.Form):
     search_term = forms.CharField(required=False)
-    # filter_query = forms.ModelMultipleChoiceField(
-    #     queryset=Ingredients.objects.filter(approved=True).order_by('name'),
-    #     widget=forms.CheckboxSelectMultiple
-    # )
 
 
 class IngredientsForm(forms.ModelForm):
@@ -107,7 +102,6 @@ class UserDetailsForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     location = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    # user_image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
     user_image = CloudinaryField('image')
 
     class Meta:
@@ -134,14 +128,3 @@ class FollowForm(forms.Form):
 class UnfollowForm(forms.Form):
     unfollow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=False)
 
-
-# class ListItemForm(forms.ModelForm):
-#     submit = forms.CharField(widget=forms.HiddenInput(), required=False)
-#     class Meta:
-#         model = ShoppingListItems
-#         fields = ['collected']
-    
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.fields['collected'].widget.attrs.update({'id': 'id_collected_'+str(self.instance.id), 'class':'item_collected',})
-#         self.fields['submit'].widget.attrs.update({'id': 'btn_id_collected_'+str(self.instance.id), 'type': 'submit', 'value':'Submit'})
