@@ -72,7 +72,6 @@ class IngredientsForm(forms.ModelForm):
         fields = ('name',)
 
 
-
 class RecipeItemsForm(forms.ModelForm):
     class Meta:
         model = RecipeItems
