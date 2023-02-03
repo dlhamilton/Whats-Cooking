@@ -409,85 +409,6 @@ class ProfilePage(View):
         return redirect('profile_page', username=username)
 
 
-class ProfileShoppingList(View):
-    def get(self, request, username, *args, **kwargs):
-        if username == request.user.username:
-            p_details = profile_details(self.request, username)
-            p_details.update({"logged_in_user": request.user, })
-            return render(
-                request,
-                "shopping_lists.html",
-                p_details)
-        else:
-            if request.user.is_authenticated:
-                return HttpResponseRedirect(
-                    reverse('profile_page',
-                            kwargs={'username': request.user.username}))
-            return HttpResponseRedirect(reverse('home'))
-        
-    # def post(self, request, username, *args, **kwargs):
-    #     if 'follow' in request.POST or 'unfollow' in request.POST:
-    #         following_change(request, username)
-    #     return redirect('profile_page_shopping', username=username)
-
-
-class ProfileSingleList(View):
-    def get(self, request, username, list, *args, **kwargs):
-        if username == request.user.username:
-            shopping_list = get_object_or_404(ShoppingList, slug=list)
-            user_list_items = shopping_list.shopping_list_items.filter()
-
-            check_forms = []
-            for item in user_list_items:
-                pk = item.id
-                instance = ShoppingListItems.objects.get(id=pk)
-                form = ListItemForm(instance=instance)
-                check_forms.append(form)
-
-            p_details = profile_details(self.request, username)
-            p_details.update({
-                    "logged_in_user": request.user,
-                    "user_list": user_list_items,
-                    "user_shopping_list": shopping_list,
-                    "check_forms": check_forms,
-            })
-            return render(
-                request,
-                "shopping_list.html",
-                p_details
-            )
-        else:
-            if request.user.is_authenticated:
-                return HttpResponseRedirect(
-                    reverse(
-                        'profile_page',
-                        kwargs={'username': request.user.username}))
-            return HttpResponseRedirect(reverse('home'))
-    
-    def post(self, request, username, list, *args, **kwargs):
-        if username == request.user.username:
-            shopping_list = get_object_or_404(ShoppingList, slug=list)
-            user_list_items = shopping_list.shopping_list_items.filter()
-
-            check_forms = []
-            for item in user_list_items:
-                pk = item.id
-                instance = ShoppingListItems.objects.get(id=pk)
-                form = ListItemForm(request.POST, instance=instance)
-                if form.is_valid():
-                    form.save()
-            messages.success(request, 'Changed')
-            return redirect('profile_single_shopping', username=username, list=list)
-        else:
-            messages.error(request, 'Error')
-      
-        
-    # def post(self, request, username, list, *args, **kwargs):
-    #     if 'follow' in request.POST or 'unfollow' in request.POST:
-    #         following_change(request, username)
-    #     return redirect('profile_single_shopping', username=username, list=list)
-
-
 class Profilerecipes(View):
     def get(self, request, username, *args, **kwargs):
         the_name = get_object_or_404(User, username=username)
@@ -502,13 +423,15 @@ class Profilerecipes(View):
         recipes = paginate_recipes(request, recipes)
         if len(recipes) == 0:
             recipes_list = "No Recipes"
-        p_details.update({"recipe_list": recipes, "recipe_list_count": recipes_len,})
+        p_details.update({
+            "recipe_list": recipes,
+            "recipe_list_count": recipes_len, })
         return render(
             request,
             "user_recipes.html",
             p_details
         )
-    
+
     def post(self, request, username, *args, **kwargs):
         if 'follow' in request.POST or 'unfollow' in request.POST:
             following_change(request, username)
@@ -518,7 +441,6 @@ class Profilerecipes(View):
 class ProfileRecipesAdd(View):
     def get(self, request, username, *args, **kwargs):
         if username == request.user.username:
-
             p_details = profile_details(self.request, username)
             p_details.update({"logged_in_user": request.user,
                               "add_form": RecipesForm()})
@@ -537,17 +459,12 @@ class ProfileRecipesAdd(View):
 
     def post(self, request, username, *args, **kwargs):
         if username == request.user.username:
-
             recipe_form = RecipesForm(data=request.POST, files=request.FILES)
             if recipe_form.is_valid():
-
                 recipe_form.instance.author = request.user
-
                 title = recipe_form.cleaned_data['title']
-                
                 slug = slugify(title)
-
-                if recipe_form.cleaned_data['publish'] == True:
+                if recipe_form.cleaned_data['publish'] is True:
                     recipe_form.instance.status = 1
                 recipe = recipe_form.save(commit=False)
                 recipe.slug = slug
@@ -565,7 +482,7 @@ class ProfileRecipesAdd(View):
             p_details.update({"logged_in_user": request.user,
                               "add_form": recipe_form})
 
-            if valid_recipe == False:
+            if valid_recipe is False:
                 return render(
                     request,
                     "user_recipes_add.html",
@@ -575,7 +492,9 @@ class ProfileRecipesAdd(View):
                 return HttpResponseRedirect(
                         reverse(
                             'profile_page_recipes_edit',
-                            kwargs={'username':username, 'recipe': recipe.slug}))
+                            kwargs={
+                                'username': username,
+                                'recipe': recipe.slug}))
         else:
             if request.user.is_authenticated:
                 return HttpResponseRedirect(
@@ -588,8 +507,7 @@ class ProfileRecipesAdd(View):
 class ProfileRecipesEdit(View):
     form_class = AddToRecipeForm
     paginate_by = 10  # Show 10 ingredients per page
-
-    def ingredientPaginate(self,request, search_term):
+    def ingredientPaginate(self, request, search_term):
         go_to_id_id = None
         page = request.GET.get('page') or 1
         # ingredients = Ingredients.objects.filter(approved=True)
@@ -644,20 +562,15 @@ class ProfileRecipesEdit(View):
 
     def post(self, request, username, recipe, *args, **kwargs):
         if username == request.user.username:
-            
             the_recipe = get_object_or_404(Recipes, slug=recipe)
             recipe_form = RecipesForm(instance=the_recipe)
             if 'the_recipe_form' in request.POST:
                 go_to_id_id = None
                 recipe_form = RecipesForm(data=request.POST, files=request.FILES, instance=the_recipe)
                 if recipe_form.is_valid():
-
                     recipe_form.instance.author = request.user
-
-                    title = recipe_form.cleaned_data['title']
-                    
+                    title = recipe_form.cleaned_data['title']  
                     slug = slugify(title)
-
                     if recipe_form.cleaned_data['publish'] is True:
                         recipe_form.instance.status = 1
                     else:
@@ -681,13 +594,10 @@ class ProfileRecipesEdit(View):
                     # recipe_form = RecipesForm(instance=the_recipe)
                     if RecipeItems.objects.filter(recipe=the_recipe,
                                                 ingredients=add_ingredients_form.instance.ingredients):
-                        
                         id = RecipeItems.objects.filter(recipe=the_recipe,ingredients=add_ingredients_form.instance.ingredients).values('id').first()['id']
                         record = get_object_or_404(RecipeItems, id=id)
                         record.delete()
-
                         add_ingredients_form.instance.recipe = the_recipe
-                        
                         recipe_item = add_ingredients_form.save(commit=False)
                         recipe_item.save()
                         messages.warning(request, 'Ingredient Amount Updated')
@@ -713,7 +623,6 @@ class ProfileRecipesEdit(View):
                     method_item = add_methods_form.save(commit=False)
                     method_item.save()
                     messages.success(request, 'Method Added')
-            
             elif "the_method_form_id" in request.POST:
                 add_methods_form = MethodsForm(data=request.POST)
                 go_to_id_id = 'method_section_area'
@@ -785,17 +694,6 @@ class ProfileRecipesEdit(View):
             if Methods.objects.filter(recipe=temp_record.recipe).exists():
                 last = 1
         return JsonResponse({"message": id, "last": last}, status=200)
-
-    # def put(self, request, *args, **kwargs):
-    #     data = json.loads(request.body)
-    #     id = data.get('id')
-    #     edit_methods_form = MethodsForm(data=request.PUT)
-    #     if edit_methods_form.is_valid():
-    #         method_instance = Methods.objects.get(id=id)
-    #         self.get(request, username, recipe)
-    #     else:
-    #         self.get(request, username, recipe)
-
 
 
 class ProfileFollowers(View):

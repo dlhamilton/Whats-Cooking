@@ -34,7 +34,7 @@ class RecipeImagesForm(forms.ModelForm):
         recipe_image = cleaned_data.get('recipe_image')
 
         if not recipe_image:
-            self.add_error('recipe_image', 'This field is required bam.')
+            self.add_error('recipe_image', 'This field is required.')
 
 
 class RecipesForm(forms.ModelForm):
