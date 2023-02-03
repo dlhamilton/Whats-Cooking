@@ -18,34 +18,25 @@ from cloudinary.forms import cl_init_js_callbacks
 
 class HomeList(View):
     def get(self, request, *args, **kwargs):
-        top_recipes = Recipes.objects.filter(status=1).annotate(favourites_count=Count('favourites')).order_by('-favourites_count')[:3]
+        top_recipes = Recipes.objects.filter(status=1).annotate(
+            favourites_count=Count('favourites')).order_by(
+                '-favourites_count')[:3]
         top_recipes = get_average_rating(top_recipes)
         return render(
             request,
             "index.html",
             {
-                # "top_recipes": top_recipes,
                 "top_users": top_recipes,
                 "page_name": "Home",
             }
         )
 
 
-# class RecipesList(generic.ListView):
-#     model = Recipes
-#     recipes_list = Recipes.objects.filter(status=1).order_by('-upload_date')
-#     template_name = 'recipes.html'
-#     paginate_by = 6
-#     # result_list = list(chain(recipes_list))
 def RecipeFilterList(search_list):
-    test = []
-    # for i in search_list:
-        # test.append(i.name)
     temp_recipes_list = Recipes.objects.filter(status=1)
     for i in search_list:
-        temp_recipes_list = temp_recipes_list.filter(Q(recipe_items__ingredients__name__icontains=i.name))
-        # test.append(recipes_list)
-    
+        temp_recipes_list = temp_recipes_list.filter(
+            Q(recipe_items__ingredients__name__icontains=i.name))
     return temp_recipes_list
 
 
@@ -83,7 +74,6 @@ def paginate_recipes(request, recipes):
 
 
 class RecipesList(View):
-
     def sort_functions(self, recipes_list, kwargs):
         if 'sort_type' in kwargs:
             sort_name = kwargs['sort_type']
@@ -92,34 +82,50 @@ class RecipesList(View):
                 recipes_list = recipes_list.order_by('title')
             elif sort_name == "rating":
                 sort_name = "B"
-                recipes_list = recipes_list.annotate(average_rating=Avg('star_rating__rating')).order_by(Case(When(average_rating__isnull=True, then=1), default=0),'-average_rating')
+                recipes_list = recipes_list.annotate(
+                    average_rating=Avg(
+                        'star_rating__rating')).order_by(
+                            Case(
+                                When(
+                                    average_rating__isnull=True,
+                                    then=1), default=0), '-average_rating')
             elif sort_name == "favourite":
                 sort_name = "C"
-                recipes_list = recipes_list.annotate(num_favorites=Count('favourites')).order_by('-num_favorites')
+                recipes_list = recipes_list.annotate(
+                    num_favorites=Count(
+                        'favourites')).order_by('-num_favorites')
             elif sort_name == "date":
                 sort_name = "D"
                 recipes_list = recipes_list.order_by('-upload_date')
             elif sort_name == "time":
                 sort_name = "E"
-                recipes_list = recipes_list.annotate(total_time=F('prep_time')+F('cook_time')).order_by('total_time')
+                recipes_list = recipes_list.annotate(
+                    total_time=F(
+                        'prep_time')+F(
+                            'cook_time')).order_by('total_time')
         return recipes_list
 
     def get(self, request, *args, **kwargs):
-        recipes_list = Recipes.objects.filter(status=1).order_by('-upload_date')
+        recipes_list = Recipes.objects.filter(
+            status=1).order_by('-upload_date')
         form = SearchRecipeForm(request.GET)
         filter_form = FilterRecipeForm(request.GET)
         query = True
         if form.is_valid():
             if form.cleaned_data['search_query'] != "": 
                 recipes_list = form.cleaned_data['search_query']
-                recipes_list = Recipes.objects.filter(status=1).filter(Q(author__username__icontains=recipes_list) | Q(title__icontains=recipes_list)).order_by('-upload_date')
+                recipes_list = Recipes.objects.filter(
+                    status=1).filter(Q(
+                        author__username__icontains=recipes_list) | Q(
+                            title__icontains=recipes_list)).order_by(
+                                '-upload_date')
         recipe_elm = []
         if filter_form.is_valid():
             recipe_elm = filter_form.cleaned_data['filter_query']
             recipes_list = RecipeFilterList(recipe_elm)
         recipes_list = self.sort_functions(recipes_list, kwargs)
         recipes_list = get_average_rating(recipes_list)
-        recipes_list = paginate_recipes(request,recipes_list)
+        recipes_list = paginate_recipes(request, recipes_list)
         if len(recipes_list) == 0:
             recipes_list = "No Recipes Match Your Search"
             query = False
@@ -148,21 +154,23 @@ class RecipeDetail(View):
             recipe_comments = recipe.comments.order_by('-post_date')
             recipe_ingredients = recipe.recipe_items.filter()
             recipe_images = recipe.recipe_images.filter()
-            recipes_avg = StarRating.objects.filter(recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
+            recipes_avg = StarRating.objects.filter(
+                recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
             recipes_count = StarRating.objects.filter(recipe=recipe).count()
             star_loop = range(0, int(recipes_avg or 0))
-            empty_star_loop = range(int(recipes_avg or 0),5)
+            empty_star_loop = range(int(recipes_avg or 0), 5)
             favourited = False
             if recipe.favourites.filter(id=self.request.user.id).exists():
                 favourited = True
-
             if request.user.is_authenticated:
-                if StarRating.objects.filter(user=request.user).filter(recipe=recipe).exists():
-                    the_rating=StarRating.objects.filter(user=request.user).filter(recipe=recipe).first()
+                if StarRating.objects.filter(
+                    user=request.user).filter(
+                        recipe=recipe).exists():
+                    the_rating = StarRating.objects.filter(
+                        user=request.user).filter(recipe=recipe).first()
                     star_loop = range(0, int(the_rating.rating))
                     empty_star_loop = range(int(the_rating.rating), 5)
                     rated = True
-
             return render(
                 request,
                 "recipe_detail.html",
@@ -186,6 +194,8 @@ class RecipeDetail(View):
                     "image_form": RecipeImagesForm(),
                 },
             )
+        else:
+            return HttpResponseRedirect(reverse('home'))
 
     def delete(self, request, *args, **kwargs):
         data = json.loads(request.body)
@@ -197,38 +207,36 @@ class RecipeDetail(View):
             record = get_object_or_404(RecipeImages, id=id)
             messages.success(request, 'Removed Image')
         record.delete()
-        
         return JsonResponse({"message": id}, status=200)
 
     def post(self, request, slug, *args, **kwargs):
         commented = False
         rated = False
-        valid_comment=True
+        valid_comment = True
         queryset = Recipes.objects.filter(status=1)
         recipe = get_object_or_404(queryset, slug=slug)
         recipe_methods = recipe.methods.order_by('order')
-        recipe_comments = recipe.comments.filter(status=1).order_by('-post_date')
+        recipe_comments = recipe.comments.filter(
+            status=1).order_by('-post_date')
         recipe_ingredients = recipe.recipe_items.filter()
         recipe_images = recipe.recipe_images.filter()
-        recipes_avg = StarRating.objects.filter(recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
+        recipes_avg = StarRating.objects.filter(
+            recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
         recipes_count = StarRating.objects.filter(recipe=recipe).count()
         star_loop = range(0, int(recipes_avg or 0))
-        empty_star_loop = range(int(recipes_avg or 0),5)
-
+        empty_star_loop = range(int(recipes_avg or 0), 5)
         if request.user.is_authenticated:
             if StarRating.objects.filter(user=request.user).filter(recipe=recipe).exists():
-                the_rating=StarRating.objects.filter(user=request.user).filter(recipe=recipe).first()
+                the_rating = StarRating.objects.filter(
+                    user=request.user).filter(recipe=recipe).first()
                 star_loop = range(0, int(the_rating.rating))
                 empty_star_loop = range(int(the_rating.rating), 5)
                 rated = True
-            
         favourited = False
         if recipe.favourites.filter(id=self.request.user.id).exists():
             favourited = True
-
         if 'the_comment_form' in request.POST:
             comment_form = CommentsForm(data=request.POST)
-
             if comment_form.is_valid():
                 comment_form.instance.user = request.user
                 comment = comment_form.save(commit=False)
@@ -301,13 +309,11 @@ class RecipeDetail(View):
 
 def makeALike(request, slug):
     recipe = get_object_or_404(Recipes, slug=slug)
-
     if recipe.favourites.filter(id=request.user.id).exists():
         recipe.favourites.remove(request.user)
         return JsonResponse({'liked': False})
     else:
         recipe.favourites.add(request.user)
-    # return HttpResponseRedirect(reverse('recipe_detail', args=[slug]))
     return JsonResponse({'liked': True})
 
 
@@ -319,7 +325,8 @@ def getAverageRecipeRating(a_user):
     recipes_avg = []
     total_rec = 0
     for i in recipe:
-        recipes_avg.append(StarRating.objects.filter(recipe=i).aggregate(Avg('rating')))      
+        recipes_avg.append(StarRating.objects.filter(
+            recipe=i).aggregate(Avg('rating')))
         if recipes_avg[count].get('rating__avg') is not None:
             total_rec = total_rec + recipes_avg[count].get('rating__avg')
             num_of_ratings += 1
@@ -328,7 +335,7 @@ def getAverageRecipeRating(a_user):
         user_recipe_average = total_rec/num_of_ratings
     else:
         user_recipe_average = 0
-    thisdict = { 
+    thisdict = {
         "user_recipe_average": user_recipe_average,
         "user_recipe_average_star": range(0, int(user_recipe_average)),
         "user_recipe_average_blank": range(0, 5-int(user_recipe_average)),
@@ -348,21 +355,14 @@ def profile_details(request, username):
             is_following_data = 1
         follow_form = FollowForm()
         unfollow_form = UnfollowForm()
-
     user_recipe_average = getAverageRecipeRating(username)
-
     if username == request.user.username:
-        showing_recipes = Recipes.objects.filter(author=page_name).order_by('title')
+        showing_recipes = Recipes.objects.filter(
+            author=page_name).order_by('title')
     else:
-        showing_recipes = Recipes.objects.filter(status=1).filter(author=page_name).order_by('title')
+        showing_recipes = Recipes.objects.filter(
+            status=1).filter(author=page_name).order_by('title')
     showing_recipes = get_average_rating(showing_recipes)
-    
-    # fav_recipes = []
-    # all_recipes = Recipes.objects.filter(status=1)
-    # for r in all_recipes:
-    #     if r.favourites.filter(id=page_name.id).exists():
-    #         fav_recipes.append(r)
-    
     fav_recipes = Recipes.objects.filter(favourites=page_name).filter(status=1)
     fav_recipes = get_average_rating(fav_recipes)
     items = {"page_name": page_name,
@@ -377,7 +377,6 @@ def profile_details(request, username):
 
 
 class ProfilePage(View):
-
     def get(self, request, username, *args, **kwargs):
         user_form = None
         follow_form = None
