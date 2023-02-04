@@ -2,7 +2,7 @@
 Testing of Views
 """
 from django.test import TestCase, Client, RequestFactory
-from .models import User, Recipes, UserDetails, StarRating
+from .models import User, Recipes, UserDetails, StarRating, Units, Ingredients, RecipeItems, Methods  
 from django.urls import reverse
 from .views import RecipeDetail, CurrentUserProfileRedirectView, RecipesList, RecipeImages, Comments
 import json
@@ -303,7 +303,7 @@ class TestRecipeDetail(TestCase):
     def test_delete_comment(self):
         # send a delete request for the first comment
         response = self.client.delete(
-            f'/recipes/{self.recipe.slug}/', 
+            f'/recipes/{self.recipe.slug}/',
             content_type='application/json',
             data=json.dumps({
                 "model": "comment",
@@ -312,7 +312,7 @@ class TestRecipeDetail(TestCase):
         )
         # check if the comment was deleted
         self.assertEqual(
-            response.status_code, 
+            response.status_code,
             200
         )
         self.assertFalse(
@@ -364,7 +364,7 @@ class TestRecipeDetail(TestCase):
         client = Client()
         client.force_login(self.user)
         content = {'body': 'Test comment','the_comment_form': 'the_comment_form'}
-        response = client.post(f'/recipes/{self.recipe.slug}/',content)
+        response = client.post(f'/recipes/{self.recipe.slug}/', content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.recipe.comments.count(), 3)
         self.assertTemplateUsed(response, 'recipe_detail.html')
@@ -373,7 +373,7 @@ class TestRecipeDetail(TestCase):
         client = Client()
         client.force_login(self.user)
         content = {'the_rating_form': 'the_rating_form', 'rating': 4}
-        response = client.post(f'/recipes/{self.recipe.slug}/',content)
+        response = client.post(f'/recipes/{self.recipe.slug}/', content)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(StarRating.objects.count(), 1)
 
@@ -387,10 +387,9 @@ class TestRecipeDetail(TestCase):
         }
         client = Client()
         client.force_login(self.user)
-        response = client.post(f'/recipes/{self.recipe.slug}/',form_data)
+        response = client.post(f'/recipes/{self.recipe.slug}/', form_data)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recipe_detail.html')
-
 
 
 class TestProfilePage(TestCase):
@@ -401,8 +400,10 @@ class TestProfilePage(TestCase):
         self.user = User.objects.create_user(
             username='testuser',
             password='password'
+
         )
         self.details = UserDetails.objects.create(
+
             user=self.user,
         )
         self.user.user_details = self.details
@@ -453,6 +454,50 @@ class TestProfilePage(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_profile_page.html')
 
+    def test_post_view_with_follow_button(self):
+        client = Client()
+        client.force_login(self.user)
+
+        response = client.post(reverse('profile_page', kwargs={'username': self.user.username}), {'follow': 'Follow'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/')
+
+    def test_post_view_with_unfollow_button(self):
+        client = Client()
+        client.force_login(self.user)
+
+        response = client.post(f'/users/{self.user.username}/')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/')
+
+    def test_post_view_with_valid_form(self):
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(f'/users/{self.user.username}/', {
+                'first_name': 'Test',
+                'last_name': 'User',
+                'location': 'London'
+            })
+        self.assertEqual(response.status_code, 302)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, 'Test')
+        self.assertEqual(self.user.last_name, 'User')
+        self.assertEqual(response.url, f'/users/{self.user.username}/')
+    
+    def test_post_view_with_invalid_form(self):
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(f'/users/{self.user.username}/', {
+                'first_name': '',
+                'last_name': '',
+                'location': ''
+            })
+        self.assertEqual(response.status_code, 302)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.first_name, '')
+        self.assertEqual(self.user.last_name, '')
+        self.assertEqual(response.url, f'/users/{self.user.username}/')
+
 
 class TestProfilerecipes(TestCase):
     '''
@@ -470,6 +515,17 @@ class TestProfilerecipes(TestCase):
         self.details.save()
         self.user.save()
 
+        self.user_authenticated = User.objects.create_user(
+            username='testuserauthenticated',
+            password='password'
+        )
+        self.details_authenticated = UserDetails.objects.create(
+            user=self.user_authenticated,
+        )
+        self.user_authenticated.user_details = self.details_authenticated
+        self.details_authenticated.save()
+        self.user_authenticated.save()
+
     def test_get_profile_recipes_page(self):
         '''
         Test Profile Page Recipes status
@@ -486,6 +542,24 @@ class TestProfilerecipes(TestCase):
         '''
         response = self.client.get('/users/nouser/myrecipes/')
         self.assertEqual(response.status_code, 404)
+
+    def test_post_view(self):
+        client = Client()
+        client.force_login(self.user_authenticated)
+        response = client.post(
+            reverse('profile_page_recipes', kwargs={'username': self.user.username}),
+            {'follow': 'follow'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/myrecipes/')
+
+    def test_post_view_unfollow(self):
+        client = Client()
+        client.force_login(self.user_authenticated)
+        response = client.post(
+            reverse('profile_page_recipes', kwargs={'username': self.user.username}),
+            {'unfollow': 'unfollow'})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/myrecipes/')
 
 
 class TestProfileRecipesAdd(TestCase):
@@ -527,17 +601,6 @@ class TestProfileRecipesAdd(TestCase):
             serves=4
         )
 
-        self.recipe_hidden = Recipes.objects.create(
-            title='recipe_hidden',
-            slug='recipe_hidden',
-            author=self.user,
-            excerpt='about the recipe',
-            status=0,
-            recipe_image='',
-            prep_time=30,
-            cook_time=60,
-            serves=4
-        )
 
     def test_logged_in_own_page(self):
         '''
@@ -566,6 +629,36 @@ class TestProfileRecipesAdd(TestCase):
         response = self.client.get(f'/users/{self.user_authenticated.username}/myrecipes/new')
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
+
+    def test_post_with_valid_data(self):
+        client = Client()
+        client.force_login(self.user)
+        recipe_data = {
+            'title': 'Test Recipe',
+            'excerpt': 'Test Description',
+            'prep_time': 30,
+            'cook_time': 60,
+            'serves': 3,
+        }
+        data = recipe_data.copy()
+        response = client.post(reverse('profile_page_recipes_add', kwargs={'username': self.user.username}), data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Recipes.objects.count(), 2)
+
+    def test_post_with_invalid_data(self):
+        client = Client()
+        client.force_login(self.user)
+        recipe_data = {
+            'title': '',
+            'excerpt': 'Test Description',
+            'prep_time': 30,
+            'cook_time': 60,
+            'serves': 3,
+        }
+        data = recipe_data.copy()
+        response = client.post(reverse('profile_page_recipes_add', kwargs={'username': self.user.username}), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Recipes.objects.count(), 1)
 
 
 class TestProfileRecipesEdit(TestCase):
@@ -618,6 +711,10 @@ class TestProfileRecipesEdit(TestCase):
             cook_time=60,
             serves=4
         )
+        self.unit = Units.objects.create(name='unit1')
+        self.ingredient = Ingredients.objects.create(name='ingredient1')
+        self.recipe_item = RecipeItems.objects.create(recipe=self.recipe, ingredients=self.ingredient, amount=1, unit=self.unit )
+        self.method = Methods.objects.create(recipe=self.recipe, method='instruction1', order=1)
 
     def test_logged_in_own_page(self):
         '''
@@ -646,6 +743,151 @@ class TestProfileRecipesEdit(TestCase):
         response = self.client.get(f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}')
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
+
+    def test_update_recipe(self):
+        client = Client()
+        client.force_login(self.user)
+
+        content = {
+            'the_recipe_form': 'the_recipe_form',
+            'title': 'updated_recipe',
+            'author': self.user,
+            'excerpt': 'about the recipe',
+            'status': 1,
+            'recipe_image': '',
+            'prep_time': 30,
+            'cook_time': 60,
+            'serves': 4
+        }
+
+        response = client.post(f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', content)
+        self.assertEqual(response.status_code, 302)
+        self.recipe.refresh_from_db()
+        self.assertTrue(Recipes.objects.filter(title='updated_recipe').exists())
+        self.assertEqual(response.url, f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}')
+
+    def test_update_ingredient(self):
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'the_ingredient_form': 'the_ingredient_form',
+          'ingredients': self.ingredient.id,
+          'amount': 2,
+          'unit': self.unit.id,
+          'recipe': self.recipe,
+        }
+        response = client.post(f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', content)
+        self.assertEqual(response.status_code, 200)
+        self.recipe.refresh_from_db()
+        self.assertTrue(RecipeItems.objects.filter(amount=2).exists())
+    
+    def test_update_method(self):
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'the_method_form': 'the_method_form',
+          'method': "updated_instruction",
+          'order': 2,
+          'recipe': self.recipe,
+        }
+        response = client.post(f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', content)
+        self.assertEqual(response.status_code, 200)
+        self.recipe.refresh_from_db()
+        self.assertTrue(Methods.objects.filter(method='updated_instruction').exists())
+
+    def test_update_method_id(self):
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'the_method_form_id': 1,
+          'method': "updated_instruction",
+          'order': 2,
+          'recipe': self.recipe,
+        }
+        response = client.post(f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', content)
+        self.assertEqual(response.status_code, 200)
+        self.recipe.refresh_from_db()
+        self.assertTrue(Methods.objects.filter(method='updated_instruction').exists())
+
+    def test_delete_recipe(self):
+        
+        self.recipe_1 = Recipes.objects.create(
+            title='testrecipe1',
+            slug='testrecipe1',
+            author=self.user,
+            excerpt='about the recipe',
+            status=1,
+            recipe_image='',
+            prep_time=30,
+            cook_time=60,
+            serves=4,
+            id=99,
+        )
+        self.assertEqual(Recipes.objects.count(), 3)
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'the_delete_form': 'the_delete_form',
+          'id': self.recipe_1.id
+        }
+        response = client.post(f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', content)
+        self.assertEqual(response.status_code, 302)
+        self.recipe.refresh_from_db()
+        self.assertEqual(Recipes.objects.count(), 2)
+        self.assertEqual(response.url, f'/users/{self.user.username}/myrecipes/')
+
+    def test_add_ingredient(self):
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'the_ingredients_form': 'the_ingredients_form',
+          'name': "new_item",
+        }
+        response = client.post(f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', content)
+        self.assertEqual(response.status_code, 200)
+        self.recipe.refresh_from_db()
+        self.assertTrue(Ingredients.objects.filter(name='new_item').exists())
+
+    def test_delete_recipe_item(self):
+        response = self.client.delete(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', 
+            content_type='application/json',
+            data=json.dumps({
+                'id': self.recipe_item.id,
+                'model': 'RecipeItems'
+            })
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(RecipeItems.objects.filter(id=self.recipe_item.id).exists())
+        self.assertDictEqual(json.loads(response.content), {'message': (self.recipe_item.id), 'last': 0})
+
+    def test_delete_method(self):
+        response = self.client.delete(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}', 
+            content_type='application/json',
+            data=json.dumps({
+                'id': self.method.id,
+                'model': 'Methods'
+            })
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Methods.objects.filter(id=self.method.id).exists())
+        self.assertDictEqual(json.loads(response.content), {'message': (self.method.id), 'last': 0})
+
+    def test_delete_last_method(self):
+        response = self.client.delete(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            content_type='application/json',
+            data=json.dumps({
+                'id': self.method.id,
+                'model': 'Methods'
+            })
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Methods.objects.filter(id=self.method.id).exists())
+        self.assertDictEqual(json.loads(response.content), {'message': (self.method.id), 'last': 0})
 
 
 class TestProfileFollowers(TestCase):
@@ -727,6 +969,18 @@ class TestProfileFollowers(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_followers.html')
 
+    def test_post_follow(self):
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(f'/users/{self.user_authenticated.username}/myfollowers/', {'follow': 'Follow'})
+        self.assertRedirects(response, f'/users/{self.user_authenticated.username}/myfollowers/')
+
+    def test_post_unfollow(self):
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(f'/users/{self.user_authenticated.username}/myfollowers/', {'unfollow': 'Unfollow'})
+        self.assertRedirects(response, f'/users/{self.user_authenticated.username}/myfollowers/')
+
 
 class TestProfileFavourites(TestCase):
     """
@@ -806,6 +1060,22 @@ class TestProfileFavourites(TestCase):
         response = self.client.get(f'/users/{self.user.username}/myfavourites/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_favourites.html')
+
+    def test_post_follow(self):
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(f'/users/{self.user.username}/myfollowers/', {'follow': 'follow'})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/myfollowers/')
+
+    def test_post_unfollow(self):
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(f'/users/{self.user.username}/myfollowers/', {'unfollow': 'unfollow'})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/myfollowers/')
 
 
 class TestProfileCurrentUserProfileRedirectView(TestCase):
