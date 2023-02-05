@@ -812,12 +812,12 @@ class TestProfileRecipesEdit(TestCase):
         '''
         Test logged in and someone else page
         '''
-        un = self.user_authenticated.username
-        rs = self.recipe_authenticated.slug
+        username = self.user_authenticated.username
+        recipeslug = self.recipe_authenticated.slug
         client = Client()
         client.force_login(self.user)
         response = client.get(
-            f'/users/{un}/myrecipes/edit/{rs}')
+            f'/users/{username}/myrecipes/edit/{recipeslug}')
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/users/testuser/')
 
