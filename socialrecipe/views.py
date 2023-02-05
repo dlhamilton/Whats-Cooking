@@ -1,24 +1,46 @@
 # from itertools import chain
-from django.shortcuts import render, get_object_or_404, reverse,redirect
-from django.views import generic, View
-from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
+import json
+from django.shortcuts import render, get_object_or_404, reverse, redirect
+from django.views import View
+# generic
+from django.http import HttpResponseRedirect, JsonResponse
+# , HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-from .models import Recipes, User, UserDetails, StarRating, Ingredients, Comments, RecipeItems, Methods, RecipeImages
-from .forms import CommentsForm, SearchRecipeForm, FilterRecipeForm, RecipesForm, AddToRecipeForm, RecipeItemsForm, MethodsForm, UserDetailsForm, FollowForm, UnfollowForm, RatingForm, RecipeImagesForm, IngredientsForm
+
 from django.db.models import Count, Avg, Q, F, Case, When
-from django.urls import resolve
-from django.template import loader
+# from django.urls import resolve
+# from django.template import loader
 from django.contrib import messages
-import json
+
 from django.utils.text import slugify
 from django.core.paginator import Paginator
-from cloudinary.forms import cl_init_js_callbacks
+from .models import (Recipes, User, StarRating, Ingredients,
+                     Comments, RecipeItems, Methods, RecipeImages)
+#  UserDetails
+from .forms import (CommentsForm, SearchRecipeForm, FilterRecipeForm,
+                    RecipesForm, AddToRecipeForm, RecipeItemsForm,
+                    MethodsForm, UserDetailsForm, FollowForm, UnfollowForm,
+                    RatingForm, RecipeImagesForm, IngredientsForm)
+# from cloudinary.forms import cl_init_js_callbacks
+
+Recipes_obj = Recipes.objects
+StarRating_obj = StarRating.objects
+Ingredients_obj = Ingredients.objects
+Methods_obj = Methods.objects
+RecipeItems_obj = RecipeItems.objects
 
 
 class HomeList(View):
-    def get(self, request, *args, **kwargs):
-        top_recipes = Recipes.objects.filter(status=1).annotate(
+    """
+    The index page view
+    """
+    def get(self, request):
+        '''
+        get request
+        '''
+        # , *args, **kwargs
+        top_recipes = Recipes_obj.filter(status=1).annotate(
             favourites_count=Count('favourites')).order_by(
                 '-favourites_count')[:3]
         top_recipes = get_average_rating(top_recipes)
@@ -32,8 +54,11 @@ class HomeList(View):
         )
 
 
-def RecipeFilterList(search_list):
-    temp_recipes_list = Recipes.objects.filter(status=1)
+def recipe_filter_list(search_list):
+    '''
+    return all recipes with the name contains search_list
+    '''
+    temp_recipes_list = Recipes_obj.filter(status=1)
     for i in search_list:
         temp_recipes_list = temp_recipes_list.filter(
             Q(recipe_items__ingredients__name__icontains=i.name))
@@ -41,8 +66,11 @@ def RecipeFilterList(search_list):
 
 
 def get_average_rating(recipes_list):
+    '''
+    gives each recipe a average rating
+    '''
     for arecipe in recipes_list:
-        recipes_count = StarRating.objects.filter(recipe=arecipe).count()
+        recipes_count = StarRating_obj.filter(recipe=arecipe).count()
         recipes_avg = StarRating.get_average(arecipe.id)
         arecipe.the_star_rating = recipes_avg
         arecipe.the_star_rating_int = range(0, int(recipes_avg or 0))
@@ -51,6 +79,9 @@ def get_average_rating(recipes_list):
 
 
 def following_change(request, username):
+    '''
+    will toggle the state of following
+    '''
     user_details = request.user.user_details
     follow_form = FollowForm(request.POST)
     unfollow_form = UnfollowForm(request.POST)
@@ -66,6 +97,9 @@ def following_change(request, username):
 
 
 def paginate_recipes(request, recipes):
+    '''
+    will paginate the recipes
+    '''
     paginate_by = 6
     page = request.GET.get('page') or 1
     paginator = Paginator(recipes, paginate_by)
@@ -74,7 +108,13 @@ def paginate_recipes(request, recipes):
 
 
 class RecipesList(View):
+    '''
+    the list for recipes for recipes page
+    '''
     def sort_functions(self, recipes_list, kwargs):
+        '''
+        will run the sort for the recipes
+        '''
         if 'sort_type' in kwargs:
             sort_name = kwargs['sort_type']
             if sort_name == "name":
@@ -105,16 +145,20 @@ class RecipesList(View):
                             'cook_time')).order_by('total_time')
         return recipes_list
 
-    def get(self, request, *args, **kwargs):
-        recipes_list = Recipes.objects.filter(
+    def get(self, request, **kwargs):
+        '''
+        get request for recipe page
+        '''
+        # , *args
+        recipes_list = Recipes_obj.filter(
             status=1).order_by('-upload_date')
         form = SearchRecipeForm(request.GET)
         filter_form = FilterRecipeForm(request.GET)
         query = True
         if form.is_valid():
-            if form.cleaned_data['search_query'] != "": 
+            if form.cleaned_data['search_query'] != "":
                 recipes_list = form.cleaned_data['search_query']
-                recipes_list = Recipes.objects.filter(
+                recipes_list = Recipes_obj.filter(
                     status=1).filter(Q(
                         author__username__icontains=recipes_list) | Q(
                             title__icontains=recipes_list)).order_by(
@@ -122,7 +166,7 @@ class RecipesList(View):
         recipe_elm = []
         if filter_form.is_valid():
             recipe_elm = filter_form.cleaned_data['filter_query']
-            recipes_list = RecipeFilterList(recipe_elm)
+            recipes_list = recipe_filter_list(recipe_elm)
         recipes_list = self.sort_functions(recipes_list, kwargs)
         recipes_list = get_average_rating(recipes_list)
         recipes_list = paginate_recipes(request, recipes_list)
@@ -145,8 +189,15 @@ class RecipesList(View):
 
 
 class RecipeDetail(View):
-    def get(self, request, slug, *args, **kwargs):
-        queryset = Recipes.objects
+    """
+    the view for the single recipe page
+    """
+    def get(self, request, slug):
+        '''
+        get request for single recipe page
+        '''
+        # , *args, **kwargs
+        queryset = Recipes_obj
         rated = False
         recipe = get_object_or_404(queryset, slug=slug)
         if recipe.status == 1 or request.user == recipe.author:
@@ -154,19 +205,19 @@ class RecipeDetail(View):
             recipe_comments = recipe.comments.order_by('-post_date')
             recipe_ingredients = recipe.recipe_items.filter()
             recipe_images = recipe.recipe_images.filter()
-            recipes_avg = StarRating.objects.filter(
+            recipes_avg = StarRating_obj.filter(
                 recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
-            recipes_count = StarRating.objects.filter(recipe=recipe).count()
+            recipes_count = StarRating_obj.filter(recipe=recipe).count()
             star_loop = range(0, int(recipes_avg or 0))
             empty_star_loop = range(int(recipes_avg or 0), 5)
             favourited = False
             if recipe.favourites.filter(id=self.request.user.id).exists():
                 favourited = True
             if request.user.is_authenticated:
-                if StarRating.objects.filter(
+                if StarRating_obj.filter(
                     user=request.user).filter(
                         recipe=recipe).exists():
-                    the_rating = StarRating.objects.filter(
+                    the_rating = StarRating_obj.filter(
                         user=request.user).filter(recipe=recipe).first()
                     star_loop = range(0, int(the_rating.rating))
                     empty_star_loop = range(int(the_rating.rating), 5)
@@ -194,40 +245,47 @@ class RecipeDetail(View):
                     "image_form": RecipeImagesForm(),
                 },
             )
-        else:
-            return HttpResponseRedirect(reverse('home'))
+        return HttpResponseRedirect(reverse('home'))
 
     def delete(self, request, *args, **kwargs):
+        '''
+        delete comments and images from recipes
+        '''
+        # , *args, **kwargs
         data = json.loads(request.body)
         model = data.get('model')
-        id = data.get('id')
+        item_id = data.get('id')
         if model == "comment":
-            record = get_object_or_404(Comments, id=id)     
+            record = get_object_or_404(Comments, id=item_id)
         else:
-            record = get_object_or_404(RecipeImages, id=id)
+            record = get_object_or_404(RecipeImages, id=item_id)
             messages.success(request, 'Removed Image')
         record.delete()
-        return JsonResponse({"message": id}, status=200)
+        return JsonResponse({"message": item_id}, status=200)
 
     def post(self, request, slug, *args, **kwargs):
-        commented = False
+        '''
+        post request for single recipe
+        '''
+        # commented = False
         rated = False
         valid_comment = True
-        queryset = Recipes.objects.filter(status=1)
+        queryset = Recipes_obj.filter(status=1)
         recipe = get_object_or_404(queryset, slug=slug)
         recipe_methods = recipe.methods.order_by('order')
         recipe_comments = recipe.comments.filter(
             status=1).order_by('-post_date')
         recipe_ingredients = recipe.recipe_items.filter()
         recipe_images = recipe.recipe_images.filter()
-        recipes_avg = StarRating.objects.filter(
+        recipes_avg = StarRating_obj.filter(
             recipe=recipe).aggregate(Avg('rating')).get('rating__avg')
-        recipes_count = StarRating.objects.filter(recipe=recipe).count()
+        recipes_count = StarRating_obj.filter(recipe=recipe).count()
         star_loop = range(0, int(recipes_avg or 0))
         empty_star_loop = range(int(recipes_avg or 0), 5)
         if request.user.is_authenticated:
-            if StarRating.objects.filter(user=request.user).filter(recipe=recipe).exists():
-                the_rating = StarRating.objects.filter(
+            if StarRating_obj.filter(user=request.user).filter(
+                    recipe=recipe).exists():
+                the_rating = StarRating_obj.filter(
                     user=request.user).filter(recipe=recipe).first()
                 star_loop = range(0, int(the_rating.rating))
                 empty_star_loop = range(int(the_rating.rating), 5)
@@ -249,12 +307,14 @@ class RecipeDetail(View):
                 messages.error(request, 'Error With Comment')
                 valid_comment = False
         elif 'the_like_form' in request.POST:
-            return makeALike(request, slug)
+            return make_a_like(request, slug)
         elif 'the_rating_form' in request.POST:
             rating_form = RatingForm(data=request.POST)
             if rating_form.is_valid():
-                if StarRating.objects.filter(user=request.user).filter(recipe=recipe).exists():
-                    the_rating = StarRating.objects.filter(user=request.user).filter(recipe=recipe).first()
+                if StarRating_obj.filter(user=request.user).filter(
+                        recipe=recipe).exists():
+                    the_rating = StarRating_obj.filter(
+                        user=request.user).filter(recipe=recipe).first()
                     the_rating.delete()
                 rating_form.instance.user = request.user
                 rating = rating_form.save(commit=False)
@@ -307,7 +367,10 @@ class RecipeDetail(View):
         )
 
 
-def makeALike(request, slug):
+def make_a_like(request, slug):
+    '''
+    will toggle the favourites for a recipe
+    '''
     recipe = get_object_or_404(Recipes, slug=slug)
     if recipe.favourites.filter(id=request.user.id).exists():
         recipe.favourites.remove(request.user)
@@ -317,15 +380,18 @@ def makeALike(request, slug):
     return JsonResponse({'liked': True})
 
 
-def getAverageRecipeRating(a_user):
+def get_average_recipe_rating(a_user):
+    '''
+    will get the average rating for a user
+    '''
     page_name = get_object_or_404(User, username=a_user)
-    recipe = Recipes.objects.filter(author=page_name.id).filter(status=1)
+    recipe = Recipes_obj.filter(author=page_name.id).filter(status=1)
     count = 0
     num_of_ratings = 0
     recipes_avg = []
     total_rec = 0
     for i in recipe:
-        recipes_avg.append(StarRating.objects.filter(
+        recipes_avg.append(StarRating_obj.filter(
             recipe=i).aggregate(Avg('rating')))
         if recipes_avg[count].get('rating__avg') is not None:
             total_rec = total_rec + recipes_avg[count].get('rating__avg')
@@ -344,6 +410,9 @@ def getAverageRecipeRating(a_user):
 
 
 def profile_details(request, username):
+    '''
+    get all the details for the user page
+    '''
     page_name = get_object_or_404(User, username=username)
     follow_form = None
     unfollow_form = None
@@ -355,15 +424,15 @@ def profile_details(request, username):
             is_following_data = 1
         follow_form = FollowForm()
         unfollow_form = UnfollowForm()
-    user_recipe_average = getAverageRecipeRating(username)
+    user_recipe_average = get_average_recipe_rating(username)
     if username == request.user.username:
-        showing_recipes = Recipes.objects.filter(
+        showing_recipes = Recipes_obj.filter(
             author=page_name).order_by('title')
     else:
-        showing_recipes = Recipes.objects.filter(
+        showing_recipes = Recipes_obj.filter(
             status=1).filter(author=page_name).order_by('title')
     showing_recipes = get_average_rating(showing_recipes)
-    fav_recipes = Recipes.objects.filter(favourites=page_name).filter(status=1)
+    fav_recipes = Recipes_obj.filter(favourites=page_name).filter(status=1)
     fav_recipes = get_average_rating(fav_recipes)
     items = {"page_name": page_name,
              "fav_recipes_count": len(fav_recipes),
@@ -377,7 +446,13 @@ def profile_details(request, username):
 
 
 class ProfilePage(View):
+    """
+    The users profile page
+    """
     def get(self, request, username, *args, **kwargs):
+        '''
+        the get request
+        '''
         user_form = None
         follow_form = None
         unfollow_form = None
@@ -400,8 +475,12 @@ class ProfilePage(View):
         )
 
     def post(self, request, username, *args, **kwargs):
+        '''
+        the post request
+        '''
         user_details = request.user.user_details
-        user_form = UserDetailsForm(request.POST, request.FILES, instance=user_details)
+        user_form = UserDetailsForm(
+            request.POST, request.FILES, instance=user_details)
         if 'follow' in request.POST or 'unfollow' in request.POST:
             following_change(request, username)
         elif user_form.is_valid():
@@ -410,19 +489,25 @@ class ProfilePage(View):
 
 
 class Profilerecipes(View):
+    """
+    the user recipes page
+    """
     def get(self, request, username, *args, **kwargs):
+        '''
+        the get request
+        '''
         the_name = get_object_or_404(User, username=username)
         p_details = profile_details(self.request, username)
         p_details.update({"logged_in_user": the_name, })
         if username != request.user.username:
-            recipes = Recipes.objects.filter(status=1).filter(author=the_name).order_by('title')
+            recipes = Recipes_obj.filter(status=1).filter(author=the_name).order_by('title')
         else:
-            recipes = Recipes.objects.filter(author=the_name).order_by('title')
+            recipes = Recipes_obj.filter(author=the_name).order_by('title')
         recipes = get_average_rating(recipes)
         recipes_len = len(recipes)
         recipes = paginate_recipes(request, recipes)
-        if len(recipes) == 0:
-            recipes_list = "No Recipes"
+        # if len(recipes) == 0:
+        #     recipes_list = "No Recipes"
         p_details.update({
             "recipe_list": recipes,
             "recipe_list_count": recipes_len, })
@@ -433,13 +518,22 @@ class Profilerecipes(View):
         )
 
     def post(self, request, username, *args, **kwargs):
+        '''
+        the post request
+        '''
         if 'follow' in request.POST or 'unfollow' in request.POST:
             following_change(request, username)
         return redirect('profile_page_recipes', username=username)
 
 
 class ProfileRecipesAdd(View):
+    """
+    the user recipes add recipe page
+    """
     def get(self, request, username, *args, **kwargs):
+        '''
+        the get request
+        '''
         if username == request.user.username:
             p_details = profile_details(self.request, username)
             p_details.update({"logged_in_user": request.user,
@@ -458,6 +552,9 @@ class ProfileRecipesAdd(View):
             return HttpResponseRedirect(reverse('home'))
 
     def post(self, request, username, *args, **kwargs):
+        '''
+        the post request
+        '''
         if username == request.user.username:
             recipe_form = RecipesForm(data=request.POST, files=request.FILES)
             if recipe_form.is_valid():
@@ -505,13 +602,20 @@ class ProfileRecipesAdd(View):
 
 
 class ProfileRecipesEdit(View):
+    """
+    the user recipes edit recipe page
+    """
     form_class = AddToRecipeForm
     paginate_by = 10  # Show 10 ingredients per page
-    def ingredientPaginate(self, request, search_term):
+
+    def ingredient_paginate(self, request, search_term):
+        '''
+        will paginate the ingredients in the search results
+        '''
         go_to_id_id = None
         page = request.GET.get('page') or 1
         # ingredients = Ingredients.objects.filter(approved=True)
-        ingredients = Ingredients.objects.filter()
+        ingredients = Ingredients_obj.filter()
         if page != 1:
             go_to_id_id = 'ingredients_section'
         if search_term:
@@ -521,11 +625,14 @@ class ProfileRecipesEdit(View):
         paginator = paginator.get_page(page)
         return {'paginator': paginator,
                 'results_count': len(ingredients),
-                'go_to_id_id': go_to_id_id }
+                'go_to_id_id': go_to_id_id}
 
     def get(self, request, username, recipe, *args, **kwargs):
+        '''
+        the get request
+        '''
         if username == request.user.username:
-            the_recipe = get_object_or_404(Recipes,slug=recipe)
+            the_recipe = get_object_or_404(Recipes, slug=recipe)
             form = self.form_class(request.GET)
             add_ingredients_form = RecipeItemsForm()
             edit_form = RecipesForm(instance=the_recipe)
@@ -533,10 +640,11 @@ class ProfileRecipesEdit(View):
             recipe_ingredients = the_recipe.recipe_items.filter()
             # Methods
             method_form = MethodsForm()
-            the_methods = Methods.objects.filter(recipe=the_recipe).order_by('order')
-
+            the_methods = Methods_obj.filter(
+                recipe=the_recipe).order_by('order')
             p_details = profile_details(self.request, username)
-            p_details.update(self.ingredientPaginate(self.request, search_term))
+            p_details.update(
+                self.ingredient_paginate(self.request, search_term))
             p_details.update({"logged_in_user": request.user,
                               'form': form,
                               'i_form': add_ingredients_form,
@@ -561,6 +669,9 @@ class ProfileRecipesEdit(View):
             return HttpResponseRedirect(reverse('home'))
 
     def post(self, request, username, recipe, *args, **kwargs):
+        '''
+        the post request
+        '''
         if username == request.user.username:
             the_recipe = get_object_or_404(Recipes, slug=recipe)
             recipe_form = RecipesForm(instance=the_recipe)
@@ -592,9 +703,10 @@ class ProfileRecipesEdit(View):
                 # context = {'go_to_id_id': go_to_id_id}
                 if add_ingredients_form.is_valid():
                     # recipe_form = RecipesForm(instance=the_recipe)
-                    if RecipeItems.objects.filter(recipe=the_recipe,
-                                                ingredients=add_ingredients_form.instance.ingredients):
-                        id = RecipeItems.objects.filter(recipe=the_recipe,ingredients=add_ingredients_form.instance.ingredients).values('id').first()['id']
+                    if RecipeItems_obj.filter(
+                            recipe=the_recipe,
+                            ingredients=add_ingredients_form.instance.ingredients):
+                        id = RecipeItems_obj.filter(recipe=the_recipe,ingredients=add_ingredients_form.instance.ingredients).values('id').first()['id']
                         record = get_object_or_404(RecipeItems, id=id)
                         record.delete()
                         add_ingredients_form.instance.recipe = the_recipe
@@ -628,7 +740,7 @@ class ProfileRecipesEdit(View):
                 go_to_id_id = 'method_section_area'
                 if add_methods_form.is_valid():
                     method_id = add_methods_form.data.get('the_method_form_id')
-                    method_instance = Methods.objects.get(id=method_id)
+                    method_instance = Methods_obj.get(id=method_id)
                     method_instance.method = add_methods_form.cleaned_data['method']
                     method_instance.save()
                     messages.success(request, 'Method Updated')
@@ -636,7 +748,10 @@ class ProfileRecipesEdit(View):
                 id = request.POST.get('id')
                 record = get_object_or_404(Recipes, id=id)
                 record.delete()
-                return redirect(reverse('profile_page_recipes', kwargs={'username':request.user.username}))
+                return redirect(
+                    reverse(
+                        'profile_page_recipes',
+                        kwargs={'username': request.user.username}))
             elif "the_ingredients_form" in request.POST:
                 the_form = IngredientsForm(data=request.POST)
                 go_to_id_id = 'ingredients_section'
@@ -646,14 +761,16 @@ class ProfileRecipesEdit(View):
                     messages.success(request, 'Ingredient Added')
             # Methods
             method_form = MethodsForm()
-            the_methods = Methods.objects.filter(recipe=the_recipe).order_by('order')
-
+            the_methods = Methods_obj.filter(
+                recipe=the_recipe).order_by('order')
             form = self.form_class(request.GET)
             add_ingredients_form = RecipeItemsForm()
             search_term = form.data.get('search_term')
             recipe_ingredients = the_recipe.recipe_items.filter()
             p_details = profile_details(self.request, username)
-            p_details.update(self.ingredientPaginate(self.request, search_term,))
+            p_details.update(self.ingredient_paginate(
+                self.request,
+                search_term,))
             p_details.update({"logged_in_user": request.user,
                               'form': form,
                               'i_form': add_ingredients_form,
@@ -691,7 +808,7 @@ class ProfileRecipesEdit(View):
             record = get_object_or_404(Methods, id=id)
             temp_record = record
             record.delete()
-            if Methods.objects.filter(recipe=temp_record.recipe).exists():
+            if Methods_obj.filter(recipe=temp_record.recipe).exists():
                 last = 1
         return JsonResponse({"message": id, "last": last}, status=200)
 
@@ -713,6 +830,9 @@ class ProfileFollowers(View):
 
 
 class ProfileFavourites(View):
+    """
+    the user recipes Favourites recipe page
+    """
     def get(self, request, username, *args, **kwargs):
         p_details = profile_details(self.request, username)
         p_details.update({"logged_in_user": request.user, })
