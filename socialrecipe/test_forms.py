@@ -10,6 +10,11 @@ from .forms import (CommentsForm, RatingForm, RecipeImagesForm, RecipesForm,
                     UserDetailsForm, FollowForm, UnfollowForm)
 from .models import Recipes, Ingredients, Units, User, UserDetails
 
+img_link = 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg'
+Ingredients_var = Ingredients.objects
+Units_var = Units.objects
+UserDetails_var = UserDetails.objects
+
 
 class TestRecipeCommentForm(TestCase):
     """
@@ -106,7 +111,7 @@ class TestRecipeImageUploadForm(TestCase):
         Test headline is required
         '''
         form = RecipeImagesForm({
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link
         })
         self.assertFalse(form.is_valid())
         self.assertIn('headline', form.errors.keys())
@@ -199,7 +204,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': '',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -230,7 +235,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': '',
             'prep_time': 30,
             'cook_time': 60,
@@ -247,7 +252,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': '',
             'cook_time': 60,
@@ -264,7 +269,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': '',
@@ -281,7 +286,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -298,7 +303,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -315,7 +320,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -331,7 +336,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -346,7 +351,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 'abc',
             'cook_time': 60,
@@ -361,7 +366,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 'abc',
@@ -376,7 +381,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg',
+            'recipe_image': img_link,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -455,13 +460,13 @@ class FilterRecipeFormTest(TestCase):
     """
     @classmethod
     def setUpTestData(cls):
-        cls.ingredient_1 = Ingredients.objects.create(
+        cls.ingredient_1 = Ingredients_var.create(
             name='Tomatoes', approved=True
             )
-        cls.ingredient_2 = Ingredients.objects.create(
+        cls.ingredient_2 = Ingredients_var.create(
             name='Apple', approved=True
             )
-        cls.ingredient_3 = Ingredients.objects.create(
+        cls.ingredient_3 = Ingredients_var.create(
             name='Carrots', approved=False
             )
 
@@ -563,9 +568,9 @@ class IngredientsFormTestCase(TestCase):
         form_data = {'name': 'chicken'}
         form = IngredientsForm(data=form_data)
         self.assertTrue(form.is_valid())
-        ingredient = form.save()
-        self.assertEqual(Ingredients.objects.count(), 1)
-        self.assertEqual(Ingredients.objects.first().name, 'chicken')
+        form.save()
+        self.assertEqual(Ingredients_var.count(), 1)
+        self.assertEqual(Ingredients_var.first().name, 'chicken')
 
     def test_fields_are_explicit_in_form_metaclass(self):
         '''
@@ -581,10 +586,10 @@ class TestRecipeItemsForm(TestCase):
     """
     @classmethod
     def setUpTestData(cls):
-        cls.unit = Units.objects.create(
+        cls.unit = Units_var.create(
             name='grams'
             )
-        cls.ingredient_1 = Ingredients.objects.create(
+        cls.ingredient_1 = Ingredients_var.create(
             name='Tomatoes', approved=True
             )
 
@@ -721,7 +726,7 @@ class UserDetailsFormTests(TestCase):
             username='testuser',
             password='testpassword'
         )
-        user_details = UserDetails.objects.create(user=user)
+        user_details = UserDetails_var.create(user=user)
         form_data = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -742,7 +747,7 @@ class UserDetailsFormTests(TestCase):
             username='testuser',
             password='testpassword'
             )
-        user_details = UserDetails.objects.create(user=user)
+        user_details = UserDetails_var.create(user=user)
         form_data = {
             'first_name': 'John',
             'last_name': '',
@@ -765,7 +770,7 @@ class UserDetailsFormTests(TestCase):
             username='testuser',
             password='testpassword'
             )
-        user_details = UserDetails.objects.create(user=user)
+        user_details = UserDetails_var.create(user=user)
         form_data = {
             'first_name': '',
             'last_name': 'Doe',
@@ -787,7 +792,7 @@ class UserDetailsFormTests(TestCase):
             username='testuser',
             password='testpassword'
         )
-        user_details = UserDetails.objects.create(user=user)
+        user_details = UserDetails_var.create(user=user)
         form_data = {
             'first_name': 'John',
             'last_name': 'Doe',
@@ -806,7 +811,7 @@ class UserDetailsFormTests(TestCase):
             username='testuser',
             password='testpassword'
             )
-        user_details = UserDetails.objects.create(user=user)
+        user_details = UserDetails_var.create(user=user)
         image = SimpleUploadedFile(
             "test_image.jpg",
             b"file_content",
@@ -829,7 +834,7 @@ class UserDetailsFormTests(TestCase):
             username='testuser',
             password='testpassword'
             )
-        user_details = UserDetails.objects.create(user=user)
+        user_details = UserDetails_var.create(user=user)
         form = UserDetailsForm(instance=user_details)
         self.assertEqual(
             form.Meta.fields, (

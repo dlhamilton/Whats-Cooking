@@ -1,17 +1,18 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
+from decimal import Decimal
 from django.db import models
-from django.contrib.auth.models import User
-from cloudinary.models import CloudinaryField
-
-from allauth.account.signals import user_signed_up
-from django.contrib.auth.models import Group
 from django.dispatch import receiver
 from django.db.models import Avg
-from decimal import Decimal
-from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User
+from cloudinary.models import CloudinaryField
+from allauth.account.signals import user_signed_up
+# from django.contrib.auth.models import Group
+
+
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 RECIPE_STATUS = ((0, "Draft"), (1, "Published"), (2, "Hidden"), (3, "Removed"))
-USER_STATUS = ((0, "Suspended"), (1, "Standard"), (2, "Bronze"), (3, "Silver"), (4, "Gold"), (5, "Platnium"))
+USER_STATUS = ((0, "Suspended"), (1, "Standard"), (2, "Bronze"), (3, "Silver"),
+               (4, "Gold"), (5, "Platnium"))
 INGREDIENTS = ((0, "Approved"), (1, "Disapproved"))
 
 
@@ -32,7 +33,7 @@ class UserDetails(models.Model):
         return self.follows.count()
 
     def get_followers(self):
-        x=self.follows.all()
+        x = self.follows.all()
         return x
 
     def get_amount_of_recipes(self):
@@ -42,6 +43,14 @@ class UserDetails(models.Model):
     def get_amount_to_next(self):
         total = self.user.user_recipes.count()
         return 10 - total % 10
+
+    def update_status(self):
+        status_ranges = [(40, 5), (30, 4), (20, 3), (10, 2), (0, 1)]
+        num = self.user.user_recipes.filter(status=1).count()
+        for threshold, value in status_ranges:
+            if num >= threshold:
+                self.status = value
+                break
 
 
 class Recipes(models.Model):

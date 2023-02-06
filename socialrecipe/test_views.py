@@ -1,14 +1,24 @@
 """
 Testing of Views
 """
+import json
 from django.test import TestCase, Client, RequestFactory
+from django.urls import reverse
+from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import (User, Recipes, UserDetails, StarRating, Units,
                      Ingredients, RecipeItems, Methods)
-from django.urls import reverse
 from .views import (RecipeDetail, CurrentUserProfileRedirectView, RecipesList,
                     RecipeImages, Comments)
-import json
-from django.core.files.uploadedfile import SimpleUploadedFile
+
+UserDetails_var = UserDetails.objects
+Recipes_var = Recipes.objects
+Comments_var = Comments.objects
+Methods_var = Methods.objects
+StarRating_var = StarRating.objects
+Ingredients_var = Ingredients.objects
+RecipeImages_var = RecipeImages.objects
+Units_var = Units.objects
+RecipeItems_var = RecipeItems.objects
 
 
 class TestHomePage(TestCase):
@@ -34,19 +44,19 @@ class TestRecipesList(TestCase):
         self.user = User.objects.create_user(
             username='testuser', password='testpass')
 
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details
 
-        self.recipe = Recipes.objects.create(
+        self.recipe = Recipes_var.create(
             title='Test Recipe',
             slug='test_recipe',
             author=self.user,
             status=1,
             upload_date='2022-12-01'
         )
-        self.rating = StarRating.objects.create(
+        self.rating = StarRating_var.create(
             rating=3,
             recipe=self.recipe,
             user=self.user
@@ -106,35 +116,35 @@ class TestRecipesList(TestCase):
         view = RecipesList()
 
         # Test sort by name
-        recipes_list = Recipes.objects.filter(status=1).order_by(
+        recipes_list = Recipes_var.filter(status=1).order_by(
             '-upload_date')
         sorted_recipes = view.sort_functions(
             recipes_list, {'sort_type': 'name'})
         self.assertEqual(sorted_recipes[0], self.recipe)
 
         # Test sort by rating
-        recipes_list = Recipes.objects.filter(status=1).order_by(
+        recipes_list = Recipes_var.filter(status=1).order_by(
             '-upload_date')
         sorted_recipes = view.sort_functions(
             recipes_list, {'sort_type': 'rating'})
         self.assertEqual(sorted_recipes[0], self.recipe)
 
         # Test sort by favourite
-        recipes_list = Recipes.objects.filter(status=1).order_by(
+        recipes_list = Recipes_var.filter(status=1).order_by(
             '-upload_date')
         sorted_recipes = view.sort_functions(
             recipes_list, {'sort_type': 'favourite'})
         self.assertEqual(sorted_recipes[0], self.recipe)
 
         # Test sort by date
-        recipes_list = Recipes.objects.filter(status=1).order_by(
+        recipes_list = Recipes_var.filter(status=1).order_by(
             '-upload_date')
         sorted_recipes = view.sort_functions(
             recipes_list, {'sort_type': 'date'})
         self.assertEqual(sorted_recipes[0], self.recipe)
 
         # Test sort by time
-        recipes_list = Recipes.objects.filter(status=1).order_by(
+        recipes_list = Recipes_var.filter(status=1).order_by(
             '-upload_date')
         sorted_recipes = view.sort_functions(
             recipes_list, {'sort_type': 'time'})
@@ -150,7 +160,7 @@ class TestRecipeDetail(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details
@@ -161,13 +171,13 @@ class TestRecipeDetail(TestCase):
             username='testuserauthenticated',
             password='password'
         )
-        self.details_authenticated = UserDetails.objects.create(
+        self.details_authenticated = UserDetails_var.create(
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
         self.details_authenticated.save()
         self.user_authenticated.save()
-        self.recipe = Recipes.objects.create(
+        self.recipe = Recipes_var.create(
             title='testrecipe',
             slug='testrecipe',
             author=self.user,
@@ -178,7 +188,7 @@ class TestRecipeDetail(TestCase):
             cook_time=60,
             serves=4
         )
-        self.recipe_hidden = Recipes.objects.create(
+        self.recipe_hidden = Recipes_var.create(
             title='recipe_hidden',
             slug='recipe_hidden',
             author=self.user,
@@ -189,7 +199,7 @@ class TestRecipeDetail(TestCase):
             cook_time=60,
             serves=4
         )
-        self.recipe_authenticated = Recipes.objects.create(
+        self.recipe_authenticated = Recipes_var.create(
             title='recipe_authenticated',
             slug='recipe_authenticated',
             author=self.user_authenticated,
@@ -200,22 +210,22 @@ class TestRecipeDetail(TestCase):
             cook_time=60,
             serves=4
         )
-        self.image1 = RecipeImages.objects.create(
+        self.image1 = RecipeImages_var.create(
             recipe_image="path/to/image1.jpg",
             recipe=self.recipe,
             user=self.user,
         )
-        self.image2 = RecipeImages.objects.create(
+        self.image2 = RecipeImages_var.create(
             recipe_image="path/to/image2.jpg",
             recipe=self.recipe,
             user=self.user,
         )
-        self.comment1 = Comments.objects.create(
+        self.comment1 = Comments_var.create(
             body="Comment 1",
             recipe=self.recipe,
             user=self.user,
         )
-        self.comment2 = Comments.objects.create(
+        self.comment2 = Comments_var.create(
             body="Comment 2",
             recipe=self.recipe,
             user=self.user,
@@ -308,7 +318,7 @@ class TestRecipeDetail(TestCase):
         '''
         Test delete of recipe comment
         '''
-        StarRating.objects.create(user=self.user, recipe=self.recipe, rating=3)
+        StarRating_var.create(user=self.user, recipe=self.recipe, rating=3)
         request = self.factory.get(reverse(
             'recipe_detail', args=[self.recipe.slug]))
         request.user = self.user
@@ -318,7 +328,7 @@ class TestRecipeDetail(TestCase):
             200
         )
         self.assertTrue(
-            StarRating.objects.filter(rating=3).exists()
+            StarRating_var.filter(rating=3).exists()
         )
 
     def test_delete_comment(self):
@@ -338,10 +348,10 @@ class TestRecipeDetail(TestCase):
             200
         )
         self.assertFalse(
-            Comments.objects.filter(id=self.comment1.id).exists()
+            Comments_var.filter(id=self.comment1.id).exists()
         )
         self.assertTrue(
-            Comments.objects.filter(id=self.comment2.id).exists()
+            Comments_var.filter(id=self.comment2.id).exists()
         )
 
     def test_delete_image(self):
@@ -361,10 +371,10 @@ class TestRecipeDetail(TestCase):
             200
         )
         self.assertFalse(
-            RecipeImages.objects.filter(id=self.image1.id).exists()
+            RecipeImages_var.filter(id=self.image1.id).exists()
         )
         self.assertTrue(
-            RecipeImages.objects.filter(id=self.image2.id).exists()
+            RecipeImages_var.filter(id=self.image2.id).exists()
         )
 
     def test_delete_nonexistent_record(self):
@@ -408,7 +418,7 @@ class TestRecipeDetail(TestCase):
         content = {'the_rating_form': 'the_rating_form', 'rating': 4}
         response = client.post(f'/recipes/{self.recipe.slug}/', content)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(StarRating.objects.count(), 1)
+        self.assertEqual(StarRating_var.count(), 1)
 
     def test_post_view_with_image(self):
         '''
@@ -439,7 +449,7 @@ class TestProfilePage(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details
@@ -449,7 +459,7 @@ class TestProfilePage(TestCase):
             username='testuserauthenticated',
             password='password'
         )
-        self.details_authenticated = UserDetails.objects.create(
+        self.details_authenticated = UserDetails_var.create(
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
@@ -497,7 +507,7 @@ class TestProfilePage(TestCase):
         client.force_login(self.user)
 
         response = client.post(f'/users/{self.user.username}/',
-        {'follow': 'follow'})
+                               {'follow': 'follow'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, f'/users/{self.user.username}/')
 
@@ -509,7 +519,7 @@ class TestProfilePage(TestCase):
         client.force_login(self.user)
 
         response = client.post(f'/users/{self.user.username}/',
-        {'unfollow': 'unfollow'})
+                               {'unfollow': 'unfollow'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, f'/users/{self.user.username}/')
 
@@ -557,7 +567,7 @@ class TestProfilerecipes(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details
@@ -568,7 +578,7 @@ class TestProfilerecipes(TestCase):
             username='testuserauthenticated',
             password='password'
         )
-        self.details_authenticated = UserDetails.objects.create(
+        self.details_authenticated = UserDetails_var.create(
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
@@ -602,7 +612,7 @@ class TestProfilerecipes(TestCase):
             reverse(
                 'profile_page_recipes',
                 kwargs={'username': self.user.username}),
-                {'follow': 'follow'})
+            {'follow': 'follow'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response.url,
@@ -616,9 +626,9 @@ class TestProfilerecipes(TestCase):
         client.force_login(self.user_authenticated)
         response = client.post(
             reverse(
-                'profile_page_recipes',
-                kwargs={'username': self.user.username}),
-                {'unfollow': 'unfollow'})
+                    'profile_page_recipes',
+                    kwargs={'username': self.user.username}),
+            {'unfollow': 'unfollow'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
             response.url, f'/users/{self.user.username}/myrecipes/')
@@ -633,8 +643,9 @@ class TestProfileRecipesAdd(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
+            status=1,
         )
         self.user.user_details = self.details
         self.details.save()
@@ -644,14 +655,14 @@ class TestProfileRecipesAdd(TestCase):
             username='testuserauthenticated',
             password='password'
         )
-        self.details_authenticated = UserDetails.objects.create(
+        self.details_authenticated = UserDetails_var.create(
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
         self.details_authenticated.save()
         self.user_authenticated.save()
 
-        self.recipe = Recipes.objects.create(
+        self.recipe = Recipes_var.create(
             title='testrecipe',
             slug='testrecipe',
             author=self.user,
@@ -711,7 +722,7 @@ class TestProfileRecipesAdd(TestCase):
             'profile_page_recipes_add',
             kwargs={'username': self.user.username}), data)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Recipes.objects.count(), 2)
+        self.assertEqual(Recipes_var.count(), 2)
 
     def test_post_with_invalid_data(self):
         '''
@@ -732,7 +743,181 @@ class TestProfileRecipesAdd(TestCase):
                 'profile_page_recipes_add',
                 kwargs={'username': self.user.username}), data)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Recipes.objects.count(), 1)
+        self.assertEqual(Recipes_var.count(), 1)
+
+    def test_status_update_lv1(self):
+        '''
+        Test update to status 1
+        '''
+        client = Client()
+        client.force_login(self.user)
+        for i in range(5):
+            recipe_data = {
+                'title': f'recipe_{i}',
+                'excerpt': 'Test Description',
+                'prep_time': 30,
+                'cook_time': 60,
+                'serves': 3,
+                'status': 1,
+                'publish': True
+            }
+            data = recipe_data.copy()
+            response = client.post(reverse(
+                'profile_page_recipes_add',
+                kwargs={'username': self.user.username}), data)
+        self.user.user_details.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            self.user.user_recipes.filter(status=1).count(), 6)
+        self.assertEqual(
+            self.user.user_details.status, 1)
+
+    def test_status_update_lv2(self):
+        '''
+        Test update to status 2
+        '''
+        client = Client()
+        client.force_login(self.user)
+        for i in range(10):
+            recipe_data = {
+                'title': f'recipe_{i}',
+                'excerpt': 'Test Description',
+                'prep_time': 30,
+                'cook_time': 60,
+                'serves': 3,
+                'status': 1,
+                'publish': True
+            }
+            data = recipe_data.copy()
+            response = client.post(reverse(
+                'profile_page_recipes_add',
+                kwargs={'username': self.user.username}), data)
+        self.user.user_details.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            self.user.user_recipes.filter(status=1).count(), 11)
+        self.assertEqual(
+            self.user.user_details.status, 2)
+        self.assertNotEqual(
+            self.user.user_details.status, 1)
+
+    def test_status_update_lv3(self):
+        '''
+        Test update to status 3
+        '''
+        client = Client()
+        client.force_login(self.user)
+        for i in range(20):
+            recipe_data = {
+                'title': f'recipe_{i}',
+                'excerpt': 'Test Description',
+                'prep_time': 30,
+                'cook_time': 60,
+                'serves': 3,
+                'status': 1,
+                'publish': True
+            }
+            data = recipe_data.copy()
+            response = client.post(reverse(
+                'profile_page_recipes_add',
+                kwargs={'username': self.user.username}), data)
+        self.user.user_details.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            self.user.user_recipes.filter(status=1).count(), 21)
+        self.assertEqual(
+            self.user.user_details.status, 3)
+        self.assertNotEqual(
+            self.user.user_details.status, 1)
+
+    def test_status_update_lv4(self):
+        '''
+        Test update to status 4
+        '''
+        client = Client()
+        client.force_login(self.user)
+        for i in range(29):
+            recipe_data = {
+                'title': f'recipe_{i}',
+                'excerpt': 'Test Description',
+                'prep_time': 30,
+                'cook_time': 60,
+                'serves': 3,
+                'status': 1,
+                'publish': True
+            }
+            data = recipe_data.copy()
+            response = client.post(reverse(
+                'profile_page_recipes_add',
+                kwargs={'username': self.user.username}), data)
+        self.user.user_details.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            self.user.user_recipes.filter(status=1).count(), 30)
+        self.assertEqual(
+            self.user.user_details.status, 4)
+        self.assertNotEqual(
+            self.user.user_details.status, 1)
+
+    def test_status_update_lv5(self):
+        '''
+        Test update to status 5
+        '''
+        client = Client()
+        client.force_login(self.user)
+        for i in range(39):
+            recipe_data = {
+                'title': f'recipe_{i}',
+                'excerpt': 'Test Description',
+                'prep_time': 30,
+                'cook_time': 60,
+                'serves': 3,
+                'status': 1,
+                'publish': True
+            }
+            data = recipe_data.copy()
+            response = client.post(reverse(
+                'profile_page_recipes_add',
+                kwargs={'username': self.user.username}), data)
+        self.user.user_details.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            self.user.user_recipes.filter(status=1).count(), 40)
+        self.assertEqual(
+            self.user.user_details.status, 5)
+        self.assertNotEqual(
+            self.user.user_details.status, 1)
+
+    def test_status_update_lv5_plus(self):
+        '''
+        Test update to status 5 and plus
+        '''
+        client = Client()
+        client.force_login(self.user)
+        for i in range(49):
+            recipe_data = {
+                'title': f'recipe_{i}',
+                'excerpt': 'Test Description',
+                'prep_time': 30,
+                'cook_time': 60,
+                'serves': 3,
+                'status': 1,
+                'publish': True
+            }
+            data = recipe_data.copy()
+            response = client.post(reverse(
+                'profile_page_recipes_add',
+                kwargs={'username': self.user.username}), data)
+        self.user.user_details.refresh_from_db()
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(
+            self.user.user_recipes.filter(status=1).count(), 50)
+        self.assertEqual(
+            self.user.user_details.status, 5)
+        self.assertNotEqual(
+            self.user.user_details.status, 6)
+        self.assertNotEqual(
+            self.user.user_details.status, 1)
 
 
 class TestProfileRecipesEdit(TestCase):
@@ -744,7 +929,7 @@ class TestProfileRecipesEdit(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details
@@ -755,14 +940,14 @@ class TestProfileRecipesEdit(TestCase):
             username='testuserauthenticated',
             password='password'
         )
-        self.details_authenticated = UserDetails.objects.create(
+        self.details_authenticated = UserDetails_var.create(
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
         self.details_authenticated.save()
         self.user_authenticated.save()
 
-        self.recipe = Recipes.objects.create(
+        self.recipe = Recipes_var.create(
             title='testrecipe',
             slug='testrecipe',
             author=self.user,
@@ -774,7 +959,7 @@ class TestProfileRecipesEdit(TestCase):
             serves=4
         )
 
-        self.recipe_authenticated = Recipes.objects.create(
+        self.recipe_authenticated = Recipes_var.create(
             title='recipe_authenticated',
             slug='recipe_authenticated',
             author=self.user_authenticated,
@@ -785,14 +970,14 @@ class TestProfileRecipesEdit(TestCase):
             cook_time=60,
             serves=4
         )
-        self.unit = Units.objects.create(name='unit1')
-        self.ingredient = Ingredients.objects.create(name='ingredient1')
-        self.recipe_item = RecipeItems.objects.create(
+        self.unit = Units_var.create(name='unit1')
+        self.ingredient = Ingredients_var.create(name='ingredient1')
+        self.recipe_item = RecipeItems_var.create(
             recipe=self.recipe,
             ingredients=self.ingredient,
             amount=1,
             unit=self.unit)
-        self.method = Methods.objects.create(
+        self.method = Methods_var.create(
             recipe=self.recipe,
             method='instruction1',
             order=1)
@@ -855,7 +1040,7 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(response.status_code, 302)
         self.recipe.refresh_from_db()
         self.assertTrue(
-            Recipes.objects.filter(title='updated_recipe').exists())
+            Recipes_var.filter(title='updated_recipe').exists())
         self.assertEqual(
             response.url,
             f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}')
@@ -878,7 +1063,7 @@ class TestProfileRecipesEdit(TestCase):
             content)
         self.assertEqual(response.status_code, 200)
         self.recipe.refresh_from_db()
-        self.assertTrue(RecipeItems.objects.filter(amount=2).exists())
+        self.assertTrue(RecipeItems_var.filter(amount=2).exists())
 
     def test_update_method(self):
         '''
@@ -898,7 +1083,7 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(response.status_code, 200)
         self.recipe.refresh_from_db()
         self.assertTrue(
-            Methods.objects.filter(method='updated_instruction').exists())
+            Methods_var.filter(method='updated_instruction').exists())
 
     def test_update_method_id(self):
         '''
@@ -918,13 +1103,13 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(response.status_code, 200)
         self.recipe.refresh_from_db()
         self.assertTrue(
-            Methods.objects.filter(method='updated_instruction').exists())
+            Methods_var.filter(method='updated_instruction').exists())
 
     def test_delete_recipe(self):
         '''
         Test delete of recipe
         '''
-        self.recipe_1 = Recipes.objects.create(
+        recipe_1 = Recipes_var.create(
             title='testrecipe1',
             slug='testrecipe1',
             author=self.user,
@@ -936,19 +1121,19 @@ class TestProfileRecipesEdit(TestCase):
             serves=4,
             id=99,
         )
-        self.assertEqual(Recipes.objects.count(), 3)
+        self.assertEqual(Recipes_var.count(), 3)
         client = Client()
         client.force_login(self.user)
         content = {
           'the_delete_form': 'the_delete_form',
-          'id': self.recipe_1.id
+          'id': recipe_1.id
         }
         response = client.post(
             f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
             content)
         self.assertEqual(response.status_code, 302)
         self.recipe.refresh_from_db()
-        self.assertEqual(Recipes.objects.count(), 2)
+        self.assertEqual(Recipes_var.count(), 2)
         self.assertEqual(
             response.url, f'/users/{self.user.username}/myrecipes/')
 
@@ -967,7 +1152,7 @@ class TestProfileRecipesEdit(TestCase):
             content)
         self.assertEqual(response.status_code, 200)
         self.recipe.refresh_from_db()
-        self.assertTrue(Ingredients.objects.filter(name='new_item').exists())
+        self.assertTrue(Ingredients_var.filter(name='new_item').exists())
 
     def test_delete_recipe_item(self):
         '''
@@ -983,7 +1168,7 @@ class TestProfileRecipesEdit(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertFalse(
-            RecipeItems.objects.filter(id=self.recipe_item.id).exists())
+            RecipeItems_var.filter(id=self.recipe_item.id).exists())
         self.assertDictEqual(
             json.loads(response.content),
             {'message': (self.recipe_item.id), 'last': 0})
@@ -1002,7 +1187,7 @@ class TestProfileRecipesEdit(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(Methods.objects.filter(id=self.method.id).exists())
+        self.assertFalse(Methods_var.filter(id=self.method.id).exists())
         self.assertDictEqual(json.loads(response.content),
                              {'message': (self.method.id), 'last': 0})
 
@@ -1020,7 +1205,7 @@ class TestProfileRecipesEdit(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertFalse(Methods.objects.filter(id=self.method.id).exists())
+        self.assertFalse(Methods_var.filter(id=self.method.id).exists())
         self.assertDictEqual(
             json.loads(response.content),
             {'message': (self.method.id), 'last': 0})
@@ -1035,7 +1220,7 @@ class TestProfileFollowers(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details
@@ -1046,14 +1231,14 @@ class TestProfileFollowers(TestCase):
             username='testuserauthenticated',
             password='password'
         )
-        self.details_authenticated = UserDetails.objects.create(
+        self.details_authenticated = UserDetails_var.create(
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
         self.details_authenticated.save()
         self.user_authenticated.save()
 
-        self.recipe = Recipes.objects.create(
+        self.recipe = Recipes_var.create(
             title='testrecipe',
             slug='testrecipe',
             author=self.user,
@@ -1065,7 +1250,7 @@ class TestProfileFollowers(TestCase):
             serves=4
         )
 
-        self.recipe_authenticated = Recipes.objects.create(
+        self.recipe_authenticated = Recipes_var.create(
             title='recipe_authenticated',
             slug='recipe_authenticated',
             author=self.user_authenticated,
@@ -1142,7 +1327,7 @@ class TestProfileFavourites(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details
@@ -1153,14 +1338,14 @@ class TestProfileFavourites(TestCase):
             username='testuserauthenticated',
             password='password'
         )
-        self.details_authenticated = UserDetails.objects.create(
+        self.details_authenticated = UserDetails_var.create(
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
         self.details_authenticated.save()
         self.user_authenticated.save()
 
-        self.recipe = Recipes.objects.create(
+        self.recipe = Recipes_var.create(
             title='testrecipe',
             slug='testrecipe',
             author=self.user,
@@ -1172,7 +1357,7 @@ class TestProfileFavourites(TestCase):
             serves=4
         )
 
-        self.recipe_authenticated = Recipes.objects.create(
+        self.recipe_authenticated = Recipes_var.create(
             title='recipe_authenticated',
             slug='recipe_authenticated',
             author=self.user_authenticated,
@@ -1252,7 +1437,7 @@ class TestProfileCurrentUserProfileRedirectView(TestCase):
             username='testuser',
             password='password'
         )
-        self.details = UserDetails.objects.create(
+        self.details = UserDetails_var.create(
             user=self.user,
         )
         self.user.user_details = self.details

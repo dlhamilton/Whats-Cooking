@@ -16,7 +16,8 @@ from django.contrib import messages
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 from .models import (Recipes, User, StarRating, Ingredients,
-                     Comments, RecipeItems, Methods, RecipeImages)
+                     Comments, RecipeItems, Methods, RecipeImages,
+                     UserDetails)
 #  UserDetails
 from .forms import (CommentsForm, SearchRecipeForm, FilterRecipeForm,
                     RecipesForm, AddToRecipeForm, RecipeItemsForm,
@@ -500,7 +501,8 @@ class Profilerecipes(View):
         p_details = profile_details(self.request, username)
         p_details.update({"logged_in_user": the_name, })
         if username != request.user.username:
-            recipes = Recipes_obj.filter(status=1).filter(author=the_name).order_by('title')
+            recipes = Recipes_obj.filter(
+                status=1).filter(author=the_name).order_by('title')
         else:
             recipes = Recipes_obj.filter(author=the_name).order_by('title')
         recipes = get_average_rating(recipes)
@@ -568,6 +570,9 @@ class ProfileRecipesAdd(View):
                 if 'recipe_image' in request.FILES:
                     recipe.recipe_image = request.FILES['recipe_image']
                 recipe.save()
+                user_profile = UserDetails.objects.get(user=request.user)
+                user_profile.update_status()
+                user_profile.save()
                 messages.success(request, 'Recipe Added')
                 valid_recipe = True
             else:
@@ -677,10 +682,13 @@ class ProfileRecipesEdit(View):
             recipe_form = RecipesForm(instance=the_recipe)
             if 'the_recipe_form' in request.POST:
                 go_to_id_id = None
-                recipe_form = RecipesForm(data=request.POST, files=request.FILES, instance=the_recipe)
+                recipe_form = RecipesForm(
+                    data=request.POST,
+                    files=request.FILES,
+                    instance=the_recipe)
                 if recipe_form.is_valid():
                     recipe_form.instance.author = request.user
-                    title = recipe_form.cleaned_data['title']  
+                    title = recipe_form.cleaned_data['title']
                     slug = slugify(title)
                     if recipe_form.cleaned_data['publish'] is True:
                         recipe_form.instance.status = 1
@@ -692,46 +700,49 @@ class ProfileRecipesEdit(View):
                         recipe.recipe_image = request.FILES['recipe_image']
                     recipe.save()
                     messages.success(request, 'Recipe Updated')
-                    return redirect(reverse('profile_page_recipes_edit', kwargs={'username':recipe.author, 'recipe': recipe.slug}), {'go_to_id_id': 'ingredients_section'})
+                    return redirect(reverse(
+                        'profile_page_recipes_edit',
+                        kwargs={
+                            'username': recipe.author,
+                            'recipe': recipe.slug}),
+                        {'go_to_id_id': 'ingredients_section'})
                 else:
                     add_ingredients_form = RecipeItemsForm()
-                    # recipe_form = RecipesForm(instance=the_recipe)
                     messages.error(request, 'Error With Recipe')
             elif "the_ingredient_form" in request.POST:
                 add_ingredients_form = RecipeItemsForm(data=request.POST)
                 go_to_id_id = 'ingredients_section'
-                # context = {'go_to_id_id': go_to_id_id}
                 if add_ingredients_form.is_valid():
-                    # recipe_form = RecipesForm(instance=the_recipe)
+                    ing = add_ingredients_form.instance.ingredients
                     if RecipeItems_obj.filter(
                             recipe=the_recipe,
-                            ingredients=add_ingredients_form.instance.ingredients):
-                        id = RecipeItems_obj.filter(recipe=the_recipe,ingredients=add_ingredients_form.instance.ingredients).values('id').first()['id']
-                        record = get_object_or_404(RecipeItems, id=id)
+                            ingredients=ing):
+                        item_id = RecipeItems_obj.filter(
+                            recipe=the_recipe, ingredients=ing
+                            ).values('id').first()['id']
+                        record = get_object_or_404(RecipeItems, id=item_id)
                         record.delete()
                         add_ingredients_form.instance.recipe = the_recipe
                         recipe_item = add_ingredients_form.save(commit=False)
                         recipe_item.save()
                         messages.warning(request, 'Ingredient Amount Updated')
-                        # return redirect(reverse('profile_page_recipes_edit', kwargs={'username':the_recipe.author, 'recipe': the_recipe.slug}), context)
                     else:
                         add_ingredients_form.instance.recipe = the_recipe
-                        # add_ingredients_form.instance.ingredients = the_ingredient
                         recipe_item = add_ingredients_form.save(commit=False)
                         recipe_item.save()
                         messages.success(request, 'Ingredient Added')
-                        # return redirect(reverse('profile_page_recipes_edit', kwargs={'username':the_recipe.author, 'recipe': the_recipe.slug}), context)
                 else:
                     add_ingredients_form = RecipeItemsForm()
-                    # recipe_form = RecipesForm(instance=the_recipe)
                     messages.error(request, 'Error With Ingredient')
 
-            elif "the_method_form" in request.POST and not "the_method_form_id" in request.POST:
+            elif ("the_method_form" in request.POST and
+                  "the_method_form_id" not in request.POST):
                 add_methods_form = MethodsForm(data=request.POST)
                 go_to_id_id = 'method_section_area'
                 if add_methods_form.is_valid():
                     add_methods_form.instance.recipe = the_recipe
-                    add_methods_form.instance.order = Methods.number_of_methods(self,the_recipe.id)+1
+                    add_methods_form.instance.order = \
+                        Methods.number_of_methods(self, the_recipe.id)+1
                     method_item = add_methods_form.save(commit=False)
                     method_item.save()
                     messages.success(request, 'Method Added')
@@ -741,12 +752,13 @@ class ProfileRecipesEdit(View):
                 if add_methods_form.is_valid():
                     method_id = add_methods_form.data.get('the_method_form_id')
                     method_instance = Methods_obj.get(id=method_id)
-                    method_instance.method = add_methods_form.cleaned_data['method']
+                    method_instance.method = \
+                        add_methods_form.cleaned_data['method']
                     method_instance.save()
                     messages.success(request, 'Method Updated')
             elif "the_delete_form" in request.POST:
-                id = request.POST.get('id')
-                record = get_object_or_404(Recipes, id=id)
+                item_id = request.POST.get('id')
+                record = get_object_or_404(Recipes, id=item_id)
                 record.delete()
                 return redirect(
                     reverse(
@@ -787,7 +799,6 @@ class ProfileRecipesEdit(View):
                 "user_recipes_edit.html",
                 p_details
             )
-            # return redirect(reverse('profile_page_recipes_edit', kwargs={'username':the_recipe.author, 'recipe': the_recipe.slug}), p_details)
         else:
             if request.user.is_authenticated:
                 return HttpResponseRedirect(
@@ -799,18 +810,18 @@ class ProfileRecipesEdit(View):
     def delete(self, request, *args, **kwargs):
         last = 0
         data = json.loads(request.body)
-        id = data.get('id')
+        item_id = data.get('id')
         model = data.get('model')
         if model == 'RecipeItems':
-            record = get_object_or_404(RecipeItems, id=id)
+            record = get_object_or_404(RecipeItems, id=item_id)
             record.delete()
         elif model == 'Methods':
-            record = get_object_or_404(Methods, id=id)
+            record = get_object_or_404(Methods, id=item_id)
             temp_record = record
             record.delete()
             if Methods_obj.filter(recipe=temp_record.recipe).exists():
                 last = 1
-        return JsonResponse({"message": id, "last": last}, status=200)
+        return JsonResponse({"message": item_id, "last": last}, status=200)
 
 
 class ProfileFollowers(View):

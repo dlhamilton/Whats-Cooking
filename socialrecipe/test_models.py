@@ -90,6 +90,103 @@ class TestUserDetailsModels(TestCase):
         self.assertEqual(
             self.user.user_details.get_amount_to_next(), 10 - 5 % 10)
 
+    def test_status_update_lv1(self):
+        '''
+        Test update to status 1
+        '''
+        for i in range(5):
+            Recipes_var.create(
+                author=self.user,
+                title=f'recipe_{i}',
+                slug=f'recipe_{i}')
+        self.user.user_details.update_status()
+        self.assertEqual(
+            self.user.user_recipes.count(), 5)
+        self.assertEqual(
+            self.user.user_details.status, 1)
+
+    def test_status_update_lv2(self):
+        '''
+        Test update to status 2
+        '''
+        for i in range(10):
+            Recipes_var.create(
+                author=self.user,
+                title=f'recipe_{i}',
+                slug=f'recipe_{i}',
+                status=1)
+        self.user.user_details.update_status()
+        self.assertEqual(
+            self.user.user_recipes.count(), 10)
+        self.assertEqual(
+            self.user.user_details.status, 2)
+
+    def test_status_update_lv3(self):
+        '''
+        Test update to status 3
+        '''
+        for i in range(20):
+            Recipes_var.create(
+                author=self.user,
+                title=f'recipe_{i}',
+                slug=f'recipe_{i}',
+                status=1)
+        self.user.user_details.update_status()
+        self.assertEqual(
+            self.user.user_recipes.count(), 20)
+        self.assertEqual(
+            self.user.user_details.status, 3)
+
+    def test_status_update_lv4(self):
+        '''
+        Test update to status 4
+        '''
+        for i in range(30):
+            Recipes_var.create(
+                author=self.user,
+                title=f'recipe_{i}',
+                slug=f'recipe_{i}',
+                status=1)
+        self.user.user_details.update_status()
+        self.assertEqual(
+            self.user.user_recipes.count(), 30)
+        self.assertEqual(
+            self.user.user_details.status, 4)
+
+    def test_status_update_lv5(self):
+        '''
+        Test update to status 5
+        '''
+        for i in range(40):
+            Recipes_var.create(
+                author=self.user,
+                title=f'recipe_{i}',
+                slug=f'recipe_{i}',
+                status=1)
+        self.user.user_details.update_status()
+        self.assertEqual(
+            self.user.user_recipes.count(), 40)
+        self.assertEqual(
+            self.user.user_details.status, 5)
+
+    def test_status_update_lv5_plus(self):
+        '''
+        Test update to status 5 and more
+        '''
+        for i in range(50):
+            Recipes_var.create(
+                author=self.user,
+                title=f'recipe_{i}',
+                slug=f'recipe_{i}',
+                status=1)
+        self.user.user_details.update_status()
+        self.assertEqual(
+            self.user.user_recipes.count(), 50)
+        self.assertEqual(
+            self.user.user_details.status, 5)
+        self.assertNotEqual(
+            self.user.user_details.status, 6)
+
 
 class TestRecipesModels(TestCase):
     '''
