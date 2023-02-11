@@ -30,6 +30,7 @@ StarRating_obj = StarRating.objects
 Ingredients_obj = Ingredients.objects
 Methods_obj = Methods.objects
 RecipeItems_obj = RecipeItems.objects
+UserDetails_obj = UserDetails.objects
 
 
 class HomeList(View):
@@ -570,7 +571,7 @@ class ProfileRecipesAdd(View):
                 if 'recipe_image' in request.FILES:
                     recipe.recipe_image = request.FILES['recipe_image']
                 recipe.save()
-                user_profile = UserDetails.objects.get(user=request.user)
+                user_profile = UserDetails_obj.get(user=request.user)
                 user_profile.update_status()
                 user_profile.save()
                 messages.success(request, 'Recipe Added')
@@ -861,8 +862,6 @@ class ProfileFavourites(View):
 
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            return reverse(
-                'profile_page',
-                kwargs={'username': self.request.user.username})
-        return HttpResponseRedirect(reverse('home'))
+        return reverse(
+            'profile_page',
+            kwargs={'username': self.request.user.username})

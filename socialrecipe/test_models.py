@@ -1,7 +1,7 @@
 from django.test import TestCase
 from allauth.account.signals import user_signed_up
 from .models import (User, UserDetails, Recipes, Methods, Comments,
-                     StarRating, Ingredients)
+                     StarRating, Ingredients, Units, RecipeItems)
 
 UserDetails_var = UserDetails.objects
 Recipes_var = Recipes.objects
@@ -9,6 +9,8 @@ Comments_var = Comments.objects
 Methods_var = Methods.objects
 StarRating_var = StarRating.objects
 Ingredients_var = Ingredients.objects
+Units_var = Units.objects
+RecipeItems_var = RecipeItems.objects
 
 
 class TestUserDetailsModels(TestCase):
@@ -26,6 +28,13 @@ class TestUserDetailsModels(TestCase):
         self.user.user_details = self.details
         self.details.save()
         self.user.save()
+
+    def test_item_string_method(self):
+        '''
+        Test str is returned
+        '''
+        self.assertEqual(str(self.user.user_details),
+                         self.user.username)
 
     def test_status_default(self):
         '''
@@ -280,6 +289,14 @@ class TestCommentsModels(TestCase):
             body='test comment',
         )
 
+    def test_item_string_method(self):
+        '''
+        Test str is returned
+        '''
+        self.assertEqual(
+            str(self.comment),
+            f"Comment {self.comment.body} by {self.user.username}")
+
     def test_status_default(self):
         '''
         Test status on default
@@ -317,6 +334,9 @@ class TestMethodsModels(TestCase):
         )
 
     def test_follow_count(self):
+        """
+        Test the follow count
+        """
         self.assertEqual(self.method.number_of_methods(self.method.pk), 1)
 
 
@@ -360,6 +380,9 @@ class TestStarRatingModels(TestCase):
         )
 
     def test_get_average(self):
+        '''
+        Test get the average rating
+        '''
         self.assertEqual(
             self.starrating.get_average(self.recipe.pk), (4+4+2)/3)
 
@@ -381,6 +404,9 @@ class TestIngredientsModels(TestCase):
 
 
 class TestCreateUserDetails(TestCase):
+    """
+    Test the creation of the user details
+    """
     def test_after_user_signed_up(self):
         '''
         Test after_user_signed_up user details creation
@@ -390,3 +416,36 @@ class TestCreateUserDetails(TestCase):
         self.assertFalse(UserDetails_var.filter(user=user).exists())
         user_signed_up.send(sender=User, request=None, user=user)
         self.assertTrue(UserDetails_var.filter(user=user).exists())
+
+
+class TestRecipeItems(TestCase):
+    """
+    Test the recipe items
+    """
+    def test_item_string_method(self):
+        '''
+        Test str is returned
+        '''
+        user = User.objects.create_user(
+            username='testuser',
+            password='password'
+        )
+        recipe = Recipes_var.create(
+                author=user,
+                title='title',
+                slug='title')
+        unit = Units_var.create(
+            name='testunit',
+        )
+        ingredient = Ingredients_var.create(
+            name='testingredient',
+            approved=True
+        )
+        recipeitems = RecipeItems_var.create(
+            recipe=recipe,
+            ingredients=ingredient,
+            amount=2,
+            unit=unit,
+        )
+        self.assertEqual(str(recipeitems),
+                         ingredient.name)

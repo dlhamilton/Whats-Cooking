@@ -5,10 +5,11 @@ import json
 from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.messages.storage.fallback import FallbackStorage
 from .models import (User, Recipes, UserDetails, StarRating, Units,
                      Ingredients, RecipeItems, Methods)
 from .views import (RecipeDetail, CurrentUserProfileRedirectView, RecipesList,
-                    RecipeImages, Comments)
+                    RecipeImages, Comments, ProfileRecipesEdit)
 
 UserDetails_var = UserDetails.objects
 Recipes_var = Recipes.objects
@@ -61,6 +62,20 @@ class TestRecipesList(TestCase):
             recipe=self.recipe,
             user=self.user
         )
+        self.ingredient_1 = Ingredients_var.create(
+            name='Tomatoes', approved=True
+            )
+        self.ingredient_2 = Ingredients_var.create(
+            name='Apple', approved=True
+            )
+        self.unit = Units_var.create(
+            name='testunit',
+        )
+        self.recipeitems = RecipeItems_var.create(
+            recipe=self.recipe,
+            ingredients=self.ingredient_1,
+            amount=2,
+            unit=self.unit)
 
     def test_get(self):
         '''
@@ -90,15 +105,35 @@ class TestRecipesList(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recipes.html')
 
-    def test_get_filter(self):
+    def test_get_filter_valid(self):
         '''
-        Test get for recipe list filter
+        Test get for recipe list filter valid
         '''
         client = Client()
         response = client.get(
-            '/recipes/filter/', {'filter_query': ['test1', 'test2']})
+            '/recipes/filter/',
+            {'filter_query': [self.ingredient_1.pk]})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recipes.html')
+        recipes = Recipes_var.filter(
+            recipe_items__ingredients__in=[self.ingredient_1])
+        self.assertQuerysetEqual(
+            response.context['recipes_list'], [repr(r) for r in recipes])
+
+    def test_get_filter_valid_no_match(self):
+        '''
+        Test get for recipe list filter valid
+        '''
+        client = Client()
+        response = client.get(
+            '/recipes/filter/',
+            {'filter_query': [self.ingredient_2.pk]})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'recipes.html')
+        self.assertQuerysetEqual(
+            response.context['recipes_list'],
+            (str(r) for r in 'No Recipes Match Your Search'))
+        self.assertEqual(response.context['query'], False)
 
     def test_get_sort(self):
         '''
@@ -186,7 +221,7 @@ class TestRecipeDetail(TestCase):
             recipe_image='',
             prep_time=30,
             cook_time=60,
-            serves=4
+            serves=4,
         )
         self.recipe_hidden = Recipes_var.create(
             title='recipe_hidden',
@@ -304,6 +339,18 @@ class TestRecipeDetail(TestCase):
         response = RecipeDetail.as_view()(request, slug=self.recipe.slug)
         self.assertContains(response, self.recipe.title)
 
+    def test_favourited(self):
+        '''
+        Test if user has favourited recipe
+        '''
+        self.recipe.favourites.add(self.user)
+        client = Client()
+        client.force_login(self.user)
+        response = client.get(f'/recipes/{self.recipe.slug}/')
+        self.recipe.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['favourited'])
+
     def test_view_redirects_if_not_author_or_published(self):
         '''
         Test redirect if not your recipe or not published
@@ -420,6 +467,92 @@ class TestRecipeDetail(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(StarRating_var.count(), 1)
 
+    def test_post_view_with_invalid_rating(self):
+        '''
+        Test recipe rating form invalid
+        '''
+        client = Client()
+        client.force_login(self.user)
+        content = {'the_rating_form': 'the_rating_form'}
+        response = client.post(f'/recipes/{self.recipe.slug}/', content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(StarRating_var.count(), 0)
+        self.assertDictEqual(
+            json.loads(response.content),
+            {'status': False})
+
+    def test_post_view_with_rating_update(self):
+        '''
+        Test recipe rating form update
+        '''
+        StarRating_var.create(user=self.user, recipe=self.recipe, rating=3)
+        client = Client()
+        client.force_login(self.user)
+        content = {'the_rating_form': 'the_rating_form', 'rating': 4}
+        response = client.post(f'/recipes/{self.recipe.slug}/', content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(StarRating_var.count(), 1)
+        self.assertEqual(
+            StarRating_var.filter(user=self.user).first().rating, 4)
+
+    def test_favourited_post(self):
+        '''
+        Test if user has favourited recipe
+        '''
+        self.recipe.favourites.add(self.user)
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(f'/recipes/{self.recipe.slug}/')
+        self.recipe.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['favourited'])
+
+    def test_post_view_with_invalid_comment(self):
+        '''
+        Test recipe form comment upload
+        '''
+        client = Client()
+        client.force_login(self.user)
+        content = {
+            'the_comment_form': 'the_comment_form'
+            }
+        response = client.post(f'/recipes/{self.recipe.slug}/', content)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['valid_comment'])
+        self.assertEqual(self.recipe.comments.count(), 2)
+        self.assertTemplateUsed(response, 'recipe_detail.html')
+
+    def test_post_view_with_like_true(self):
+        '''
+        Test like form to true
+        '''
+        client = Client()
+        client.force_login(self.user)
+        content = {
+            'the_like_form': 'the_like_form'
+            }
+        response = client.post(f'/recipes/{self.recipe.slug}/', content)
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(
+            json.loads(response.content),
+            {'liked': True})
+
+    def test_post_view_with_like_false(self):
+        '''
+        Test like form to false
+        '''
+        self.recipe.favourites.add(self.user)
+        client = Client()
+        client.force_login(self.user)
+        content = {
+            'the_like_form': 'the_like_form'
+            }
+        response = client.post(f'/recipes/{self.recipe.slug}/', content)
+        self.assertEqual(response.status_code, 200)
+        self.assertDictEqual(
+            json.loads(response.content),
+            {'liked': False})
+
     def test_post_view_with_image(self):
         '''
         Test recipe form image upload
@@ -433,9 +566,13 @@ class TestRecipeDetail(TestCase):
             'headline': 'This is a test headline',
             'the_image_form': 'the_image_form',
         }
+
         client = Client()
         client.force_login(self.user)
-        response = client.post(f'/recipes/{self.recipe.slug}/', form_data)
+        response = client.post(
+            f'/recipes/{self.recipe.slug}/',
+            data=form_data,
+            files={'recipe_image': image})
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'recipe_detail.html')
 
@@ -557,6 +694,72 @@ class TestProfilePage(TestCase):
         self.assertEqual(self.user.last_name, '')
         self.assertEqual(response.url, f'/users/{self.user.username}/')
 
+    def test_follow_change(self):
+        '''
+        Test change of follow post
+        '''
+        self.assertEqual(self.user.user_details.follows.count(), 0)
+        client = Client()
+        client.force_login(self.user)
+
+        response = client.post(f'/users/{self.user.username}/',
+                               {'follow': 1})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/')
+        self.assertEqual(self.user.user_details.follows.count(), 1)
+
+    def test_unfollow_change(self):
+        '''
+        Test change of unfollow post
+        '''
+        self.user.user_details.follows.add(self.user)
+        self.assertEqual(self.user.user_details.follows.count(), 1)
+        client = Client()
+        client.force_login(self.user)
+
+        response = client.post(f'/users/{self.user.username}/',
+                               {'unfollow': 1})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f'/users/{self.user.username}/')
+        self.assertEqual(self.user.user_details.follows.count(), 0)
+
+    def test_user_rating(self):
+        '''
+        Test the users average rating
+        '''
+        recipe = Recipes_var.create(
+            title='testrecipe',
+            slug='testrecipe',
+            author=self.user,
+            excerpt='about the recipe',
+            status=1,
+            recipe_image='',
+            prep_time=30,
+            cook_time=60,
+            serves=4,
+        )
+        StarRating_var.create(user=self.user, recipe=recipe, rating=3)
+        client = Client()
+        client.force_login(self.user)
+        response = client.get(f'/users/{self.user.username}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context['average_recipe']['user_recipe_average'],
+            3.0)
+
+    def test_following_a_user(self):
+        '''
+        Test if user is following
+        '''
+        self.user.user_details.follows.add(self.user)
+        client = Client()
+        client.force_login(self.user)
+        response = client.get(f'/users/{self.user.username}/')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context['is_following'],
+            2)
+
 
 class TestProfilerecipes(TestCase):
     '''
@@ -592,6 +795,17 @@ class TestProfilerecipes(TestCase):
         client = Client()
         client.force_login(self.user)
         response = client.get(f'/users/{self.user.username}/myrecipes/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user_recipes.html')
+
+    def test_get_profile_recipes_page_other(self):
+        '''
+        Test Profile Page Recipes status if not your page
+        '''
+        client = Client()
+        client.force_login(self.user)
+        response = client.get(
+            f'/users/{self.user_authenticated.username}/myrecipes/')
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_recipes.html')
 
@@ -695,11 +909,31 @@ class TestProfileRecipesAdd(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/users/testuser/')
 
+    def test_logged_in_someone_else_post(self):
+        '''
+        Test logged in and someone else page post method
+        '''
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(
+            f'/users/{self.user_authenticated.username}/myrecipes/new')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/users/testuser/')
+
     def test_not_logged_in(self):
         '''
         Test not logged in and not own page
         '''
         response = self.client.get(
+            f'/users/{self.user_authenticated.username}/myrecipes/new')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_not_logged_in_post(self):
+        '''
+        Test not logged in and not own page post method
+        '''
+        response = self.client.post(
             f'/users/{self.user_authenticated.username}/myrecipes/new')
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
@@ -1015,6 +1249,28 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
 
+    def test_logged_in_someone_else_post(self):
+        '''
+        Test logged in and someone else page post method
+        '''
+        username = self.user_authenticated.username
+        recipeslug = self.recipe_authenticated.slug
+        client = Client()
+        client.force_login(self.user)
+        response = client.post(
+            f'/users/{username}/myrecipes/edit/{recipeslug}')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/users/testuser/')
+
+    def test_not_logged_in_post(self):
+        '''
+        Test not logged in and not own page post method
+        '''
+        response = self.client.post(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}')
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
     def test_update_recipe(self):
         '''
         Test update of recipe details
@@ -1045,6 +1301,80 @@ class TestProfileRecipesEdit(TestCase):
             response.url,
             f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}')
 
+    def test_update_recipe_invalid(self):
+        '''
+        Test update of recipe details invalid form
+        '''
+
+        content = {
+            'the_recipe_form': 'the_recipe_form',
+            'title': 'updated_recipe',
+            'author': self.user,
+            'excerpt': 'about the recipe',
+            'status': 1,
+            'recipe_image': '',
+            'prep_time': '',
+            'cook_time': '',
+            'serves': ''
+        }
+
+        factory = RequestFactory()
+
+        request = factory.post(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            recipe=self.recipe.slug,
+            data=content)
+        post_data = request.POST.copy()
+        post_data.update(content)
+        request.POST = post_data
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = ProfileRecipesEdit.as_view()(
+            request,
+            username=self.user.username,
+            recipe=self.recipe.slug,
+            data=content)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(list(messages)[0]), 'Error With Recipe')
+
+    def test_update_recipe_publish(self):
+        '''
+        Test update of recipe details to publish
+        '''
+        client = Client()
+        client.force_login(self.user)
+
+        content = {
+
+            'the_recipe_form': 'the_recipe_form',
+            'title': 'updated_recipe',
+            'author': self.user,
+            'excerpt': 'about the recipe',
+            'status': 1,
+            'recipe_image': '',
+            'prep_time': 30,
+            'cook_time': 60,
+            'serves': 4,
+            'publish': True,
+        }
+
+        response = client.post(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            content)
+        self.assertEqual(response.status_code, 302)
+        self.recipe.refresh_from_db()
+        self.assertEqual(
+            Recipes_var.filter(status=1).count(), 2)
+        self.assertEqual(
+            response.url,
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}')
+
     def test_update_ingredient(self):
         '''
         Test update of ingredient in recipe
@@ -1064,6 +1394,84 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(response.status_code, 200)
         self.recipe.refresh_from_db()
         self.assertTrue(RecipeItems_var.filter(amount=2).exists())
+
+    def test_add_ingredient_with_messages(self):
+        '''
+        Test add of ingredient in recipe
+        '''
+        ingredient2 = Ingredients_var.create(name='ingredient2')
+        content = {
+          'the_ingredient_form': 'the_ingredient_form',
+          'ingredients': ingredient2.id,
+          'amount': 7,
+          'unit': self.unit.id,
+          'recipe': self.recipe,
+        }
+
+        factory = RequestFactory()
+
+        request = factory.post(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            recipe=self.recipe.slug,
+            data=content)
+        post_data = request.POST.copy()
+        post_data.update(content)
+        request.POST = post_data
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = ProfileRecipesEdit.as_view()(
+            request,
+            username=self.user.username,
+            recipe=self.recipe.slug,
+            data=content)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(list(messages)[0]), 'Ingredient Added')
+        self.recipe.refresh_from_db()
+        self.assertTrue(RecipeItems_var.filter(amount=7).exists())
+
+    def test_add_ingredient_with_messages_invalid(self):
+        '''
+        Test add of ingredient in recipe invalid
+        '''
+        ingredient2 = Ingredients_var.create(name='ingredient2')
+        content = {
+          'the_ingredient_form': 'the_ingredient_form',
+          'ingredients': ingredient2.id,
+          'amount': '',
+          'unit': self.unit.id,
+          'recipe': self.recipe,
+        }
+
+        factory = RequestFactory()
+
+        request = factory.post(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            recipe=self.recipe.slug, data=content)
+        post_data = request.POST.copy()
+        post_data.update(content)
+        request.POST = post_data
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = ProfileRecipesEdit.as_view()(
+            request, username=self.user.username,
+            recipe=self.recipe.slug, data=content)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(list(messages)[0]), 'Error With Ingredient')
+        self.recipe.refresh_from_db()
+        self.assertFalse(
+            RecipeItems_var.filter(ingredients=ingredient2.id).exists())
 
     def test_update_method(self):
         '''
@@ -1195,6 +1603,10 @@ class TestProfileRecipesEdit(TestCase):
         '''
         Test you can delete the last method
         '''
+        Methods_var.create(
+            recipe=self.recipe,
+            method='instruction2',
+            order=2)
         response = self.client.delete(
             f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
             content_type='application/json',
@@ -1203,12 +1615,45 @@ class TestProfileRecipesEdit(TestCase):
                 'model': 'Methods'
             })
         )
-
         self.assertEqual(response.status_code, 200)
         self.assertFalse(Methods_var.filter(id=self.method.id).exists())
         self.assertDictEqual(
             json.loads(response.content),
-            {'message': (self.method.id), 'last': 0})
+            {'message': (self.method.id), 'last': 1})
+
+    def test_search_term(self):
+        '''
+        Test when a search term is present
+        '''
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'search_term': 'test',
+        }
+        response = client.get(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context['go_to_id_id'],
+            'ingredients_section')
+
+    def test_page_number(self):
+        '''
+        Test when on a page not 1
+        '''
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'page': 2,
+        }
+        response = client.get(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.context['go_to_id_id'],
+            'ingredients_section')
 
 
 class TestProfileFollowers(TestCase):
@@ -1399,33 +1844,33 @@ class TestProfileFavourites(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'user_favourites.html')
 
-    def test_post_follow(self):
+    def test_post_favourites(self):
         '''
-        Test user can follow
+        Test user can favourites
         '''
         client = Client()
         client.force_login(self.user)
         response = client.post(
-            f'/users/{self.user.username}/myfollowers/',
+            f'/users/{self.user.username}/myfavourites/',
             {'follow': 'follow'})
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response.url, f'/users/{self.user.username}/myfollowers/')
+            response.url, f'/users/{self.user.username}/myfavourites/')
 
-    def test_post_unfollow(self):
+    def test_post_unfollow_favourites(self):
         '''
-        Test user can unfollow
+        Test user can favourites
         '''
         client = Client()
         client.force_login(self.user)
         response = client.post(
-            f'/users/{self.user.username}/myfollowers/',
+            f'/users/{self.user.username}/myfavourites/',
             {'unfollow': 'unfollow'})
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(
-            response.url, f'/users/{self.user.username}/myfollowers/')
+            response.url, f'/users/{self.user.username}/myfavourites/')
 
 
 class TestProfileCurrentUserProfileRedirectView(TestCase):
@@ -1474,3 +1919,12 @@ class TestProfileCurrentUserProfileRedirectView(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse(
             'profile_page', args=[self.user.username]))
+
+    def test_redirect_to_login(self):
+        '''
+        Test redirect to login when not logged on
+        '''
+        response = self.client.get(reverse('logged_on'))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, '/accounts/login/?next=/loggedIn/')
