@@ -6,9 +6,8 @@ from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
 from allauth.account.signals import user_signed_up
 # from django.contrib.auth.models import Group
-
-
 from django.core.validators import MaxValueValidator, MinValueValidator
+
 
 RECIPE_STATUS = ((0, "Draft"), (1, "Published"), (2, "Hidden"), (3, "Removed"))
 USER_STATUS = ((0, "Suspended"), (1, "Standard"), (2, "Bronze"), (3, "Silver"),
@@ -21,7 +20,7 @@ class UserDetails(models.Model):
     Extend the user model
     '''
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_details")
-    location = models.CharField(max_length=150,blank=True)
+    location = models.CharField(max_length=150, blank=True)
     status = models.IntegerField(choices=USER_STATUS, default=1)
     user_image = CloudinaryField('image', default='v1670885027/placeholder.jpg')
     follows = models.ManyToManyField(User, related_name='user_follows', blank=True)

@@ -1,3 +1,6 @@
+"""
+Social recipe views
+"""
 # from itertools import chain
 import json
 from django.shortcuts import render, get_object_or_404, reverse, redirect
@@ -809,6 +812,9 @@ class ProfileRecipesEdit(View):
             return HttpResponseRedirect(reverse('home'))
 
     def delete(self, request, *args, **kwargs):
+        '''
+        delete method
+        '''
         last = 0
         data = json.loads(request.body)
         item_id = data.get('id')
@@ -827,6 +833,9 @@ class ProfileRecipesEdit(View):
 
 class ProfileFollowers(View):
     def get(self, request, username, *args, **kwargs):
+        '''
+        get method
+        '''
         p_details = profile_details(self.request, username)
         p_details.update({"logged_in_user": request.user, })
         return render(
@@ -836,6 +845,9 @@ class ProfileFollowers(View):
         )
 
     def post(self, request, username, *args, **kwargs):
+        '''
+        post method
+        '''
         if 'follow' in request.POST or 'unfollow' in request.POST:
             following_change(request, username)
         return redirect('profile_page_followers', username=username)
@@ -846,6 +858,9 @@ class ProfileFavourites(View):
     the user recipes Favourites recipe page
     """
     def get(self, request, username, *args, **kwargs):
+        '''
+        get method
+        '''
         p_details = profile_details(self.request, username)
         p_details.update({"logged_in_user": request.user, })
         return render(
@@ -855,12 +870,18 @@ class ProfileFavourites(View):
         )
 
     def post(self, request, username, *args, **kwargs):
+        '''
+        post method
+        '''
         if 'follow' in request.POST or 'unfollow' in request.POST:
             following_change(request, username)
         return redirect('profile_page_favourites', username=username)
 
 
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
+    """
+    redirect for user logging in 
+    """
     def get_redirect_url(self, *args, **kwargs):
         return reverse(
             'profile_page',

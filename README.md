@@ -4,6 +4,8 @@ Click the link to view the live app [What's Cooking](https://whats-cooking.herok
 
 Making recipes by putting ingredients first and sharing recipes between the Whats Cooking community.
 
+Welcome to the social recipe app, a platform for food enthusiasts to come together and share their culinary creations. Built using the powerful Django framework, this app allows users to create their own profiles and save their favourite recipes and chefs. With a focus on community, users can share their recipes and connect with others who share their love of food. Whether you're an experienced cook or just starting out, this app is a great way to discover new recipes, get inspired, and connect with others in the foodie community.
+
 ***
 
 ## Contents
@@ -33,11 +35,37 @@ Making recipes by putting ingredients first and sharing recipes between the What
 
 ***
 
-## Introduction
+## Project Aims
+- Provide a platform for users to share their own recipes and connect with others in the foodie community.
+
+- Allow users to save and organize their favourite recipes and chefs in one convenient location.
+
+- Encourage community engagement by allowing users to like, comment on, and rate recipes.
+
+- Make it easy for users to discover new and exciting recipes by offering a variety of search and filter options.
+
+- Provide a visually appealing and user-friendly interface that makes it easy for users to navigate the app and find what they're looking for.
+
+- Ensure that the app is scalable and can handle an increasing number of users and recipes over time.
+
+- Offer robust security features to protect user data and ensure that the app complies with privacy regulations.
+
+- Continuously improve the app through regular updates and bug fixes based on user feedback.
+
+Overall, the goal of the social recipe app is to create a vibrant and engaged community of food lovers who can share their passion for cooking and discover new recipes and chefs.
 
 ## How to use it
 
 ## User Stories
+
+### Epic: Authentication
+### Epic: Account Management
+### Epic: Account Interactions
+### Epic: Recipe Management
+### Epic: Recipe Interactions
+### Epic: Application Configuration
+### Epic: Notifications
+
 
 ***
 

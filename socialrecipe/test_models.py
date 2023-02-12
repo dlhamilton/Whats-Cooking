@@ -1,3 +1,6 @@
+"""
+Test Models
+"""
 from django.test import TestCase
 from allauth.account.signals import user_signed_up
 from .models import (User, UserDetails, Recipes, Methods, Comments,

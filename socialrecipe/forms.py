@@ -1,18 +1,37 @@
+"""
+Socialrecipe forms
+"""
 from django import forms
-from cloudinary.forms import CloudinaryInput
+# from cloudinary.forms import CloudinaryInput
 from cloudinary.models import CloudinaryField
-from django.contrib.auth.models import User
-from .models import Comments, Ingredients, Recipes, RecipeItems, Units, Methods, UserDetails, StarRating, RecipeImages, Ingredients
+# from django.contrib.auth.models import User
+from .models import (Comments, Ingredients, Recipes, RecipeItems, Units,
+                     Methods, UserDetails, StarRating, RecipeImages)
+
+Ingredients_obj = Ingredients.objects
+Units_obj = Units.objects
 
 
 class CommentsForm(forms.ModelForm):
+    '''
+    Form to add new comments to recipe
+    '''
     class Meta:
+        '''
+        Meta data
+        '''
         model = Comments
         fields = ('body',)
 
 
 class RatingForm(forms.ModelForm):
+    '''
+    Form to add new rating to recipe
+    '''
     class Meta:
+        '''
+        Meta data
+        '''
         model = StarRating
         fields = ('rating',)
         widgets = {
@@ -21,28 +40,43 @@ class RatingForm(forms.ModelForm):
 
 
 class RecipeImagesForm(forms.ModelForm):
+    '''
+    Form to add new Image to recipe
+    '''
     recipe_image = CloudinaryField('image')
     headline = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}))
 
     class Meta:
+        '''
+        Meta data
+        '''
         model = RecipeImages
         fields = ('recipe_image', 'headline',)
-        
-    
+
     def clean(self):
+        '''
+        clean the form data
+        '''
         cleaned_data = super().clean()
         recipe_image = cleaned_data.get('recipe_image')
-
         if not recipe_image:
             self.add_error('recipe_image', 'This field is required.')
 
 
 class RecipesForm(forms.ModelForm):
-    publish = forms.BooleanField(initial=False, required=False, widget=forms.CheckboxInput(attrs={'label': 'Publish'}))
-
+    '''
+    Form to add new recipe
+    '''
+    publish = forms.BooleanField(
+        initial=False,
+        required=False,
+        widget=forms.CheckboxInput(attrs={'label': 'Publish'}))
     recipe_image = CloudinaryField('image')
 
     class Meta:
+        '''
+        Meta data
+        '''
         model = Recipes
         fields = ('title',
                   'recipe_image',
@@ -61,6 +95,9 @@ class RecipesForm(forms.ModelForm):
 
 
 class SearchRecipeForm(forms.Form):
+    '''
+    Form to search for a recipe
+    '''
     search_query = forms.CharField(
         max_length=100,
         required=False,
@@ -70,54 +107,95 @@ class SearchRecipeForm(forms.Form):
 
 
 class FilterRecipeForm(forms.Form):
+    '''
+    Form to filter ingredients for a recipe
+    '''
     filter_query = forms.ModelMultipleChoiceField(
-        queryset=Ingredients.objects.filter(approved=True).order_by('name'),
+        queryset=Ingredients_obj.filter(approved=True).order_by('name'),
         widget=forms.CheckboxSelectMultiple
     )
 
 
 class AddToRecipeForm(forms.Form):
+    '''
+    Form to search for an Ingredient for a recipe
+    '''
     search_term = forms.CharField(required=False)
 
 
 class IngredientsForm(forms.ModelForm):
+    '''
+    Form to add new Ingredient
+    '''
     class Meta:
-        model=Ingredients
+        '''
+        Meta data
+        '''
+        model = Ingredients
         fields = ('name',)
 
 
 class RecipeItemsForm(forms.ModelForm):
+    '''
+    Form to add new Ingredient to a recipe
+    '''
     class Meta:
+        '''
+        Meta data
+        '''
         model = RecipeItems
         fields = ['ingredients', 'amount', 'unit']
         widgets = {
-        'ingredients': forms.TextInput(attrs={'id': 'recipient-name'}),
+            'ingredients': forms.TextInput(attrs={'id': 'recipient-name'}),
         }
 
-    unit = forms.ModelChoiceField(queryset=Units.objects.all())
-   
+    unit = forms.ModelChoiceField(queryset=Units_obj.all())
+
     def __init__(self, *args, **kwargs):
         super(RecipeItemsForm, self).__init__(*args, **kwargs)
         self.fields['unit'].empty_label = "Select Unit"
-        self.fields['ingredients'].widget.attrs.update({'id': 'ingredient-name'})
+        self.fields['ingredients'].widget.attrs.update(
+            {'id': 'ingredient-name'})
 
 
 class MethodsForm(forms.ModelForm):
+    '''
+    Form to add new method to a recipe
+    '''
     class Meta:
+        '''
+        Meta data
+        '''
         model = Methods
         fields = ('method',)
         widgets = {
-            'method': forms.Textarea(attrs={'rows': 4, 'class': 'method-class-design'})
+            'method': forms.Textarea(
+                attrs={'rows': 4, 'class': 'method-class-design'})
         }
 
 
 class UserDetailsForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(max_length=30, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    location = forms.CharField(max_length=150, required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    '''
+    Form to complete the user account details
+    '''
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}))
+    location = forms.CharField(
+        max_length=150,
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}))
     user_image = CloudinaryField('image')
 
     class Meta:
+        '''
+        Meta data
+        '''
         model = UserDetails
         fields = ('first_name', 'last_name', 'location', 'user_image')
 
@@ -135,9 +213,16 @@ class UserDetailsForm(forms.ModelForm):
 
 
 class FollowForm(forms.Form):
-    follow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=True)
+    '''
+    Form to follow a user profile
+    '''
+    follow = forms.IntegerField(
+        widget=forms.HiddenInput(attrs={'class': 'd-none'}), required=True)
 
 
 class UnfollowForm(forms.Form):
-    unfollow = forms.IntegerField(widget=forms.HiddenInput(attrs={'class': 'd-none'}),required=True)
-
+    '''
+    Form to unfollow a user profile
+    '''
+    unfollow = forms.IntegerField(
+        widget=forms.HiddenInput(attrs={'class': 'd-none'}), required=True)
