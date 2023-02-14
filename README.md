@@ -56,16 +56,89 @@ Overall, the goal of the social recipe app is to create a vibrant and engaged co
 
 ## How to use it
 
-## User Stories
+Here are the steps to use **What's Cooking**:
 
-### Epic: Authentication
+1. Create an account: To get started, you will need to create an account by entering your email address, and password.
+
+2. Update your profile: After creating an account, you can update your profile information, with personal information, such as your name, profile picture and bio, to help others get to know you better.
+
+3. Browse recipes: You can start browsing the site's recipes by visiting the "Recipes" page. Here, you will see a list of all the recipes available on the site.
+
+4. Filter recipes: If you are looking for a specific type of recipe, you can use the filtering options to narrow down the list of recipes based on ingredients or sort by another criteria.
+
+5. View a recipe: To view a recipe, simply click on its title. You will be taken to a page that displays detailed information about the recipe, including ingredients, instructions, images and user reviews.
+
+6. Leave a review: If you have tried a recipe, you can leave a review by clicking the "Leave a Comment" button on the recipe page. Enter your review and click "Submit.". You can also rate the recipe out of 5 and upload a image of the meal you cooked.
+
+7. Like and save recipes: If you like a recipe, you can click the "Like" button to show your appreciation, this will also save recipes to your personal collection so you can eaily view it from your profile page.
+
+8. Upload your own recipe: To share your own cooking skills with others, click the "Upload Recipe" button and follow the prompts to enter information about your recipe, including the ingredients, instructions, and a photo.
+
+9. View your saved recipes: To view the recipes you have saved, go to your profile and click on the "My Recipes" section.
+
+10. Follow other users: If you want to keep up with the recipes shared by other users, you can follow them by clicking the "Follow" button on their profiles.
+
+With these steps, you should be able to easily use **What's Cooking** to find, share, and discover new recipes.
+
+## User Stories & Epics
+
+### Epic: Authentication: The ability for users to create and manage their own profiles, including updating their information and viewing their saved recipes.
+- 26 - As a Site User I can register an account so that I can use the site to share and view recipes.
+- 33 - As a Site User I can log into an account so that I can view all my recipes.
+
 ### Epic: Account Management
+- 31 - As a user, I want to be able to update my profile information so that my followers can get to know me better.
+
 ### Epic: Account Interactions
-### Epic: Recipe Management
-### Epic: Recipe Interactions
-### Epic: Application Configuration
+- 34 - As a Site User I can follow and unfollow another users account so that I can view all their recipes or I can stop following a user.
+
+### Epic: Recipe Management: The ability for users to create, upload, view, and delete recipes on the app.
+- 7 - As a Site User I can create draft recipes so that I can finish writing the content later.
+- 8 - As a Site User I can add new ingredients to the main list so that I can use them in my recipes.
+- 10 - As a Site User I can add ingredients to a recipe so that readers know what they will need for the recipe.
+- 11 - As a Site User I can add instructions on how to cook a recipe so that users can follow and make the recipe.
+- 12 - As a Site User I can post a recipe so that users can view the recipe and try and make it them self.
+- 30 - As a Site User I can create, read, update and delete posts that I manage so that I can manage my recipe content.
+
+### Epic: Recipe Discovery: The ability for users to discover new recipes by browsing the list of recipes, filtering by ingredients, and viewing detailed information about a recipe.
+- 16 - As a Site User I can search for recipes so that I can interact and save the recipe to make.
+- 17 - As a Site User I can search for recipes with ingredients so that I can interact and save the recipe to make.
+- 19 - As a Site User I can view a paginated list of recipes so that I can easily select a recipe to view.
+- 20 - As a Site User I can view a paginated list of ingredients so that I can easily select an ingredient to view recipes linked to it.
+- 21 - As a Site User I can view a list of recipes so that I can easily select a recipe to read.
+- 22 - As a Site User I can view a list of ingredients so that I can easily select an ingredient to read.
+- 23 - As a Site User I can view the number of favourites on each recipe so that I can see which is the most popular or viral.
+- 24 - As a Site User I can view the most popular recipes so that I can try the recipes.
+- 25 - As a Site User I can view the 5 top recipes so that I can try the most popular recipes.
+- 29 - As a Site User I can click on a recipe title so that I can read the full recipe.
+- 32 - As a user, I want to be able to view detailed information about a recipe, including the ingredients, instructions, and user reviews, so that I can decide if I want to make the recipe.
+
+### Epic: User Interactions: The ability for users to interact with each other by liking and saving recipes, leaving reviews, and following other users.
+- 6 - As a Site User I can view comments on an individual recipes so that I can read the conversations.
+- 15 - As a Site User I can favourite/ unfavourite recipes so that I can interact and save the recipe to make.
+- 18 - As a Site User I can leave a comment on a recipe so that I can leave a review on the recipe and give feedback.
+- 28 - As a Site User I can view comments on an individual recipe so that I can read the conversations and reviews.
+- 35 - As a Site User I can upload pictures of the recipe if I have tried to make it. so that users can see and example of the meal.
 ### Epic: Notifications
 
+### Epic: Application Configuration
+- 1 - As a Site Admin I can approve or disapprove comments so that I can filter out objectionable comments.
+- 2 - As a Site Admin I can approve or disapprove ingredients so that I can filter out objectionable ingredients.
+- 3 - As a Site Admin I can remove recipes so that I can filter out objectionable recipes.
+- 4 - As a Site Admin I can view the number of favourites on each post so that I can see which is the most popular or viral.
+- 5 - As a Site Admin I can create, read, update and delete recipes so that I can manage my app content
+
+### To Do
+- 14 - As a Site User I can print/ export a recipe so that I can use it when i want to make the recipe.
+- 27 - As a Site User I can view the top 5 ingredients used in recipes so that I know what ingredients I will use the most.
+- - As a Site User I can register for an account using social media so that I can quickly make an account with all user details transfered.
+***
+
+### Incomplete User Stories for future developement
+9 - As a Site User I can add new ingredients to my shopping list so that I can know what I need to purchase to make the meal.
+13 - As a Site User I can print/ export my shopping list so that I can know what I need to purchase to make the meal.
+
+These are discussed more in the [Future Features](#future-features) section. 
 
 ***
 
@@ -76,39 +149,76 @@ Overall, the goal of the social recipe app is to create a vibrant and engaged co
 ### Wireframes
 #### Index
 Mobile
+<details>
+<summary>Click to view</summary>
 ![Index M Screen](readme-media/IndexMobile.png)
+</details>
+
 Desktop
+<details>
+<summary>Click to view</summary>
 ![Index D Screen](readme-media/IndexDesktop.png)
+</details>
 
 #### Shopping List
 Mobile
+<details>
+<summary>Click to view</summary>
 ![Shopping M Screen](readme-media/ShoppingList.png)
+</details>
 Desktop
+<details>
+<summary>Click to view</summary>
 ![Shopping D Screen](readme-media/ShoppingListDesktop.png)
+</details>
 
 #### Logged In Recipe List
 Mobile
+<details>
+<summary>Click to view</summary>
 ![Recipe List M Screen](readme-media/LoggedInHomePageMobile.png)
+</details>
 Desktop
+<details>
+<summary>Click to view</summary>
 ![Recipe List D Screen](readme-media/LoggedInHomePageDesktop.png)
+</details>
 
 #### Login
 Mobile
+<details>
+<summary>Click to view</summary>
 ![Login M Screen](readme-media/LoginMobile.png)
+</details>
 Desktop
+<details>
+<summary>Click to view</summary>
 ![Login D Screen](readme-media/LoginDesktop.png)
+</details>
 
 #### New Recipe
 Mobile
+<details>
+<summary>Click to view</summary>
 ![New Recipe M Screen](readme-media/NewRecipe.png)
+</details>
 Desktop
+<details>
+<summary>Click to view</summary>
 ![New Recipe D Screen](readme-media/NewRecipeDesktop.png)
+</details>
 
 #### Search Ingridents
+<details>
+<summary>Click to view</summary>
 ![Program Screen](readme-media/SearchIngridents.png)
+</details>
 
 #### Add New Instruction
+<details>
+<summary>Click to view</summary>
 ![Program Screen](readme-media/AddNewInstruction.png)
+</details>
 
 ### Navigation Plan
 ![Navigation Plan](readme-media/NavigationPlan.png)
@@ -117,6 +227,10 @@ Desktop
 ![colours](readme-media/TestColours.png)
 
 ### Fonts
+Google fonts was used in this project with both fonts selected for their legibility and simplicity.
+
+***** - Use in headings.
+***** - Use in paragraphs and labels.
 
 ***
 
