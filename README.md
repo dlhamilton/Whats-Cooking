@@ -151,73 +151,73 @@ These are discussed more in the [Future Features](#future-features) section.
 Mobile
 <details>
 <summary>Click to view</summary>
-![Index M Screen](readme-media/IndexMobile.png)
+<img src="readme-media/IndexMobile.png" alt="Index M Screen">
 </details>
 
 Desktop
 <details>
 <summary>Click to view</summary>
-![Index D Screen](readme-media/IndexDesktop.png)
+<img src="readme-media/IndexDesktop.png" alt="Index D Screen">
 </details>
 
 #### Shopping List
 Mobile
 <details>
 <summary>Click to view</summary>
-![Shopping M Screen](readme-media/ShoppingList.png)
+<img src="readme-media/ShoppingList.png" alt="Shopping M Screen">
 </details>
 Desktop
 <details>
 <summary>Click to view</summary>
-![Shopping D Screen](readme-media/ShoppingListDesktop.png)
+<img src="readme-media/ShoppingListDesktop.png" alt="Shopping D Screen">
 </details>
 
 #### Logged In Recipe List
 Mobile
 <details>
 <summary>Click to view</summary>
-![Recipe List M Screen](readme-media/LoggedInHomePageMobile.png)
+<img src="readme-media/LoggedInHomePageMobile.png" alt="Recipe List M Screen">
 </details>
 Desktop
 <details>
 <summary>Click to view</summary>
-![Recipe List D Screen](readme-media/LoggedInHomePageDesktop.png)
+<img src="readme-media/LoggedInHomePageDesktop.png" alt="Recipe List D Screen">
 </details>
 
 #### Login
 Mobile
 <details>
 <summary>Click to view</summary>
-![Login M Screen](readme-media/LoginMobile.png)
+<img src="readme-media/LoginMobile.png" alt="Login M Screen">
 </details>
 Desktop
 <details>
 <summary>Click to view</summary>
-![Login D Screen](readme-media/LoginDesktop.png)
+<img src="readme-media/LoginDesktop.png" alt="Login D Screen">
 </details>
 
 #### New Recipe
 Mobile
 <details>
 <summary>Click to view</summary>
-![New Recipe M Screen](readme-media/NewRecipe.png)
+<img src="readme-media/NewRecipe.png" alt="New Recipe M Screen">
 </details>
 Desktop
 <details>
 <summary>Click to view</summary>
-![New Recipe D Screen](readme-media/NewRecipeDesktop.png)
+<img src="readme-media/NewRecipeDesktop.png" alt="New Recipe D Screen">
 </details>
 
 #### Search Ingridents
 <details>
 <summary>Click to view</summary>
-![Program Screen](readme-media/SearchIngridents.png)
+<img src="readme-media/SearchIngridents.png" alt="Program Screen">
 </details>
 
 #### Add New Instruction
 <details>
 <summary>Click to view</summary>
-![Program Screen](readme-media/AddNewInstruction.png)
+<img src="readme-media/AddNewInstruction.png" alt="Program Screen">
 </details>
 
 ### Navigation Plan
@@ -238,12 +238,15 @@ Google fonts was used in this project with both fonts selected for their legibil
 ### Existing Features
 
 #### Base
-
 ##### NavBar
 - A logo image and brand name link to the home page, with two variations of the brand name text (full and shortened).
 - A toggle button to expand/collapse the navigation links in a dropdown menu.
 - Links for the home and recipes pages, which are active if the current page is the respective one.
 - Conditional links for user authentication: profile page or profile toggle button if the user is logged in, or register and login links if the user is not logged in.
+
++++ An Image here +++
+
++++ An Image here +++
 
 ##### Messages
 - A container with a row and a column that takes up 8 of 12 columns on medium-sized screens and is offset by 2 columns.
@@ -251,10 +254,34 @@ Google fonts was used in this project with both fonts selected for their legibil
 - An alert for each message, with a class assigned based on the message's tags (e.g., success, warning, error). The message is displayed in a safe manner to prevent malicious content.
 - A close button for each alert using Bootstrap's data-bs-dismiss attribute.
 
++++ An Image here +++
+
+##### Profile Section
+- A profle sectionm that is only accessible when the user is logged in.
+- Shows user account details. It shows the users status and how far they are from the next level. If the user has not completed their account then it will show a button to link the user to the complete account section.
+- Quick links to favourite recipes, recipes made by the user and the users that the user follows.
+- There is a button which links to the user profile and a logout button
+
+
++++ An Image here +++
+
 ##### Footer
 - The footer contains two paragraphs of text and icons.
 - The first paragraph displays a link to the author's Github account, and the second paragraph displays social media icons.
 - The footer has a background color of "footer-bg" and uses font awesome icons to display the social media icons.
+
++++ An Image here +++
+
+#### Index
+- A carousel is created to display 3 featured recipes with their corresponding images and captions.
+- Indicators are added to show which image is currently being displayed in the carousel.
+- A "sign up" button is added to the carousel that links to the login/sign up page if the user is not already authenticated.
+- A section is added that introduces the website and its purpose.
+- Another section is added that explains why the user should sign up for the website.
+- A bulleted list is included with reasons to sign up, such as access to an extensive recipe database, ability to save favorite recipes, and share recipes with the community.
+- The page shows the top three liked recipes with the author of the recipe, description and the average rating.
+
++++ An Image here +++
 
 ### Future Features
 

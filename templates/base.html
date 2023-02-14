@@ -72,6 +72,8 @@
         </div>
     </nav>
 
+    <!-- Messages Section -->
+
     <div class="container">
         <div class="row">
             <div class="col-md-8 offset-md-2">
@@ -104,10 +106,11 @@
             <i class="fab fa-instagram-square ms-3"></i>
             <i class="fab fa-youtube-square ms-3"></i></p>
     </footer>
-
-
+    {% if user.is_authenticated %}
+    <!-- Profile Slider -->
     <div class="offcanvas offcanvas-end" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
         id="offcanvasScrolling" aria-labelledby="offcanvasScrollingLabel">
+        <!-- Header -->
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasScrollingLabel">
                 <a class="navbar-brand" href="{% url 'home' %}">
@@ -130,8 +133,10 @@
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
+        <!-- Body -->
         <div class="offcanvas-body">
             {% if user.is_authenticated %}
+            <!-- Profile Pic -->
             <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
                 <div class="image_box_size mx-auto d-block">
                     <div class="ratio ratio-1x1 rounded-circle overflow-hidden">
@@ -141,7 +146,7 @@
                 </div>
             </a>
 
-
+            <!-- Username -->
             <div class="row mt-4">
                 <div class="col">
                     <div class="mx-auto d-block">
@@ -154,15 +159,17 @@
                 </div>
             </div>
             {% if user.first_name != "" %}
+            <!-- User details -->
             <div class="row">
                 <div class="col">
-                    <p>First name: {{ user.first_name }}</p>
-                    <p>Last name: {{ user.last_name }}</p>
-                    <p>Email: {{ user.email }}</p>
-                    <p>Location: {{ user.user_details.location }}</p>
+                    <p><strong>First name:</strong> {{ user.first_name }}</p>
+                    <p><strong>Last name:</strong> {{ user.last_name }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>Location:</strong> {{ user.user_details.location }}</p>
                 </div>
             </div>
             {% else %}
+            <!-- User complete account -->
             <div class="row mb-3">
                 <div class="col">
                     <div class="card text-dark bg-warning">
@@ -181,6 +188,7 @@
             </div>
             {% endif %}
             <div class="row">
+                <!-- Account Status -->
                 <div class="col">
                     <div class="card text-white bg-{{ user.user_details.get_status_display|lower }}">
                         <div class="card-header">Account Status</div>
@@ -208,7 +216,7 @@
                     </div>
                 </div>
             </div>
-
+            <!-- Links to user pages -->
             <div class="row my-3 justify-content-center">
                 <div class="col-4 text-center d-inline">
                     <a href="{% url 'profile_page_favourites' user.username %}" class="post-link">
@@ -248,6 +256,7 @@
             {% endif %}
         </div>
     </div>
+    {% endif %}
     <script src="https://kit.fontawesome.com/372da758e4.js" crossorigin="anonymous"></script>
     <script>
         setTimeout(function () {
