@@ -405,4 +405,5 @@ Now you need to get the API credentials from the [Google Cloud Platform](https:/
 
 Delphine Hourlay
 Adonyi Gábor
+Klaus Nielsen
 ***

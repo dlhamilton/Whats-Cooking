@@ -19,6 +19,8 @@ if os.path.isfile('env.py'):
 
 development = os.environ.get('DEVELOPMENT', False)
 
+#AllAuth Settings
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

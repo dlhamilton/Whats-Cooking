@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "account/base.html" %}
 
 {% load i18n %}
 {% load account socialaccount %}
@@ -11,7 +11,7 @@
     <div class="col-md-8 mt-3 offset-md-2">
 
 
-      <h3>{% trans "Sign In" %}</h3>
+      <h2>{% trans "Sign In" %}</h2>
 
       {% get_providers as socialaccount_providers %}
 

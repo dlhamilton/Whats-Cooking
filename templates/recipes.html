@@ -87,8 +87,13 @@
         </div>
     </div>
     {% if query == False %}
-    <p>{{ recipes_list }}</p>
-
+    <div class="container-fluid">
+        <div class="row">
+    <div class="col">
+        <p>{{ recipes_list }}</p>
+    </div>
+</div>
+</div>
     {% else %}
 
     <div class="container-fluid">
@@ -179,23 +184,25 @@
 <div class="offcanvas offcanvas-start recipe-page" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
     id="offcanvasFilterScroll" aria-labelledby="offcanvasFilterScrollLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasFilterScrollLabel">Colored with scrolling</h5>
+        <h5 class="offcanvas-title" id="offcanvasFilterScrollLabel">Ingredient Filter</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        <p>Try scrolling the rest of the page to see this option in action.</p>
+        <p>Select the ingredients you would like to have in the recipe</p>
+        <p>Below is a list of all ingredients:</p>
 
         <form id="ingredients_bar" method="get" action="{% url 'recipes_filter' %}">
             {% for object in filter_form %}
             {{ object }}
             {% endfor %}
             <input class="btn btn-primary" type="submit" value="Go">
+            <button class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
         </form>
 
 
     </div>
     <div class="offcanvas-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
+        
     </div>
 </div>
 

@@ -51,7 +51,7 @@ class TestUserDetailsModels(TestCase):
         '''
         self.assertEqual(
             self.user.user_details.user_image,
-            'v1670885027/placeholder.jpg')
+            'v1676418063/placeholder.webp')
 
     def test_follow_count(self):
         '''
