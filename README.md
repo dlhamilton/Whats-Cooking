@@ -265,6 +265,8 @@ Google fonts was used in this project with both fonts selected for their legibil
 
 +++ An Image here +++
 
++++ An Image here +++
+
 ##### Footer
 - The footer contains two paragraphs of text and icons.
 - The first paragraph displays a link to the author's Github account, and the second paragraph displays social media icons.
@@ -283,15 +285,45 @@ Google fonts was used in this project with both fonts selected for their legibil
 
 +++ An Image here +++
 
+#### Signup, Login and other account management pages
+
++++ An Image here +++
+
++++ An Image here +++
+
+Recipe list
+
+Filters and search
+
+Recipe management
+
+Recipe interactions
+
+Profile management
+
+Profile pages
+
+Profile interactions
+
 ### Future Features
+
+Shopping list
+Due to time constraints this feature could not be completed for this release
+
+More social login options
+Due to time constraints this feature could not be completed for this release
 
 ***
 
 ## Testing 
+
+A separate testing document has been created as TESTING.md
+
 ### Manual Testing
 ### User Story Testing
 ### Validators
-### Solved Bugs
+### Bugs
+No known errors remaining.
 
 ***
 
