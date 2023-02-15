@@ -317,6 +317,11 @@ Cloudinary
 Using the cloud and airy features to crop and focus on the right elements of an image when I use uploads it
 https://cloudinary.com/documentation/django_image_manipulation
 
+image Zoom:
+When you click on an image it will become a model which takes up the screen so you can see the image better.
+
+Splide
+There will not be a repeat of items in the Splide
 ***
 
 ## Testing 

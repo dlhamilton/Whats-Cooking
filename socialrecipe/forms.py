@@ -217,7 +217,7 @@ class FollowForm(forms.Form):
     Form to follow a user profile
     '''
     follow = forms.IntegerField(
-        widget=forms.HiddenInput(attrs={'class': 'd-none'}), required=True)
+        widget=forms.HiddenInput(attrs={'class': 'd-none'}), required=False)
 
 
 class UnfollowForm(forms.Form):
@@ -225,4 +225,4 @@ class UnfollowForm(forms.Form):
     Form to unfollow a user profile
     '''
     unfollow = forms.IntegerField(
-        widget=forms.HiddenInput(attrs={'class': 'd-none'}), required=True)
+        widget=forms.HiddenInput(attrs={'class': 'd-none'}), required=False)

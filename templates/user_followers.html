@@ -47,16 +47,102 @@
 
   <div class="row">
     <div class="col">
-      <p>followers count: {{ page_name.user_details.number_of_follows }}</p>
-      <p>followers:</p>
+      <p>Followers count: {{ page_name.user_details.number_of_follows }}</p>
+      <p>Followers:</p>
       {% if page_name.user_details.number_of_follows > 0 %}
-      <ul>
-        {% for follow in page_name.user_details.get_followers %}
-        <a class="post-link" href="{% url 'profile_page' follow.username %}">
-          <li>{{ follow }}</li>
-        </a>
-        {% endfor %}
-      </ul>
+
+      {% for follow in user_follow_rating %}
+      <div class="col-lg-12 ">
+        <div class="card-margin p-1 pt-2 m-1">
+    
+            <div class="user-profile-card border-{{ follow.user_details.get_status_display|lower }}">
+                <div class="user-profile-card-title-wrapper">
+                    <a class="text-decoration-none text-reset hide_small"
+                        href="{% url 'profile_page' follow.username %}">
+                        <img src="{{ follow.user_details.user_image.url }}" class="user-profile-card-img"
+                            alt="profile pic">
+                    </a>
+                    <div class="user-profile-card-meeting-info">
+                        <span class="text-uppercase post-link">
+                            <strong><a class="text-decoration-none text-reset"
+                                    href="{% url 'profile_page' follow.username %}">{{ follow.username }}</a></strong>
+                            {% if follow.user_details.location != "" %}
+                            <span
+                                class="text-capitalize user-profile-card-lrg">({{ follow.user_details.location }})</span>
+                            {% endif %}
+                        </span>
+                        <span class="user-profile-card-start-time mb-1 user-profile-card-lrg">Member Since:
+                            {{ follow.date_joined|date:"jS F Y" }}</span>
+                        <span
+                            class="user-profile-card-start-time mb-1 user-profile-card-shrt">{{ follow.date_joined|date:"M y" }}</span>
+    
+                        <div class="color-slide float-start bg-{{ follow.user_details.get_status_display|lower }}">
+                            <span class="user-profile-card-title">
+                                <i class="fas fa-award"></i>
+                                <span>{{ follow.user_details.get_status_display }}</span>
+                            </span>
+                        </div>
+    
+    
+    
+                    </div>
+                    {% if user.is_authenticated %}
+                    {% if follow != user %}
+                    {% if follow.is_following_data != 0 %}
+                    {% if follow.is_following_data == 1 %}
+    
+                    <form name="follow_submit" method="post">
+                        {% csrf_token %}
+                        {{ follow_form }}
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-wc-green">
+                        Follow
+                        </button>
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-wc-green">
+                            <i class="fas fa-user-plus"></i>
+                            </button>
+                        <input type="hidden" name="the_follow_form" value="{{ follow.username }}">
+                    </form>
+                    {% else %}
+    
+                    <form name="follow_submit" method="post">
+                        {% csrf_token %}
+                        {{ unfollow_form }}
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary following_btn_blue" id="following_btn_blue">
+                        Following
+                        </button>
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary following_btn_blue_sm" id="following_btn_blue_sm">
+                            <i class="fas fa-user"></i>
+                            </button>
+                        <input type="hidden" name="the_follow_form" value="{{ follow.username }}">
+                    </form>
+    
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                </div>
+    
+                <div class="mt-2">
+                    {% if follow.average_rating.user_recipe_average != 0 %}
+                    <p class="mb-0">Rating:
+                        {% for number in follow.average_rating.user_recipe_average_star %}
+                        <i class="fa-solid fa-star"></i>
+                        {% endfor %}
+                        {% for number in follow.average_rating.user_recipe_average_blank %}
+                        <i class="fa-regular fa-star"></i>
+                        {% endfor %}
+                        {{ follow.average_rating.user_recipe_average|floatformat:1 }}
+                    </p>
+                    {% else %}
+                    <p class="mb-0">No Recipe Ratings</p>
+                    {% endif %}
+                </div>
+    
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
       {% else %}
       <p><strong>No Follows</strong></p>
       {% endif %}
@@ -64,5 +150,22 @@
   </div>
 
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+$(".following_btn_blue").hover(function(){
+    $(this).text("Unfollow");
+}, function(){
+    $(this).text("Following");
+});
+
+$(".following_btn_blue_sm").hover(function(){
+    $(this).html('<i class="fa-solid fa-user-xmark"></i>');
+}, function(){
+    $(this).html('<i class="fas fa-user"></i>');
+});
+
+
+</script>
 
 {%endblock%}

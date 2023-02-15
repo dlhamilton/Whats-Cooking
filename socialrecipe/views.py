@@ -95,11 +95,22 @@ def following_change(request, username):
         if follow_form.is_valid():
             request.user.user_details.follows.add(page_name)
             user_details.save()
+            messages.success(request, 'Following')
+        else:
+            errors = follow_form.errors.as_data()
+            error_message = ""
+            for key, value in errors.items():
+                error_message += f"{key}: {value[0].message}\n"
+            messages.error(request, f"Error Follow: {error_message}")
     elif 'unfollow' in request.POST:
         if unfollow_form.is_valid():
             request.user.user_details.follows.remove(page_name)
             user_details.save()
-
+            messages.success(request, ' Unfollowing')
+        else:
+            messages.error(request, 'Error Unfollowing')
+    else:
+        messages.error(request, 'Error')
 
 def paginate_recipes(request, recipes):
     '''
@@ -839,8 +850,22 @@ class ProfileFollowers(View):
         '''
         get method
         '''
+        page_name = get_object_or_404(User, username=username)
+        followers_w_rating = page_name.user_details.get_followers().all().order_by('username')
         p_details = profile_details(self.request, username)
-        p_details.update({"logged_in_user": request.user, })
+        for follow in followers_w_rating:
+        # for follow in page_name.user_details.get_followers:
+            follow.average_rating = get_average_recipe_rating(follow.username)
+            follow.is_following_data = 0
+            if request.user.is_authenticated:
+                if follow.user_follows.filter(user=request.user).exists():
+                    follow.is_following_data = 2
+                else:
+                    follow.is_following_data = 1
+
+        p_details.update({
+            "logged_in_user": request.user,
+            "user_follow_rating": followers_w_rating})
         return render(
             request,
             "user_followers.html",
@@ -852,8 +877,11 @@ class ProfileFollowers(View):
         post method
         '''
         if 'follow' in request.POST or 'unfollow' in request.POST:
-            following_change(request, username)
-        return redirect('profile_page_followers', username=username)
+            the_username = username
+            if 'the_follow_form' in request.POST:
+                the_username = request.POST['the_follow_form']
+            following_change(request, the_username)
+        return redirect('profile_page_followers', username=the_username)
 
 
 class ProfileFavourites(View):
