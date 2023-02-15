@@ -122,7 +122,7 @@ class RecipeImages(models.Model):
     '''
     recipe = models.ForeignKey(
         Recipes, on_delete=models.CASCADE, related_name="recipe_images")
-    recipe_image = CloudinaryField('image', null=False)
+    recipe_image = CloudinaryField('image')
     headline = models.TextField(blank=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="recipe_images")

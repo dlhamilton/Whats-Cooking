@@ -313,6 +313,10 @@ Due to time constraints this feature could not be completed for this release
 More social login options
 Due to time constraints this feature could not be completed for this release
 
+Cloudinary
+Using the cloud and airy features to crop and focus on the right elements of an image when I use uploads it
+https://cloudinary.com/documentation/django_image_manipulation
+
 ***
 
 ## Testing 
@@ -322,6 +326,10 @@ A separate testing document has been created as TESTING.md
 ### Manual Testing
 ### User Story Testing
 ### Validators
+
+image_form = RecipeImagesForm(request.POST)
+image_form = RecipeImagesForm(request.POST, request.FILES)
+
 ### Bugs
 No known errors remaining.
 

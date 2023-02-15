@@ -331,7 +331,7 @@ class RecipeDetail(View):
                 messages.error(request, 'Error With Rating')
                 return JsonResponse({'status': False})
         elif 'the_image_form' in request.POST:
-            image_form = RecipeImagesForm(data=request.POST)
+            image_form = RecipeImagesForm(request.POST, request.FILES)
             if image_form.is_valid():
                 image_form.instance.user = request.user
                 image = image_form.save(commit=False)

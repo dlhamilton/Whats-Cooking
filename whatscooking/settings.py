@@ -19,7 +19,7 @@ if os.path.isfile('env.py'):
 
 development = os.environ.get('DEVELOPMENT', False)
 
-#AllAuth Settings
+# AllAuth Settings
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 

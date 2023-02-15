@@ -395,7 +395,7 @@
  <form method="post" enctype="multipart/form-data">
         <div class="modal-body">
            
-                {{ image_form | crispy }}
+                {{ image_form.as_p }}
                 {% csrf_token %}
                 
                 <input type="hidden" name="the_image_form" value="the_image_form">
