@@ -9,7 +9,6 @@ from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
 from cloudinary.models import CloudinaryField
 from allauth.account.signals import user_signed_up
-# from django.contrib.auth.models import Group
 
 RECIPE_STATUS = ((0, "Draft"), (1, "Published"), (2, "Hidden"), (3, "Removed"))
 USER_STATUS = ((0, "Suspended"), (1, "Standard"), (2, "Bronze"), (3, "Silver"),
@@ -191,7 +190,8 @@ class StarRating(models.Model):
         get the average rating for the recipe by recipe_id
         '''
         return cls.objects.filter(
-            recipe_id=recipe_id).aggregate(average=Avg('rating')).get('average')
+            recipe_id=recipe_id).aggregate(
+                average=Avg('rating')).get('average')
 
 
 class Ingredients(models.Model):

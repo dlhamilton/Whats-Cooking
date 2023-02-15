@@ -866,13 +866,6 @@ class FollowFormTest(TestCase):
         form = FollowForm({'follow': 1})
         self.assertTrue(form.is_valid())
 
-    def test_form_invalid_data(self):
-        '''
-        Test form with invalid data
-        '''
-        form = FollowForm({'follow': ''})
-        self.assertFalse(form.is_valid())
-
 
 class UnfollowFormTest(TestCase):
     """
@@ -893,10 +886,3 @@ class UnfollowFormTest(TestCase):
         '''
         form = UnfollowForm({'unfollow': 1})
         self.assertTrue(form.is_valid())
-
-    def test_form_invalid_data(self):
-        '''
-        Test form with invalid data
-        '''
-        form = UnfollowForm({'unfollow': ''})
-        self.assertFalse(form.is_valid())

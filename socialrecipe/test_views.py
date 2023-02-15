@@ -9,7 +9,10 @@ from django.contrib.messages.storage.fallback import FallbackStorage
 from .models import (User, Recipes, UserDetails, StarRating, Units,
                      Ingredients, RecipeItems, Methods)
 from .views import (RecipeDetail, CurrentUserProfileRedirectView, RecipesList,
-                    RecipeImages, Comments, ProfileRecipesEdit)
+                    RecipeImages, Comments, ProfileRecipesEdit,
+                    ProfileRecipesAdd)
+from .forms import (RecipeImagesForm)
+
 
 UserDetails_var = UserDetails.objects
 Recipes_var = Recipes.objects
@@ -553,28 +556,99 @@ class TestRecipeDetail(TestCase):
             json.loads(response.content),
             {'liked': False})
 
+    def generate_test_image(self):
+        '''
+        A test image to upload
+        '''
+        image_path = 'media/test_image.jpg'
+        new_photo = SimpleUploadedFile(
+            name='test_image.jpg',
+            content=open(image_path, 'rb').read(),
+            content_type='image/jpeg')
+        return new_photo
+
     def test_post_view_with_image(self):
         '''
         Test recipe form image upload
         '''
-        image = SimpleUploadedFile(
-            "file.jpg",
-            b"file_content",
-            content_type="image/jpeg")
+        self.assertEqual(RecipeImages_var.count(), 2)
+        image = self.generate_test_image()
         form_data = {
             'recipe_image': image,
             'headline': 'This is a test headline',
             'the_image_form': 'the_image_form',
         }
+        image_form = RecipeImagesForm(data=form_data, files=form_data)
 
-        client = Client()
-        client.force_login(self.user)
-        response = client.post(
-            f'/recipes/{self.recipe.slug}/',
+        self.assertTrue(image_form.is_valid())
+
+        request = self.factory.post(
+            reverse('recipe_detail', args=[self.recipe.slug]),
+            data=form_data, files=form_data)
+        post_data = request.POST.copy()
+        post_data.update(form_data)
+        request.POST = post_data
+        request.FILES.update(form_data)
+        request.user = self.user
+
+        # Adding messages to the request
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = RecipeDetail.as_view()(
+            request,
+            slug=self.recipe.slug,
+            format='multipart/form-data',
             data=form_data,
-            files={'recipe_image': image})
+            files=form_data)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(RecipeImages_var.count(), 3)
+        self.assertEqual(
+            RecipeImages_var.last().headline, 'This is a test headline')
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(list(messages)[0]), 'Image Added')
+
+    def test_post_view_with_image_invalid(self):
+        '''
+        Test recipe form image upload with invalid image
+        '''
+        image = self.generate_test_image()
+        form_data = {
+            'recipe_image': image,
+            'headline': '',
+            'the_image_form': 'the_image_form',
+        }
+        image_form = RecipeImagesForm(data=form_data, files=form_data)
+
+        self.assertFalse(image_form.is_valid())
+
+        request = self.factory.post(
+            reverse('recipe_detail', args=[self.recipe.slug]),
+            data=form_data,
+            files=form_data)
+        post_data = request.POST.copy()
+        post_data.update(form_data)
+        request.POST = post_data
+        request.FILES.update(form_data)
+        request.user = self.user
+
+        # Adding messages to the request
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = RecipeDetail.as_view()(
+            request,
+            slug=self.recipe.slug,
+            format='multipart/form-data',
+            data=form_data,
+            files=form_data)
+
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'recipe_detail.html')
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(list(messages)[0]), 'Error With Image Upload')
 
 
 class TestProfilePage(TestCase):
@@ -938,24 +1012,58 @@ class TestProfileRecipesAdd(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
 
+    def generate_test_image(self):
+        '''
+        A test image to upload
+        '''
+        image_path = 'media/test_image.jpg'
+        new_photo = SimpleUploadedFile(
+            name='test_image.jpg',
+            content=open(image_path, 'rb').read(),
+            content_type='image/jpeg')
+        return new_photo
+
     def test_post_with_valid_data(self):
         '''
         Test recipe with valid data
         '''
+        factory = RequestFactory()
+        image = self.generate_test_image()
         client = Client()
         client.force_login(self.user)
-        recipe_data = {
+        form_data = {
             'title': 'Test Recipe',
             'excerpt': 'Test Description',
             'prep_time': 30,
             'cook_time': 60,
             'serves': 3,
+            'recipe_image': image,
         }
-        data = recipe_data.copy()
-        response = client.post(reverse(
-            'profile_page_recipes_add',
-            kwargs={'username': self.user.username}), data)
+
+        request = factory.post(
+            reverse('profile_page_recipes_add', args=[self.user.username]),
+            data=form_data,
+            files=form_data)
+        post_data = request.POST.copy()
+        post_data.update(form_data)
+        request.POST = post_data
+        request.FILES.update(form_data)
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = ProfileRecipesAdd.as_view()(
+            request,
+            username=self.user.username,
+            format='multipart/form-data',
+            data=form_data,
+            files=form_data)
+
         self.assertEqual(response.status_code, 302)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(list(messages)[0]), 'Recipe Added')
         self.assertEqual(Recipes_var.count(), 2)
 
     def test_post_with_invalid_data(self):
@@ -1271,28 +1379,59 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/')
 
+    def generate_test_image(self):
+        '''
+        A test image to upload
+        '''
+        image_path = 'media/test_image.jpg'
+        new_photo = SimpleUploadedFile(
+            name='test_image.jpg',
+            content=open(image_path, 'rb').read(),
+            content_type='image/jpeg')
+        return new_photo
+
     def test_update_recipe(self):
         '''
         Test update of recipe details
         '''
+        factory = RequestFactory()
+        image = self.generate_test_image()
         client = Client()
         client.force_login(self.user)
-
-        content = {
+        form_data = {
             'the_recipe_form': 'the_recipe_form',
             'title': 'updated_recipe',
             'author': self.user,
             'excerpt': 'about the recipe',
             'status': 1,
-            'recipe_image': '',
+            'recipe_image': image,
             'prep_time': 30,
             'cook_time': 60,
             'serves': 4
         }
 
-        response = client.post(
+        request = factory.post(
             f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
-            content)
+            data=form_data,
+            files=form_data)
+        post_data = request.POST.copy()
+        post_data.update(form_data)
+        request.POST = post_data
+        request.FILES.update(form_data)
+        request.user = self.user
+
+        setattr(request, 'session', 'session')
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
+
+        response = ProfileRecipesEdit.as_view()(
+            request,
+            username=self.user.username,
+            recipe=self.recipe.slug,
+            format='multipart/form-data',
+            data=form_data,
+            files=form_data)
+
         self.assertEqual(response.status_code, 302)
         self.recipe.refresh_from_db()
         self.assertTrue(
@@ -1300,12 +1439,13 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(
             response.url,
             f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}')
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(list(messages)[0]), 'Recipe Updated')
 
     def test_update_recipe_invalid(self):
         '''
         Test update of recipe details invalid form
         '''
-
         content = {
             'the_recipe_form': 'the_recipe_form',
             'title': 'updated_recipe',
@@ -1669,8 +1809,6 @@ class TestProfileFollowers(TestCase):
             user=self.user,
         )
         self.user.user_details = self.details
-        self.details.save()
-        self.user.save()
 
         self.user_authenticated = User.objects.create_user(
             username='testuserauthenticated',
@@ -1680,8 +1818,6 @@ class TestProfileFollowers(TestCase):
             user=self.user_authenticated,
         )
         self.user_authenticated.user_details = self.details_authenticated
-        self.details_authenticated.save()
-        self.user_authenticated.save()
 
         self.recipe = Recipes_var.create(
             title='testrecipe',
@@ -1744,7 +1880,8 @@ class TestProfileFollowers(TestCase):
         client.force_login(self.user)
         response = client.post(
             f'/users/{self.user_authenticated.username}/myfollowers/',
-            {'follow': 'Follow'})
+            {'follow': 'Follow',
+             'the_follow_form': self.user_authenticated.username})
         self.assertRedirects(
             response,
             f'/users/{self.user_authenticated.username}/myfollowers/')
@@ -1757,10 +1894,44 @@ class TestProfileFollowers(TestCase):
         client.force_login(self.user)
         response = client.post(
             f'/users/{self.user_authenticated.username}/myfollowers/',
-            {'unfollow': 'Unfollow'})
+            {'unfollow': 'Unfollow',
+             'the_follow_form': self.user_authenticated.username})
         self.assertRedirects(
             response,
             f'/users/{self.user_authenticated.username}/myfollowers/')
+
+    def test_get_already_following(self):
+        '''
+        Test if you are already following the user
+        '''
+        self.user.user_details.follows.add(self.user)
+        self.user.user_details.follows.add(self.user_authenticated)
+        self.assertEqual(self.user.user_details.follows.count(), 2)
+        self.user.user_details.save()
+        client = Client()
+        client.force_login(self.user)
+        response = client.get(f'/users/{self.user.username}/myfollowers/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user_followers.html')
+        self.assertIn("user_follow_rating", response.context)
+        self.assertEqual(
+            response.context["user_follow_rating"][0].is_following_data, 2)
+
+    def test_get_not_already_following(self):
+        '''
+        Test if you are not already following the user
+        '''
+        self.user.user_details.follows.add(self.user_authenticated)
+        self.user.user_details.save()
+        self.assertEqual(self.user.user_details.follows.count(), 1)
+        client = Client()
+        client.force_login(self.user_authenticated)
+        response = client.get(f'/users/{self.user.username}/myfollowers/')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user_followers.html')
+        self.assertIn("user_follow_rating", response.context)
+        self.assertEqual(
+            response.context["user_follow_rating"][0].is_following_data, 1)
 
 
 class TestProfileFavourites(TestCase):

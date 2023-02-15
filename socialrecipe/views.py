@@ -1,32 +1,24 @@
 """
 Social recipe views
 """
-# from itertools import chain
 import json
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import View
-# generic
 from django.http import HttpResponseRedirect, JsonResponse
-# , HttpResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import RedirectView
-
 from django.db.models import Count, Avg, Q, F, Case, When
-# from django.urls import resolve
-# from django.template import loader
 from django.contrib import messages
-
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 from .models import (Recipes, User, StarRating, Ingredients,
                      Comments, RecipeItems, Methods, RecipeImages,
                      UserDetails)
-#  UserDetails
 from .forms import (CommentsForm, SearchRecipeForm, FilterRecipeForm,
                     RecipesForm, AddToRecipeForm, RecipeItemsForm,
                     MethodsForm, UserDetailsForm, FollowForm, UnfollowForm,
                     RatingForm, RecipeImagesForm, IngredientsForm)
-# from cloudinary.forms import cl_init_js_callbacks
+
 
 Recipes_obj = Recipes.objects
 StarRating_obj = StarRating.objects
@@ -44,7 +36,6 @@ class HomeList(View):
         '''
         get request
         '''
-        # , *args, **kwargs
         top_recipes = Recipes_obj.filter(status=1).annotate(
             favourites_count=Count('favourites')).order_by(
                 '-favourites_count')[:3]
@@ -109,8 +100,7 @@ def following_change(request, username):
             messages.success(request, ' Unfollowing')
         else:
             messages.error(request, 'Error Unfollowing')
-    else:
-        messages.error(request, 'Error')
+
 
 def paginate_recipes(request, recipes):
     '''
@@ -165,7 +155,6 @@ class RecipesList(View):
         '''
         get request for recipe page
         '''
-        # , *args
         recipes_list = Recipes_obj.filter(
             status=1).order_by('-upload_date')
         form = SearchRecipeForm(request.GET)
@@ -212,7 +201,6 @@ class RecipeDetail(View):
         '''
         get request for single recipe page
         '''
-        # , *args, **kwargs
         queryset = Recipes_obj
         rated = False
         recipe = get_object_or_404(queryset, slug=slug)
@@ -267,7 +255,6 @@ class RecipeDetail(View):
         '''
         delete comments and images from recipes
         '''
-        # , *args, **kwargs
         data = json.loads(request.body)
         model = data.get('model')
         item_id = data.get('id')
@@ -283,7 +270,6 @@ class RecipeDetail(View):
         '''
         post request for single recipe
         '''
-        # commented = False
         rated = False
         valid_comment = True
         queryset = Recipes_obj.filter(status=1)
@@ -523,8 +509,7 @@ class Profilerecipes(View):
         recipes = get_average_rating(recipes)
         recipes_len = len(recipes)
         recipes = paginate_recipes(request, recipes)
-        # if len(recipes) == 0:
-        #     recipes_list = "No Recipes"
+
         p_details.update({
             "recipe_list": recipes,
             "recipe_list_count": recipes_len, })
@@ -634,7 +619,6 @@ class ProfileRecipesEdit(View):
         '''
         go_to_id_id = None
         page = request.GET.get('page') or 1
-        # ingredients = Ingredients.objects.filter(approved=True)
         ingredients = Ingredients_obj.filter()
         if page != 1:
             go_to_id_id = 'ingredients_section'
@@ -851,10 +835,10 @@ class ProfileFollowers(View):
         get method
         '''
         page_name = get_object_or_404(User, username=username)
-        followers_w_rating = page_name.user_details.get_followers().all().order_by('username')
+        followers_w_rating = \
+            page_name.user_details.get_followers().all().order_by('username')
         p_details = profile_details(self.request, username)
         for follow in followers_w_rating:
-        # for follow in page_name.user_details.get_followers:
             follow.average_rating = get_average_recipe_rating(follow.username)
             follow.is_following_data = 0
             if request.user.is_authenticated:
@@ -881,7 +865,7 @@ class ProfileFollowers(View):
             if 'the_follow_form' in request.POST:
                 the_username = request.POST['the_follow_form']
             following_change(request, the_username)
-        return redirect('profile_page_followers', username=the_username)
+        return redirect('profile_page_followers', username=username)
 
 
 class ProfileFavourites(View):
@@ -917,7 +901,7 @@ class ProfileFavourites(View):
 
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
     """
-    redirect for user logging in 
+    redirect for user logging in
     """
     def get_redirect_url(self, *args, **kwargs):
         return reverse(

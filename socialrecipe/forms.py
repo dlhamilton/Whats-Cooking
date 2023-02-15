@@ -2,9 +2,7 @@
 Socialrecipe forms
 """
 from django import forms
-# from cloudinary.forms import CloudinaryInput
 from cloudinary.models import CloudinaryField
-# from django.contrib.auth.models import User
 from .models import (Comments, Ingredients, Recipes, RecipeItems, Units,
                      Methods, UserDetails, StarRating, RecipeImages)
 
