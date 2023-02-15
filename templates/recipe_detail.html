@@ -224,9 +224,11 @@
     <div class="row">
         <div class="col-md-8 card mb-4  mt-3 ">
             <h3>Pictures:</h3>
+        {% if user.is_authenticated %}
         <div class="col-sm-2 card mb-4  mt-3 ">
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_image_upload">Upload</button>
         </div>
+        {% endif %}
     </div>
     {% if images|length != 0 %}
     <div class="row d-flex justify-content-center">

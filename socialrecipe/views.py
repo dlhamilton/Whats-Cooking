@@ -832,6 +832,9 @@ class ProfileRecipesEdit(View):
 
 
 class ProfileFollowers(View):
+    """
+    the user following page
+    """
     def get(self, request, username, *args, **kwargs):
         '''
         get method
@@ -861,8 +864,14 @@ class ProfileFavourites(View):
         '''
         get method
         '''
+        page_name = get_object_or_404(User, username=username)
+        fav_recipes = Recipes_obj.filter(favourites=page_name).filter(status=1)
+        fav_recipes = get_average_rating(fav_recipes)
+        fav_recipes = paginate_recipes(request, fav_recipes)
+
         p_details = profile_details(self.request, username)
         p_details.update({"logged_in_user": request.user, })
+        p_details.update({"recipe_list": fav_recipes, })
         return render(
             request,
             "user_favourites.html",
