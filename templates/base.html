@@ -46,6 +46,12 @@
                         <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'aboutus' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'aboutus' %}#contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{% url 'recipes' %}">Recipes</a>
                     </li>
                     {% if user.is_authenticated %}
@@ -67,7 +73,6 @@
     </nav>
 
     <!-- Messages Section -->
-
     <div class="container">
         <div class="row">
             <div class="col-md-8 offset-md-2">

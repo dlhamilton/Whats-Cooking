@@ -15,6 +15,10 @@ urlpatterns = [
         views.RecipesList.as_view(),
         name='recipes'),
     path(
+        'aboutus/',
+        views.AboutUs.as_view(),
+        name='aboutus'),
+    path(
         'recipes/search/',
         views.RecipesList.as_view(),
         name='recipes_search'),

@@ -899,6 +899,32 @@ class ProfileFavourites(View):
         return redirect('profile_page_favourites', username=username)
 
 
+class AboutUs(View):
+    """
+    The about us page for whats cooking
+    """
+    def get(self, request):
+        '''
+        get method
+        '''
+        return render(
+            request,
+            "about_us.html",
+            {
+                "page_name": "About Us",
+            }
+        )
+    
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        model = data.get('status')
+        if model == 1:
+            messages.success(request, 'Message Sent')
+        else:
+            messages.error(request, 'Error With Message')
+        return JsonResponse({"message": "Message"}, status=200)
+
+
 class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
     """
     redirect for user logging in

@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<head>
+  <script type="text/javascript"
+  src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+</script>
+<script type="text/javascript">
+(function(){
+emailjs.init("sjZI_dTlFCVI_oVEq");
+})();
+</script>
+</head>
+
+<div class="container-fluid">
+
+<div class="row">
+  <div class="col">
+    <hr>
+  </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h1>About</h1>
+</div>
+
+<div class="row">
+    <div class="col">
+        <hr>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+  <div class="row text-center mt-4">
+  <h2>What's Cooking</h2>
+    <p>Our website features a wide variety of recipes for all occasions and skill levels.
+      Whether you're a
+      beginner cook just learning the basics, or a seasoned pro looking for new and exciting recipe ideas, we have
+      something for everyone.</p>
+    <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
+    <p >Our user-friendly interface makes it easy to search for recipes by ingredient, cuisine,
+      or dietary
+      restriction. This will help you to avoid food waste by using ingredients that you already have on hand or
+      plan to purchase. You can also save your favorite recipes for quick and easy reference, and share your own
+      creations with the community.</p>
+    <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
+    <p>In addition to our recipe database, we also offer a variety of cooking resources and
+      tools, including
+      cooking videos, kitchen gadget reviews, and a forum for sharing cooking tips and techniques.</p>
+    <i class="fa-solid fa-ellipsis mb-2 brand-bar"></i>
+    <p>We believe that cooking should be fun, inspiring, and accessible to everyone, and we are
+      dedicated to
+      fostering a supportive and inclusive community of cooks. So join us today and discover the joys of home
+      cooking with Whats Cooking!</p>
+  </div>
+</div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <hr>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-10 col-lg-8">
+    <div class="row mt-4">
+      <h2 class="text-center">How To Use</h2>
+      <p>Here are the steps to use What's Cooking:</p>
+      <ol class="list-group list-group-numbered">
+        <li class="list-group-item">Create an account: To get started, you will need to create an account by entering your email address, and password.</li>
+        <li class="list-group-item">Update your profile: After creating an account, you can update your profile information, with personal information, such as your name, profile picture and bio, to help others get to know you better.</li>
+        <li class="list-group-item">Browse recipes: You can start browsing the site's recipes by visiting the "Recipes" page. Here, you will see a list of all the recipes available on the site.</li>
+        <li class="list-group-item">Filter recipes: If you are looking for a specific type of recipe, you can use the filtering options to narrow down the list of recipes based on ingredients or sort by another criteria.</li>
+        <li class="list-group-item">View a recipe: To view a recipe, simply click on its title. You will be taken to a page that displays detailed information about the recipe, including ingredients, instructions, images and user reviews.</li>
+        <li class="list-group-item">Leave a review: If you have tried a recipe, you can leave a review by clicking the "Leave a Comment" button on the recipe page. Enter your review and click "Submit.". You can also rate the recipe out of 5 and upload a image of the meal you cooked.</li>
+        <li class="list-group-item">Like and save recipes: If you like a recipe, you can click the "Like" button to show your appreciation, this will also save recipes to your personal collection so you can eaily view it from your profile page.</li>
+        <li class="list-group-item">Upload your own recipe: To share your own cooking skills with others, click the "Upload Recipe" button and follow the prompts to enter information about your recipe, including the ingredients, instructions, and a photo.</li>
+        <li class="list-group-item">View your saved recipes: To view the recipes you have saved, go to your profile and click on the "My Recipes" section.</li>
+        <li class="list-group-item">Follow other users: If you want to keep up with the recipes shared by other users, you can follow them by clicking the "Follow" button on their profiles.</li>
+      </ol>
+      <p> With these steps, you should be able to easily use What's Cooking to find, share, and discover new recipes.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <hr>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-10 col-lg-8">
+    <div class="row mt-4">
+      <h2 class="text-center">Key Points</h2>
+      <p>Key bits fo information to make using What's Cooking easier:</p>
+      <ol class="list-group">
+        <li class="list-group-item">Rating a recipe</li>
+        <li class="list-group-item">Unverified ingredient</li>
+        <li class="list-group-item">Deleting an image</li>
+      </ol>
+      <p> With these steps, you should be able to easily use What's Cooking to find, share, and discover new recipes.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <hr>
+  </div>
+</div>
+
+
+  <div class="row">
+    <div class="col">
+      <h2 id="contact" class="text-center">Contact Us</h2>
+      <div class="col-md-8 mt-3 offset-md-2 mb-4">
+        <p>An issues with accounts or just need help use the form below:</p>
+        <form onsubmit="return sendMail(this);">
+          {% csrf_token %}
+          <input type="text" name="name" id="fullname" class="form-control" placeholder="Name" required />
+          <input type="email" name="emailaddress" id="emailaddress" class="form-control" placeholder="Email"
+              required />
+          <textarea rows="5" name="formmessage" id="formmessage" class="form-control"
+              placeholder="Message" required></textarea>
+          <div class="form-row text-center">
+              <div class="col">
+                  <button type="submit" class="btn btn-secondary">Send Message</button>
+              </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/sendEmail.js' %}"></script>
+{%endblock%}
+

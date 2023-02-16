@@ -317,6 +317,8 @@ Due to time constraints this feature could not be completed for this release
 Allauth
 Use Allauth to reset user passwords and to change the email address
 
+Using all off to reset user passwords and also to send an email when verifying an account. This hasn't been done so for this release users can use the contact us form to get help to reopen their account or to get any issues that they have with the user accounts
+
 Cloudinary
 Using the cloud and airy features to crop and focus on the right elements of an image when I use uploads it
 https://cloudinary.com/documentation/django_image_manipulation
