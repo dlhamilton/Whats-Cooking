@@ -229,6 +229,7 @@ Desktop
 ### Fonts
 Google fonts was used in this project with both fonts selected for their legibility and simplicity.
 
+Unica One - Use in Logo
 ***** - Use in headings.
 ***** - Use in paragraphs and labels.
 

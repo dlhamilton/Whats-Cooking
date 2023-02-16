@@ -35,7 +35,7 @@
 
   <div class="row">
     <div class="col">
-      <h1 class="text-capitalize"><span class="fw-bold">{{ page_name }}</span> - Follows</h1>
+      <h1 class="text-capitalize"><span class="fw-bold text-green-color">{{ page_name }}</span> - Follows</h1>
     </div>
   </div>
 
@@ -47,8 +47,6 @@
 
   <div class="row">
     <div class="col">
-      <p>Followers count: {{ page_name.user_details.number_of_follows }}</p>
-      <p>Followers:</p>
       {% if page_name.user_details.number_of_follows > 0 %}
 
       {% for follow in user_follow_rating %}
