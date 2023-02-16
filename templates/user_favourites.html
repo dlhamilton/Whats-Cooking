@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
 <div class="container-fluid">
   <div class="row">
     <div class="col">
@@ -18,7 +17,6 @@
     </div>
   </div>
 
-
   <div class="row">
     <div class="col">
   <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}">
@@ -32,14 +30,12 @@
       </div>
     </div>
 
-
   <div class="row">
     <div class="col">
       <h1 class="text-capitalize"><span class="fw-bold text-green-color">{{ page_name }}</span> - Favourites</h1>
     </div>
   </div>
   
-
   <div class="row">
     <div class="col">
       <hr>
@@ -49,17 +45,16 @@
   <div class="row">
     <div class="col">
       <div class="row">
-
+        <!-- recipe list -->
         {% if fav_recipes_count > 0 %}
-
         {% for recipe in recipe_list %}
               <div class="col-md-4">
                 <div class="card mb-4">
                   <div class="card-body index-card-body">
                     <div class="image-container">
-        
+
                         <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
-                  
+
                     </div>
                     <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
                       <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}</h2>
@@ -91,7 +86,6 @@
               {% endif %}
             {% endfor %}
 
-
         {% else %}
         <p><strong>No Favourite Recipes</strong></p>
         {% endif %}
@@ -100,7 +94,6 @@
       <div class="row p-0 my-3">
         <span class="text-center">Page {{ recipe_list.number }} of {{ recipe_list.paginator.num_pages }}</span>
     </div>
-
     
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">

@@ -314,6 +314,9 @@ Due to time constraints this feature could not be completed for this release
 More social login options
 Due to time constraints this feature could not be completed for this release
 
+Allauth
+Use Allauth to reset user passwords and to change the email address
+
 Cloudinary
 Using the cloud and airy features to crop and focus on the right elements of an image when I use uploads it
 https://cloudinary.com/documentation/django_image_manipulation
@@ -323,6 +326,9 @@ When you click on an image it will become a model which takes up the screen so y
 
 Splide
 There will not be a repeat of items in the Splide
+
+recipe detaisl heading
+The ability for the image in the top right corner on the recipe details page to be changed depending on cuisine this means that the model for recipes will have a cuisine feature added to it so that the user when creating a recipe can choose what cuisine it is. The image will change depending on the cuisine so you know what cuisine that recipe is under
 ***
 
 ## Testing 

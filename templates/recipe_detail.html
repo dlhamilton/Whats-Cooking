@@ -9,7 +9,7 @@
             <div class="col-md-6 masthead-text">
                 <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'recipes' %}">
                         <i class="fa-solid fa-chevron-left"></i>Back</a></span>
-                <!-- Post title goes in these h1 tags -->
+                <!-- Recipe title -->
                 <h1 class="post-title text-capitalize">
                     {{ recipe.title }}
                     {% if user == recipe.author %}    
@@ -18,7 +18,7 @@
                     </a>
                     {% endif %}
                 </h1>
-                <!-- Post author goes before the | the post's created date goes after -->
+                <!-- author -->
                 <h2 class="post-subtitle post-link-green">
                     Recipe by:
                     <span class="text-uppercase">
@@ -28,26 +28,18 @@
                             </a>
                         </strong>
                     </span>
-
-                    
-
                 </h2>
-                <p class="post-subtitle">Uploaded: {{ recipe.upload_date|date:"d/m/Y" }}</p>
-                
+                <p class="post-subtitle">Uploaded: {{ recipe.upload_date|date:"d/m/Y" }}</p>   
             </div>
-            
             <div class="d-none d-md-block col-md-6 masthead-image">
-                <!-- The featured image URL goes in the src attribute -->
-              
+                <!-- The image URL  --> 
                 <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675121604/site_images/banner.webp" width="100%">
-            
             </div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col">
-
     </div>
 </div>
 <div class="container-xxl">
@@ -76,7 +68,6 @@
             {% endif %}
             {% if user.is_authenticated %}
            
-            
             <p class="card-text mt-2">
                 <form method="post" id="the_rating_form_form" name="the_rating_form_form">
                 {% for _ in star_loop %}
@@ -94,8 +85,8 @@
             </button>
                 {% endfor %}
                 <input type="hidden" name="the_rating_form" value="the_rating_form">
-{{ rating_form }}
-{% csrf_token %}
+                {{ rating_form }}
+                {% csrf_token %}
                 </form>
             </p>
             {% else %}
@@ -110,13 +101,10 @@
             {% endif %}
         </div>
         <div class="d-inline col-6">
-            <!-- The featured image URL goes in the src attribute -->
-         
             <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3 max_width_recipe_img" data-bs-toggle="modal" data-bs-target="#exampleModal">
         </div>
     </div>
     <div class="row recipe_icons mt-4">
-
         <div class="col-4 col-md-2 text-center">
             <strong>
                 {% if user.is_authenticated %}
@@ -144,7 +132,6 @@
             <a class="text-decoration-none text-reset" href="#the_methods">
                 {% with methods.count as total_methods %}
                 <strong class="text-secondary"><i class="fas fa-list-ul"></i>
-                    <!-- Our total_comments variable goes before the closing strong tag -->
                     {{ total_methods }}
                 </strong>
                 {% endwith %}
@@ -154,7 +141,6 @@
             <a class="text-decoration-none text-reset" href="#the_comments">
                 {% with comments.count as total_comments %}
                 <strong class="text-secondary"><i class="far fa-comments"></i>
-                    <!-- Our total_comments variable goes before the closing strong tag -->
                     {{ total_comments }}
                 </strong>
                 {% endwith %}
@@ -166,9 +152,9 @@
             <hr>
         </div>
     </div>
+    <!-- ingredients  -->
     <div class="row">
         <div class="d-inline col-12 ">
-
             <h3>Ingredients:</h3>
             {% if ingredients|length != 0 %}
             <ul>
@@ -185,7 +171,6 @@
                 </li>
                 {% endif %}
                 {% endfor %}
-                <!-- {{ ingredients }} -->
             </ul>
             {% else %}
 
@@ -199,6 +184,7 @@
             <hr>
         </div>
     </div>
+    <!-- methods  -->
     <div class="row" id="the_methods">
         <div class="card-body">
             <h3>Methods:</h3>
@@ -238,15 +224,9 @@
                     <ul class="splide__list">
                         {% for image in images %}
                         <li class="splide__slide" data-image_id="{{ image.id }}">
-                            <!-- <div class="splide__slide__container"> -->
-                          
                             <img class="rounded" src="{{ image.recipe_image.url }}" width="100%">
-                        
-                            <!-- </div> -->
                             <div class="font-weight-bold">
-                                <!-- The commenter's name goes here. Check the model if you're not sure what that is -->
                                 <span class=" text-muted font-weight-normal">
-                                    <!-- The comment's created date goes here -->
                                     <span class="text-capitalize text-green-color"><strong>{{ image.user }}</strong></span>
                                     
                                     {% if user.is_authenticated %}
@@ -258,7 +238,6 @@
                                     {% endif %}
                                     {% endif %}
                                     -
-                                    
                                     
                                     {{ image.upload_date|date:"jS F Y" }}
                                 </span> 
@@ -298,12 +277,11 @@
                             <span class="slider round"></span>
                         </label>
                     </span>
-                </div>
-                
+                </div>   
             </div>
         </div>
     </div>
-
+<!-- comments  -->
     <div class="row" id="comments_row">
         <div class="col-md-8 card mb-4  mt-3 comments-section">
             <div>
@@ -346,7 +324,6 @@
         <div class="col-md-4 card mb-4  mt-3 ">
             <div class="card-body">
                 <!-- For comments -->
-
                 {% if user.is_authenticated %}
                 <h3>Leave a comment:</h3>
                 <p>Posting as: {{ user.username }}</p>
@@ -361,16 +338,11 @@
             </div>
         </div>
     </div>
-
-    <!-- new test content -->
-
     <div class="row  d-flex justify-content-center">
-
     </div>
-    <!-- new test content -->
 </div>
 
-
+<!-- recipe image larger modal -->
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -386,6 +358,7 @@
     </div>
   </div>
 
+  <!-- upload an image modal -->
   <!-- Modal -->
 <div class="modal fade" id="staticBackdrop_image_upload" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop_image_uploadLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -420,9 +393,9 @@
 <script>
     {% if user.is_authenticated %}
     const form = document.querySelector('#myForm');
-    var button = form.querySelector('.btn-like');
-    var element = document.querySelector('#fav_count');
-    var currentValue = parseInt(element.innerHTML, 10);
+    let button = form.querySelector('.btn-like');
+    let element = document.querySelector('#fav_count');
+    let currentValue = parseInt(element.innerHTML, 10);
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         const formData = new FormData(form);
@@ -484,8 +457,6 @@
             1000: {
                 perPage: 4,
             }
-
-
         }
     }).mount();
     }
@@ -534,8 +505,6 @@
             .catch(error => console.error(error));
     }
 
-
-
     function removeImageFunction(id) {
         let valid;
         let recipe_slug = '{{ recipe.slug }}';
@@ -563,9 +532,6 @@
             })
             .catch(error => console.error(error));
     }
-
-
-
 
     {% if user.is_authenticated %}
     $('.star_click').hover(function() {
@@ -597,23 +563,17 @@
   });
 
 });
-// const ratingForm = document.querySelector('#the_rating_form_form');
+
 $('.star_click').click( function(){
-    // ratingForm.addEventListener('submit', (event) => {
     event.preventDefault();
     let num = $(this).data("num")+1;
 
     document.getElementById("id_rating").value = num;
-
-
-    
         let formDataRating = new FormData(the_rating_form_form);
 
         let recipe_slug = '{{ recipe.slug }}';
         let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         
-
-
         fetch(`/recipes/${recipe_slug}/`, {
                 method: 'POST',
                 body: formDataRating,

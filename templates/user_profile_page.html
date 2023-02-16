@@ -4,13 +4,10 @@
 {% load cloudinary %}
 
 <head>
-
   <link rel="stylesheet" href="{% static 'css/style_card.css' %}">
-
 </head>
 
 <div class="container-fluid">
-
 
   <div class="row">
     <div class="col">
@@ -81,11 +78,6 @@
                 {% endif %}
               </div>
 
-
-
-
-
-
             </div>
 
             <div class="col-12 col-sm-4">
@@ -97,13 +89,11 @@
             </div>
           </div>
 
-
           {% if user.is_authenticated %}
           <div class="row justify-content-center mt-5">
             <div class="col-8 col-sm-4">
               <div class="row">
                 {% if page_name != user %}
-
 
                 {% if is_following != 0 %}
                 {% if is_following == 1 %}
@@ -126,7 +116,6 @@
                 {% endif %}
                 {% if page_name == user %}
 
-
                 {% if page_name.first_name and page_name.last_name and page_name.user_details.location %}
                 <button class="btn btn-wc-green" data-bs-toggle="modal" data-bs-target="#userProfileModal">
                   Edit Account
@@ -136,8 +125,6 @@
                   Complete Account
                 </button>
                 {% endif %}
-
-
 
                 {% endif %}
               </div>
@@ -149,14 +136,12 @@
     </div>
   </div>
 
-
-
   <div class="row">
     <div class="col">
       <hr>
     </div>
   </div>
-
+<!-- recipe section -->
   <div class="row">
     <div class="col">
       <h2>
@@ -240,7 +225,7 @@
         <hr>
       </div>
     </div>
-
+<!-- Favourite recipe section -->
     <div class="row">
       <div class="col">
         <h2>
@@ -306,15 +291,12 @@
       </div>
     </div>
 
-
     <div class="row">
       <div class="col">
         <hr>
       </div>
     </div>
-  
-  
-  
+<!-- followers section -->
     <div class="row">
       <div class="col">
         <h2>
@@ -336,7 +318,6 @@
                     </div>
                     <div class="col-6 mx-auto my-auto">
 
-                    
                     <p class="card-text">
                       <strong>Status:</strong>
                       <span class="color-slide bg-{{ page_name.user_details.get_status_display|lower }}">
@@ -368,10 +349,9 @@
       </div>
     </div>
 
-  
   </div>
 
-  <!-- Modal -->
+  <!-- Modal for user detail edit -->
   <div class="modal fade" id="userProfileModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="userProfileModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -393,6 +373,7 @@
       </div>
     </div>
   </div>
+
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
   <script>
@@ -404,12 +385,10 @@
         1020: {
           perPage: 2,
           gap: '.7rem',
-      
         },
         700: {
           perPage: 1,
           gap: '.7rem',
-
         },
       },
     }
@@ -453,6 +432,5 @@
     $(this).attr("value", "Following");
 });
   </script>
-
 
   {%endblock%}

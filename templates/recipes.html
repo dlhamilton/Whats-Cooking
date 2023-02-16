@@ -16,14 +16,12 @@
         </div>
     </div>
 
-
     <div class="row">
         <div class="col">
             <hr>
         </div>
     </div>
-
-
+    <!-- filter and search features -->
     <div class="d-flex flex-wrap justify-content-center">
         <div class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto">
 
@@ -44,14 +42,10 @@
                 data-bs-target="#offcanvasFilterScroll" aria-controls="offcanvasFilterScroll">
                 <i class="fa-solid fa-filter"></i> Filter</button>
 
-                
-
             <button class="btn btn-secondary mx-1" type="button" onclick="window.location.href='{% url 'recipes' %}';">
                 <i class="fa-solid fa-rotate"></i> Reset</button>
         </div>
-
-      
-
+        <!-- search bar -->
         <form class="col-12 col-lg-auto mb-3 mb-lg-0" id="search_recipe_bar" method="get"
             action="{% url 'recipes_search' %}">
             <div class="input-group">
@@ -61,8 +55,6 @@
                 {% endfor %}
             </div>
         </form>
-
-
     </div>
 
     <div class="row">
@@ -82,7 +74,6 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-
             </div>
         </div>
     </div>
@@ -98,8 +89,7 @@
 
     <div class="container-fluid">
     <div class="row">
-
-        <!-- Blog Entries Column -->
+        <!-- recipe list -->
         <div class="col-12 left">
             <div class="row">
                 {% for recipe in recipes_list %}
@@ -107,9 +97,7 @@
                     <div class="card mb-4">
                         <div class="card-body index-card-body">
                             <div class="image-container">
-                            
                                 <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
-                                
                                 <div class="image-flash">
                                     <a class="text-decoration-none text-reset"
                                         href="{% url 'profile_page' recipe.author %}">
@@ -141,7 +129,6 @@
                         </div>
                     </div>
                 </div>
-
                 {% if forloop.counter|divisibleby:3 %}
             </div>
             <div class="row">
@@ -151,12 +138,10 @@
         </div>
     </div>
 
-
 <div class="row p-0 my-3">
         <span class="text-center">Page {{ recipes_list.number }} of {{ recipes_list.paginator.num_pages }}</span>
     </div>
 
-    
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             {% if recipes_list.has_previous %}
@@ -169,18 +154,11 @@
             {% endif %}
         </ul>
     </nav>
-
-
- 
-
-
-
-
-
     {% endif %}
 </div>
 </div>
 
+<!-- recipe ingredients side -->
 <div class="offcanvas offcanvas-start recipe-page" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
     id="offcanvasFilterScroll" aria-labelledby="offcanvasFilterScrollLabel">
     <div class="offcanvas-header">
@@ -198,15 +176,10 @@
             <input class="btn btn-primary" type="submit" value="Go">
             <button class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close">Close</button>
         </form>
-
-
     </div>
     <div class="offcanvas-footer">
-        
     </div>
 </div>
-
-
 
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"
     integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -216,17 +189,14 @@
             $('#search_recipe_bar').submit();
         });
 
-
         $('#search_query').focus();
 
-        var input = $('#search_query')[0];
-        var length = input.value.length;
+        let input = $('#search_query')[0];
+        let length = input.value.length;
         input.setSelectionRange(length, length);
         input.focus();
 
-
-
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        let checkboxes = document.querySelectorAll('input[type="checkbox"]');
         checkboxes.forEach(function (checkbox) {
 
             let filter = checkbox.getAttribute('id');
@@ -238,24 +208,18 @@
             label.classList.add('unchecked');
             checkbox.removeAttribute('checked');
 
-            // Add a change event listener to update sessionStorage
             checkbox.addEventListener('change', function () {
-                // sessionStorage.setItem(filter, this.checked);
-
                 if (label.classList.contains('unchecked')) {
-                    // the element has the class-name class
                     checkbox.setAttribute('checked', 'checked');
                     label.classList.remove('unchecked');
                     label.classList.add('checked');
                 } else {
-                    // the element does not have the class-name class
                     label.classList.add('unchecked');
                     label.classList.remove('checked');
                     checkbox.removeAttribute('checked');
                 }
             });
         });
-
     });
 </script>
 {%endblock%}

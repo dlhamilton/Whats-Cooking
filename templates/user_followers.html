@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 
-
 <div class="container-fluid">
   <div class="row">
     <div class="col">
@@ -18,7 +17,6 @@
     </div>
   </div>
 
-
   <div class="row">
     <div class="col">
   <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}">
@@ -31,7 +29,6 @@
         <hr>
       </div>
     </div>
-
 
   <div class="row">
     <div class="col">
@@ -47,6 +44,7 @@
 
   <div class="row">
     <div class="col">
+      <!-- user followers list -->
       {% if page_name.user_details.number_of_follows > 0 %}
 
       {% for follow in user_follow_rating %}
@@ -81,9 +79,8 @@
                             </span>
                         </div>
     
-    
-    
                     </div>
+                    <!-- following button -->
                     {% if user.is_authenticated %}
                     {% if follow != user %}
                     {% if follow.is_following_data != 0 %}
@@ -162,7 +159,6 @@ $(".following_btn_blue_sm").hover(function(){
 }, function(){
     $(this).html('<i class="fas fa-user"></i>');
 });
-
 
 </script>
 
