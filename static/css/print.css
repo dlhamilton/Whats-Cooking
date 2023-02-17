@@ -1,0 +1,18 @@
+@media print {
+    /* Hide the header and footer */
+    header, footer {
+      display: none;
+    }
+  
+    /* Adjust the layout and font size of the printed content */
+    body {
+      margin: 0;
+      font-size: 12pt;
+      visibility:hidden;
+    }
+  
+    /* Specify which elements should be printed */
+    .printable {
+      visibility:visible;
+    }
+  }

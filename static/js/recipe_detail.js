@@ -197,3 +197,7 @@ $('.star_click').click( function(){
 });
 
 }
+
+document.getElementById("printButton").addEventListener("click", function() {
+    window.print();
+  });
