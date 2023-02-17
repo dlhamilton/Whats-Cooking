@@ -364,6 +364,9 @@
           <div class="modal-body">
             {% csrf_token %}
             {{ user_form.as_p }}
+            <p><a href="{% url 'account_change_password' %}" class="post-link">Change Password</a></p>
+            <p><a href="{% url 'account_email' %}" class="post-link">Change Email Address</a></p>
+            <p><a href="{% url 'socialaccount_connections' %}" class="post-link">Add/ Remove Social Accounts</a></p>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

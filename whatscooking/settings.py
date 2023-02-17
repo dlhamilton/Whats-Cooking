@@ -21,9 +21,8 @@ development = os.environ.get('DEVELOPMENT', False)
 
 # AllAuth Settings
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
-# test
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -34,6 +33,9 @@ EMAIL_USE_TLS = True
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 DEFAULT_FROM_EMAIL = os.environ.get("EMAIL_HOST_USER")
 
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 900  # 15 minutes in seconds
+
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
@@ -41,8 +43,7 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
-# end test
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
