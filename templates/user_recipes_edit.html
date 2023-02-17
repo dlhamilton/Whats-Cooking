@@ -371,7 +371,6 @@
   </div>
 </div>
 
-
 <!-- Modal new ingredient to db-->
 <div class="modal fade" id="new_ingredient_staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="new_ingredient_staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -394,117 +393,23 @@
     </div>
   </div>
 </div>
-
-<script>
-  let imModal = document.getElementById('im_staticBackdrop')
-  imModal.addEventListener('show.bs.modal', function (event) {
-    let button = event.relatedTarget
-    let ingredients = button.getAttribute('data-bs-ingredient')
-    let ingredients_id = button.getAttribute('data-bs-ingredient_id')
-    let modalTitle = imModal.querySelector('.ingredient_modal .modal-title')
-    let modalBodyInput = imModal.querySelector('.ingredient_modal .modal-body .ingredient_input input')
-
-    modalTitle.textContent = ingredients
-    modalBodyInput.value = ingredients_id
-    document.getElementById("id_amount").value = "";
-    document.getElementById("id_unit").selectedIndex = 0;
-  })
-
-  let rModal = document.getElementById('r_staticBackdrop')
-  rModal.addEventListener('show.bs.modal', function (event) {
-  })
-
-  let mmModal = document.getElementById('mm_staticBackdrop')
-  mmModal.addEventListener('show.bs.modal', function (event) {
-    let button = event.relatedTarget
-    let methods_order = button.getAttribute('data-bs-method_order')
-    let methods = button.getAttribute('data-bs-method')
-    let methods_id = button.getAttribute('data-bs-method_id')
-    let modalTitle = mmModal.querySelector('.method_modal .modal-title')
-    let modalBodyInput = mmModal.querySelector('.method_modal .modal-body textarea')
-
-    document.getElementById("the_method_form_id").value = methods_id;
-
-    modalTitle.textContent = "{{ recipe.title }} method - "+ methods_order
-    modalBodyInput.value = methods
-  })
-
-  let remove_button = document.getElementById("remove-method");
-  if (remove_button){
-  remove_button.addEventListener("click",  function(){removeIngredients(-1,"Methods")});
-  }
-
-  function removeIngredients(id,model) {
-    if (id == -1){
-      id = document.querySelector("#methods_section ul li:last-child").dataset.method_id;
-    }
-    let valid;
-    let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
-    fetch(`{% url 'profile_page_recipes_edit' user.username recipe.slug %}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRFToken': csrf_token,
-        },
-        body: JSON.stringify({
-          'id': id,
-          'model': model
-        })
-      })
-      .then(response => {
-        if (response.ok) {
-          valid = response
-          return response.json();
-        }
-        throw new Error(response.statusText);
-      })
-      .then(data => {
-        console.log(data.message);
-        console.log(valid);
-        if (valid.ok) {
-          if (model == "Methods"){
-            let method = document.querySelector(`[data-method_id="${id}"]`);
-            method.innerHTML = `<div class="alert alert-warning" role="alert">
-  This Method has been removed.
-</div>`;
-          setTimeout(function () {
-            method.remove();
-            if (data.last == 0){
-            location.reload();
-          }
-          }, 2500);
-          }
-          else{
-          let comment = document.querySelector(`[data-comment_id="${id}"]`);
-          comment.innerHTML = `<div class="alert alert-warning" role="alert">
-  This ingredient has been removed.
-</div>`;
-          setTimeout(function () {
-            comment.remove();
-          }, 2500);
-        }
-        } else {
-          console.log(data.message);
-        }
-      })
-      .catch(error => console.error(error));
-  }
-
-  {% if go_to_id_id %}
-  document.addEventListener("DOMContentLoaded", function() {
-    let element = document.getElementById("{{ go_to_id_id|safe }}");
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
-});
-  {% endif %}
-
-  let popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
-  let popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
-  return new bootstrap.Popover(popoverTriggerEl)
-});
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous">
 </script>
-
+<script>
+  let recipeTitle = '{{ recipe.title }}';
+  let fetchURL = `{% url 'profile_page_recipes_edit' user.username recipe.slug %}`;
+</script>
+{% if go_to_id_id %}
+    <script>
+        let goToIdIdBool = true;
+        let goToIdId = "{{ go_to_id_id|safe }}";
+    </script>
+{% else %}
+    <script>
+        let goToIdIdBool = false;
+        let goToIdId = "";
+    </script>
+{% endif %}
+<script src="{% static 'js/user_recipes_edit.js' %}"></script>
 {%endblock%}
