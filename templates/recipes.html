@@ -162,10 +162,17 @@
 <div class="offcanvas offcanvas-start recipe-page" data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"
     id="offcanvasFilterScroll" aria-labelledby="offcanvasFilterScrollLabel">
     <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasFilterScrollLabel">Ingredient Filter</h5>
+        <h4 class="offcanvas-title text-orange-color" id="offcanvasFilterScrollLabel">Ingredients</h4>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
+        <h5>The Top 5 Ingredients <i class="fa-solid fa-arrow-down-1-9"></i></h5>
+
+        {% for ingredient, count in top_ingredients %}
+            <p class="text-capitalize mb-1"><span class="text-green-color">{{ ingredient }}</span> ({{ count }} Recipes)</p>
+        {% endfor %}
+
+        <h5 class="mt-4">Ingredient Filter <i class="fa-solid fa-bowl-food"></i></h5>
         <p>Select the ingredients you would like to have in the recipe</p>
         <p>Below is a list of all ingredients:</p>
 

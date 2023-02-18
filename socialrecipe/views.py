@@ -2,6 +2,7 @@
 Social recipe views
 """
 import json
+from collections import Counter
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import View
 from django.http import HttpResponseRedirect, JsonResponse
@@ -150,6 +151,14 @@ class RecipesList(View):
                         'prep_time')+F(
                             'cook_time')).order_by('total_time')
         return recipes_list
+    
+    def top_5_ingredients(self):
+        '''
+        get the most common ingredients
+        '''
+        ingredients_list = RecipeItems.objects.values_list('ingredients__name', flat=True)
+        top_ingredients = Counter(ingredients_list).most_common(5)
+        return top_ingredients
 
     def get(self, request, **kwargs):
         '''
@@ -189,6 +198,7 @@ class RecipesList(View):
                 "query": query,
                 "filter_form": filter_form,
                 "searched_ingri_list": recipe_elm,
+                "top_ingredients": self.top_5_ingredients(),
             }
         )
 
