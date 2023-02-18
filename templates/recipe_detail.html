@@ -11,13 +11,13 @@
     <div class="container-fluid">
         <div class="row g-0">
             <div class="col-md-6 masthead-text printable">
-                <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'recipes' %}">
+                <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'recipes' %}" title="Go to recipes page">
                         <i class="fa-solid fa-chevron-left"></i>Back</a></span>
                 <!-- Recipe title -->
                 <h1 class="post-title text-capitalize">
                     {{ recipe.title }}
                     {% if user == recipe.author %}    
-                    <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link">
+                    <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link" title="Go to recipe edit page">
                         <div class="btn btn-primary">Edit</div>
                     </a>
                     {% endif %}
@@ -27,7 +27,7 @@
                     Recipe by:
                     <span class="text-uppercase">
                         <strong>
-                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}">
+                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}" title="Go to user profile page">
                                 {{ recipe.author }}
                             </a>
                         </strong>
@@ -37,7 +37,7 @@
             </div>
             <div class="d-none d-md-block col-md-6 masthead-image">
                 <!-- The image URL  --> 
-                <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675121604/site_images/banner.webp" width="100%">
+                <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675121604/site_images/banner.webp" alt="Banner image of cooking" width="100%">
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@
             <p class="card-text mt-2">
                 <form method="post" id="the_rating_form_form" name="the_rating_form_form">
                 {% for _ in star_loop %}
-                <button type="submit" class="btn-no-style" data-num="{{ forloop.counter0 }}">
+                <button type="submit" class="btn-no-style" data-num="{{ forloop.counter0 }}" aria-label="rate recipe">
                     {% if rated == False %}
                 <i class="fa-solid fa-star star_click" data-fill="fill" data-num="{{ forloop.counter0 }}"></i>          
             {% else %}
@@ -80,7 +80,7 @@
             </button>
                 {% endfor %}
                 {% for i in empty_star_loop %}
-                <button type="submit" class="btn-no-style">
+                <button type="submit" class="btn-no-style" aria-label="rate recipe">
                 <i class="fa-regular fa-star star_click" data-fill="clear" data-num="{{ i }}"></i>
             </button>
                 {% endfor %}
@@ -99,10 +99,10 @@
                 {% endfor %}
             </p>
             {% endif %}
-            <button id="printButton" class="btn post-link-green"><i class="fa-solid fa-print"></i> Print</button>
+            <button id="printButton" class="btn post-link-green" aria-label="Print recipe button"><i class="fa-solid fa-print"></i> Print</button>
         </div>
         <div class="d-inline col-6">
-            <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3 max_width_recipe_img" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <img src="{{ recipe.recipe_image.url }}" alt="Image of the recipe" width="100%" class="rounded-3 max_width_recipe_img" data-bs-toggle="modal" data-bs-target="#exampleModal">
         </div>
     </div>
     <div class="row recipe_icons mt-4 printable">
@@ -112,11 +112,11 @@
                 <form id="myForm" class="d-inline" method="POST">
                     {% csrf_token %}
                     {% if favourited %}
-                    <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
+                    <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like" aria-label="Make recipe a favourite">
                         <i class="fas fa-heart"></i>
                     </button>
                     {% else %}
-                    <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like">
+                    <button type="submit" name="recipe_id" value="{{recipe.slug}}" class="btn-like" aria-label="remove recipe as favourite">
                         <i class="far fa-heart"></i>
                     </button>
                     {% endif %}
@@ -130,7 +130,7 @@
 
         </div>
         <div class="col-4 col-md-2 text-center">
-            <a class="text-decoration-none text-reset" href="#the_methods">
+            <a class="text-decoration-none text-reset" href="#the_methods" title="Go to methods section">
                 {% with methods.count as total_methods %}
                 <strong class="text-secondary"><i class="fas fa-list-ul"></i>
                     {{ total_methods }}
@@ -139,7 +139,7 @@
             </a>
         </div>
         <div class="col-4 col-md-2 text-center">
-            <a class="text-decoration-none text-reset" href="#the_comments">
+            <a class="text-decoration-none text-reset" href="#the_comments" title="Go to comments section">
                 {% with comments.count as total_comments %}
                 <strong class="text-secondary"><i class="far fa-comments"></i>
                     {{ total_comments }}
@@ -213,7 +213,7 @@
             <h3>Pictures:</h3>
         {% if user.is_authenticated %}
         <div class="col-sm-2 card mb-4  mt-3 ">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_image_upload">Upload</button>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_image_upload" aria-label="Upload image for recipe">Upload</button>
         </div>
         {% endif %}
     </div>
@@ -225,7 +225,7 @@
                     <ul class="splide__list">
                         {% for image in images %}
                         <li class="splide__slide" data-image_id="{{ image.id }}">
-                            <img class="rounded" src="{{ image.recipe_image.url }}" width="100%">
+                            <img class="rounded" src="{{ image.recipe_image.url }}" width="100%" alt="User profile image">
                             <div class="font-weight-bold">
                                 <span class=" text-muted font-weight-normal">
                                     <span class="text-capitalize text-green-color"><strong>{{ image.user }}</strong></span>
@@ -233,7 +233,7 @@
                                     {% if user.is_authenticated %}
                                     {% if user == image.user %}
                                     <button id="remove_image_button" onclick="removeImageFunction({{ image.id }})"
-                                    data-id="{{ image.id }}" class="btn-no-style">
+                                    data-id="{{ image.id }}" class="btn-no-style" aria-label="remove recipe image">
                                         <i class="fa-solid fa-ban"></i>
                                     </button> 
                                     {% endif %}
@@ -291,9 +291,9 @@
                 <div class="card p-3 mt-2 " data-comment_id="{{ comment.id }}">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="user d-flex flex-row align-items-center">
-                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' comment.user %}">
+                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' comment.user %}" title="Go to user profile page">
                                 <img src="{{ comment.user.user_details.user_image.url }}" width="30" height="30"
-                                    class="user-img rounded-circle mr-2">
+                                    class="user-img rounded-circle mr-2" alt="User profile image">
                                 <span class="font-weight-bold text-primary margin-l-name">{{ comment.user }}</span></a>
                         </div>
                         <small class="d-none d-sm-block">{{ comment.post_date|date:"jS F Y, P" }}</small>
@@ -331,7 +331,7 @@
                 <form method="post" style="margin-top: 1.3em;">
                     {{ comment_form | crispy }}
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-wc-green btn-lg mt-1">Submit Comment</button>
+                    <button type="submit" class="btn btn-wc-green btn-lg mt-1" aria-label="Submit a comment">Submit Comment</button>
                     <input type="hidden" name="the_comment_form" value="the_comment_form">
                 </form>
 
@@ -353,7 +353,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <img src="{{ recipe.recipe_image.url }}" width="100%">
+            <img src="{{ recipe.recipe_image.url }}" width="100%" alt="Final image of the meal">
         </div>
       </div>
     </div>
@@ -377,8 +377,8 @@
                 <input type="hidden" name="the_image_form" value="the_image_form">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-wc-green">Submit Image</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="submit" class="btn btn-wc-green" aria-label="Submit an image">Submit Image</button>
         </div>
     </form>
       </div>

@@ -26,23 +26,23 @@
         <div class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto">
 
             <div class="dropdown">
-                <a class="btn btn-dark dropdown-toggle mx-1" href="#" role="button" id="dropdownMenuLink"
+                <a class="btn btn-dark dropdown-toggle mx-1" href="#" role="button" id="dropdownMenuLink" title="Dropdown sort options"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-arrow-down-wide-short"></i>Sort
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'name' %}">Name</a></li>
-                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'rating' %}">Rating</a></li>
-                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'favourite' %}">Favourites</a></li>
-                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'date' %}">Newest</a></li>
-                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'time' %}">Quickest</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'name' %}" title="Sort recipes by name">Name</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'rating' %}" title="Sort recipes by rating">Rating</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'favourite' %}" title="Sort recipes by favourite">Favourites</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'date' %}" title="Sort recipes by date">Newest</a></li>
+                    <li><a class="dropdown-item" href="{% url 'recipes_sort' 'time' %}" title="Sort recipes by time">Quickest</a></li>
                 </ul>
             </div>
             <button class="btn btn-dark mx-1" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasFilterScroll" aria-controls="offcanvasFilterScroll">
+                data-bs-target="#offcanvasFilterScroll" aria-controls="offcanvasFilterScroll" aria-label="Open filter tab">
                 <i class="fa-solid fa-filter"></i> Filter</button>
 
-            <button class="btn btn-secondary mx-1" type="button" onclick="window.location.href='{% url 'recipes' %}';">
+            <button class="btn btn-secondary mx-1" type="button" onclick="window.location.href='{% url 'recipes' %}';" aria-label="Reset the filters">
                 <i class="fa-solid fa-rotate"></i> Reset</button>
         </div>
         <!-- search bar -->
@@ -97,15 +97,15 @@
                     <div class="card mb-4">
                         <div class="card-body index-card-body">
                             <div class="image-container">
-                                <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
+                                <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
                                 <div class="image-flash">
                                     <a class="text-decoration-none text-reset"
-                                        href="{% url 'profile_page' recipe.author %}">
+                                        href="{% url 'profile_page' recipe.author %}" title="Go to user profile page">
                                         <p class="author">Recipe by: {{ recipe.author }}</p>
                                     </a>
                                 </div>
                             </div>
-                            <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                            <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                                 <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}</h2>
                                 <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
                             </a>
@@ -145,11 +145,11 @@
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             {% if recipes_list.has_previous %}
-            <li><a href="?page={{ recipes_list.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
+            <li><a href="?page={{ recipes_list.previous_page_number }}" class="page-link" title="Go to previous recipe page">&laquo; PREV </a></li>
             {% endif %}
             
             {% if recipes_list.has_next %}
-            <li><a href="?page={{ recipes_list.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
+            <li><a href="?page={{ recipes_list.next_page_number }}" class="page-link" title="Go to next recipe page"> NEXT &raquo;</a></li>
 
             {% endif %}
         </ul>

@@ -19,7 +19,7 @@
 
   <div class="row">
     <div class="col">
-  <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}">
+  <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}" title="Go to user profile page">
     <i class="fa-solid fa-chevron-left"></i>Back</a></span>
   </div>
 </div>
@@ -45,8 +45,8 @@
   <div class="row">
     <div class="col">
       {% if page_name == user %}
-      <a href="{% url 'profile_page_recipes_add' user.username %}" class="post-link">
-        <button type="button" class="btn btn-outline-primary">
+      <a href="{% url 'profile_page_recipes_add' user.username %}" class="post-link" title="Go to user recipes add page">
+        <button type="button" class="btn btn-outline-primary" aria-label="create new reicpe button">
           <i class="fa-regular fa-square-plus"></i> Create New
         </button>
       </a>
@@ -65,9 +65,7 @@
                 <div class="card mb-4">
                   <div class="card-body index-card-body">
                     <div class="image-container">
-        
-                        <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
-                  
+                        <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
                       {% if page_name == user %}
                         {% if recipe.status == 1 %}
                           <div class="pub_button_img_flash pub rounded">
@@ -79,13 +77,13 @@
                           </div>
 
                           <div class="edit_button_img_flash">
-                            <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link">
+                            <a href="{% url 'profile_page_recipes_edit' user.username recipe.slug %}" class="post-link" title="Go to user recipes edit page">
                               <div class="btn btn-primary">Edit</div>
                             </a>
                           </div>
                       {% endif %}
                     </div>
-                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                       <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}</h2>
                       <p class="card-text card-h-small">{{ recipe.excerpt }}</p>
                     </a>
@@ -126,11 +124,11 @@
     <nav aria-label="Page navigation">
         <ul class="pagination justify-content-center">
             {% if recipe_list.has_previous %}
-            <li><a href="?page={{ recipe_list.previous_page_number }}" class="page-link">&laquo; PREV </a></li>
+            <li><a href="?page={{ recipe_list.previous_page_number }}" class="page-link" title="Go to previous recipe page">&laquo; PREV </a></li>
             {% endif %}
             
             {% if recipe_list.has_next %}
-            <li><a href="?page={{ recipe_list.next_page_number }}" class="page-link"> NEXT &raquo;</a></li>
+            <li><a href="?page={{ recipe_list.next_page_number }}" class="page-link" title="Go to next recipe page"> NEXT &raquo;</a></li>
 
             {% endif %}
         </ul>

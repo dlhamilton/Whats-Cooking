@@ -28,10 +28,10 @@
   </div>
   <div class="row">
     <div class="col">
-      <a href="{% url 'recipe_detail' recipe.slug %}"><button class="btn btn-secondary mx-2">Show Recipe</button></a>
-      <a href="{% url 'profile_page_recipes' user.username %}"><button
-          class="btn btn-wc-green mx-2">Finished</button></a>
-          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_staticBackdrop">Delete</button>
+      <a href="{% url 'recipe_detail' recipe.slug %}" title="Go to recipe details page"><button class="btn btn-secondary mx-2" aria-label="Show recipe">Show Recipe</button></a>
+      <a href="{% url 'profile_page_recipes' user.username %}" title="Go to user recipes page"><button
+          class="btn btn-wc-green mx-2" aria-label="Finish the recipe">Finished</button></a>
+          <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_staticBackdrop" aria-label="Delete recipe">Delete</button>
     </div>
   </div>
 
@@ -64,14 +64,14 @@
           <div class="h2 text-success">Published</div>
           {% endif %}
           <button type="button" class="btn btn-wc-orange mt-1" data-bs-toggle="modal"
-            data-bs-target="#r_staticBackdrop">
+            data-bs-target="#r_staticBackdrop" aria-label="update the recipe detail tab">
             Update Recipe Details
           </button>
 
         </div>
         <div class="d-inline col-md-4 offset-md-1 mb-4">
 
-          <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3">
+          <img src="{{ recipe.recipe_image.url }}" width="100%" class="rounded-3" alt="Image of the recipe">
          
         </div>
       </div>
@@ -107,7 +107,7 @@
         </div>
 
         {% if results_count < 9  %}
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#new_ingredient_staticBackdrop">Add New Ingredient</button>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#new_ingredient_staticBackdrop" aria-label="add new ingredient to recipe" >Add New Ingredient</button>
         {% endif %}
         <ul class="list-group">
 
@@ -117,7 +117,7 @@
             
             <button type="button" class="btn btn-primary btn-block w-100 text-capitalize" data-bs-toggle="modal"
               data-bs-target="#im_staticBackdrop" data-bs-ingredient_id="{{ ingredients.id }}"
-              data-bs-ingredient="{{ ingredients }}">
+              data-bs-ingredient="{{ ingredients }}" aria-label="{{ ingredients }}">
               {{ ingredients }}
               {% if ingredients.approved == False %}
               <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-content="Waiting to be approved">
@@ -132,18 +132,18 @@
           {% if paginator.has_previous %}
           {% if form.search_term.value %}
           <a class="btn btn-outline-dark"
-            href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}">Previous</a>
+            href="?search_term={{ form.search_term.value }}&page={{ paginator.previous_page_number }}" title="Go to previous ingredients search page">Previous</a>
           {% else %}
-          <a class="btn btn-outline-dark" href="?page={{ paginator.previous_page_number }}">Previous</a>
+          <a class="btn btn-outline-dark" href="?page={{ paginator.previous_page_number }}" title="Go to previous ingredients page">Previous</a>
           {% endif %}
           {% endif %}
           <span class="current-page mx-3">Page {{ paginator.number }} of {{ paginator.paginator.num_pages }}</span>
           {% if paginator.has_next %}
           {% if form.search_term.value %}
           <a class="btn btn-outline-dark"
-            href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}">Next</a>
+            href="?search_term={{ form.search_term.value }}&page={{ paginator.next_page_number }}" title="Go to next ingredients search page">Next</a>
           {% else %}
-          <a class="btn btn-outline-dark" href="?page={{ paginator.next_page_number }}">Next</a>
+          <a class="btn btn-outline-dark" href="?page={{ paginator.next_page_number }}" title="Go to next ingredients page">Next</a>
           {% endif %}
           {% endif %}
         </div>
@@ -224,7 +224,7 @@
         <li class="mb-2 list-group-item" data-method_id="{{ method.id }}">
         {{ method.order }} <p>{{ method.method|safe }}</p>
           <button type="button" class="btn" data-bs-toggle="modal"
-              data-bs-target="#mm_staticBackdrop" data-bs-method_id="{{ method.id }}" data-bs-method="{{ method.method }}" data-bs-method_order="{{ method.order }}">
+              data-bs-target="#mm_staticBackdrop" data-bs-method_id="{{ method.id }}" data-bs-method="{{ method.method }}" data-bs-method_order="{{ method.order }}" aria-label="Write a new method">
               <span class="post-link-green">
                 <i class="fa-regular fa-pen-to-square"></i>
               </span>
@@ -232,7 +232,7 @@
       </li>
         {% endfor %}
       </ul>
-      <button class="btn btn-danger" id="remove-method">Remove Method</button>
+      <button class="btn btn-danger" id="remove-method" aria-label="Remove method from recipe">Remove Method</button>
         {% else %}
 
         <h4>No Methods</h4>
@@ -251,9 +251,9 @@
 
   <div class="row">
     <div class="col">
-      <a href="{% url 'recipe_detail' recipe.slug %}"><button class="btn btn-secondary mx-2">Show Recipe</button></a>
-      <a href="{% url 'profile_page_recipes' user.username %}"><button
-          class="btn btn-wc-green mx-2">Finished</button></a>
+      <a href="{% url 'recipe_detail' recipe.slug %}" title="Go to recipes details page"><button class="btn btn-secondary mx-2" aria-label="Go to recipes details page">Show Recipe</button></a>
+      <a href="{% url 'profile_page_recipes' user.username %}" title="Go to user recipes page"><button
+          class="btn btn-wc-green mx-2" aria-label="Go to user recipes page">Finished</button></a>
     </div>
   </div>
 
@@ -289,8 +289,8 @@
           <input type="hidden" name="the_ingredient_form" value="the_ingredient_form">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Add Ingredient</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="submit" class="btn btn-primary" aria-label="Add ingredient button">Add Ingredient</button>
         </div>
       </form>
     </div>
@@ -313,8 +313,8 @@
           <input type="hidden" name="the_recipe_form" value="the_recipe_form">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-wc-green">Update Recipe</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="submit" class="btn btn-wc-green" aria-label="Update the recipe button">Update Recipe</button>
         </div>
       </form>
     </div>
@@ -338,8 +338,8 @@
           <input type="hidden" name="the_method_form_id" id="the_method_form_id" value="">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-wc-green">Update Methods</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+          <button type="submit" class="btn btn-wc-green" aria-label="Update methods button">Update Methods</button>
         </div>
       </form>
     </div>
@@ -359,12 +359,12 @@
         Please confirm that you want to delete the recipe.
       </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
           <form method="post">
           {% csrf_token %}
           <input type="hidden" name="id" value="{{ recipe.id }}">
           <input type="hidden" name="the_delete_form" value="the_delete_form">
-          <button type="submit" class="btn btn-danger">Delete Recipe</button>
+          <button type="submit" class="btn btn-danger" aria-label="Delete the recipe">Delete Recipe</button>
         </form>
         </div>
     </div>
@@ -386,8 +386,8 @@
         <input type="hidden" name="the_ingredients_form" value="the_ingredients_form">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Add</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+        <button type="submit" class="btn btn-primary" aria-label="Add ingredient">Add</button>
       </div>
     </form>
     </div>

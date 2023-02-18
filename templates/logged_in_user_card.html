@@ -10,15 +10,15 @@
             <div class="user-profile-card-title-wrapper">
                 <!-- The profile Picture -->
                 <a class="text-decoration-none text-reset hide_small"
-                    href="{% url 'profile_page' page_name.username %}">
+                    href="{% url 'profile_page' page_name.username %}" title="Go to user profile page">
                     <img src="{{ page_name.user_details.user_image.url }}" class="user-profile-card-img"
-                        alt="profile pic">
+                        alt="User profile picture">
                 </a>
                 <!-- user details -->
                 <div class="user-profile-card-meeting-info">
                     <span class="text-uppercase post-link">
                         <strong><a class="text-decoration-none text-reset"
-                                href="{% url 'profile_page' page_name.username %}">{{ page_name.username }}</a></strong>
+                                href="{% url 'profile_page' page_name.username %}" title="Go to user profile page">{{ page_name.username }}</a></strong>
                         {% if page_name.user_details.location != "" %}
                         <span
                             class="text-capitalize user-profile-card-lrg">({{ page_name.user_details.location }})</span>
@@ -45,10 +45,10 @@
                 <form name="follow_submit" method="post">
                     {% csrf_token %}
                     {{ follow_form }}
-                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-wc-green">
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-wc-green" aria-label="Follow user">
                     Follow
                     </button>
-                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-wc-green">
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-wc-green" aria-label="Follow user">
                         <i class="fas fa-user-plus"></i>
                         </button>
                 </form>
@@ -57,10 +57,10 @@
                 <form name="follow_submit" method="post">
                     {% csrf_token %}
                     {{ unfollow_form }}
-                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary" id="following_btn_blue">
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary" id="following_btn_blue" aria-label="Unfollow user">
                     Following
                     </button>
-                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary" id="following_btn_blue_sm">
+                    <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary" id="following_btn_blue_sm" aria-label="Unfollow user">
                         <i class="fas fa-user"></i>
                         </button>
                 </form>
@@ -96,7 +96,7 @@
             <!-- User page links-->
             <div class="row justify-content-center">
                 <div class="col-4 text-center d-inline">
-                    <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
+                    <a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link" title="Go to user favourites recipe page">
                         <strong>
                             <i class="fas fa-heart text-orange-color profile_icons"></i>
                         </strong>
@@ -104,7 +104,7 @@
                     </a>
                 </div>
                 <div class="col-4 text-center d-inline">
-                    <a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
+                    <a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link" title="Go to user recipe page">
                         <strong>
                             <i class="fas fa-utensils text-orange-color profile_icons"></i>
                         </strong>
@@ -112,7 +112,7 @@
                     </a>
                 </div>
                 <div class="col-4 text-center d-inline">
-                    <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
+                    <a href="{% url 'profile_page_followers' page_name.username %}" class="post-link" title="Go to user followers page">
                         <strong>
                             <i class="fas fa-user-friends text-orange-color profile_icons"></i>
                         </strong>

@@ -84,7 +84,7 @@
 
               <p><strong>Profile Image:</strong> </p>
               <img src="{{ page_name.user_details.user_image.url }}"
-                class="img-thumbnail img-fluid rounded profile_img_size mx-auto d-block d-sm-inline" alt="profile pic">
+                class="img-thumbnail img-fluid rounded profile_img_size mx-auto d-block d-sm-inline" alt="User profile image">
 
             </div>
           </div>
@@ -117,11 +117,11 @@
                 {% if page_name == user %}
 
                 {% if page_name.first_name and page_name.last_name and page_name.user_details.location %}
-                <button class="btn btn-wc-green" data-bs-toggle="modal" data-bs-target="#userProfileModal">
+                <button class="btn btn-wc-green" data-bs-toggle="modal" data-bs-target="#userProfileModal" aria-label="Edit account details">
                   Edit Account
                 </button>
                 {% else %}
-                <button class="btn btn-wc-yellow" data-bs-toggle="modal" data-bs-target="#userProfileModal">
+                <button class="btn btn-wc-yellow" data-bs-toggle="modal" data-bs-target="#userProfileModal" aria-label="Complete account details">
                   Complete Account
                 </button>
                 {% endif %}
@@ -149,8 +149,8 @@
       </h2>
 
       {% if page_name == user %}
-      <p><a href="{% url 'profile_page_recipes_add' user.username %}" class="post-link">
-        <button type="button" class="btn btn-outline-primary">
+      <p><a href="{% url 'profile_page_recipes_add' user.username %}" class="post-link" title="Go to add new recipe page">
+        <button type="button" class="btn btn-outline-primary" aria-label="Go to add new recipe page">
           <i class="fa-regular fa-square-plus"></i> Create New
         </button>
       </a></p>
@@ -177,10 +177,9 @@
                   {% endif %}
               
                       <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
-                        src="{{ recipe.recipe_image.url }}">
-                   
+                        src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
                     </div>
-                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                       <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}
                         {% if recipe.status == 0 %}
                         <i class="fa-solid fa-link-slash"></i>
@@ -212,7 +211,7 @@
             </div>
           </div>
         </div>
-        <p class="mt-2 post-link"><a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link">
+        <p class="mt-2 post-link"><a href="{% url 'profile_page_recipes' page_name.username %}" class="post-link" title="Go to users recipe page">
             View All</a></p>
         {% else %}
         <p><strong>No Recipes</strong></p>
@@ -243,15 +242,14 @@
                     <div class="image-container">
                   
                       <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
-                        src="{{ recipe.recipe_image.url }}">
-                  
+                        src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
                       <div class="image-flash">
-                        <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}">
+                        <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}" title="Go to user profile page">
                           <p class="author">Recipe by: {{ recipe.author }}</p>
                         </a>
                       </div>
                     </div>
-                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+                    <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                       <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}
                         {% if recipe.status == 0 %}
                         <i class="fa-solid fa-link-slash"></i>
@@ -283,7 +281,7 @@
             </div>
           </div>
         </div>
-        <p class="mt-2 post-link"><a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link">
+        <p class="mt-2 post-link"><a href="{% url 'profile_page_favourites' page_name.username %}" class="post-link" title="Go to user favorite recipes page">
             View All</a></p>
         {% else %}
         <p><strong>No Favourite Recipes</strong></p>
@@ -314,7 +312,7 @@
                     <h5 class="card-title text-capitalize text-truncate text-center">{{ follow }}</h5>
                     <div class="row">
                     <div class="col-4 p-0">
-                      <img src="{{ follow.user_details.user_image.url }}" class="rounded w-100" alt="profile pic">
+                      <img src="{{ follow.user_details.user_image.url }}" class="rounded w-100" alt="User profile image">
                     </div>
                     <div class="col-6 mx-auto my-auto">
 
@@ -327,8 +325,8 @@
                         </span>
                       </span>
                     </p>
-                    <a class="" href="{% url 'profile_page' follow.username %}">
-                      <button class="btn btn-wc-green">View Page</button>
+                    <a class="" href="{% url 'profile_page' follow.username %}" title="Go to user profile page">
+                      <button class="btn btn-wc-green" aria-label="Go to user profile page">View Page</button>
                     </a>
 
                   </div>
@@ -341,7 +339,7 @@
             </div>
           </div>
         </div>
-        <p class="mt-2 post-link"><a href="{% url 'profile_page_followers' page_name.username %}" class="post-link">
+        <p class="mt-2 post-link"><a href="{% url 'profile_page_followers' page_name.username %}" class="post-link" title="Go to user followers page">
             View All</a></p>
         {% else %}
         <p><strong>No Follows</strong></p>
@@ -364,13 +362,13 @@
           <div class="modal-body">
             {% csrf_token %}
             {{ user_form.as_p }}
-            <p><a href="{% url 'account_change_password' %}" class="post-link">Change Password</a></p>
-            <p><a href="{% url 'account_email' %}" class="post-link">Change Email Address</a></p>
-            <p><a href="{% url 'socialaccount_connections' %}" class="post-link">Add/ Remove Social Accounts</a></p>
+            <p><a href="{% url 'account_change_password' %}" class="post-link" title="Change your password">Change Password</a></p>
+            <p><a href="{% url 'account_email' %}" class="post-link" title="Change your email address">Change Email Address</a></p>
+            <p><a href="{% url 'socialaccount_connections' %}" class="post-link" title="Change social accounts">Add/ Remove Social Accounts</a></p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" value="Save Changes" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+            <button type="submit" value="Save Changes" class="btn btn-primary" aria-label="Save Changes">Save Changes</button>
           </div>
         </form>
       </div>

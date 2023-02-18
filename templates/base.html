@@ -1,6 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
+<html lang="en">
 <html class="h-100">
 
 <head>
@@ -22,12 +23,12 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container-fluid justify-content-start">
-            <a class="text-decoration-none text-reset" href="{% url 'home' %}">
-                <img class="me-3"
+            <a class="text-decoration-none text-reset" href="{% url 'home' %}" title="Go to Home page">
+                <img class="me-3" alt="What's Cooking Logo"
                     src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675026306/site_images/Logo-WC.webp">
             </a>
             <span class="brand">
-                <a class="text-decoration-none text-reset" href="{% url 'home' %}">
+                <a class="text-decoration-none text-reset" href="{% url 'home' %}" title="Go to Home page">
                     <span class="brand-text">what's cooking</span>
                     <span class="brand-text-short">wc</span>
                 </a>
@@ -43,28 +44,28 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}" title="Go to Home page">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'aboutus' %}">About</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'aboutus' %}" title="Go to About page">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'aboutus' %}#contact">Contact</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'aboutus' %}#contact" title="Go to Contact page">Contact</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'recipes' %}">Recipes</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'recipes' %} " title="Go to Recipes page">Recipes</a>
                     </li>
                     {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" type="button" data-bs-toggle="offcanvas"
-                            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling">Profile</a>
+                            data-bs-target="#offcanvasScrolling" aria-controls="offcanvasScrolling" title="Open profile tab">Profile</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_signup' %}">Register</a>
+                        <a class="nav-link" href="{% url 'account_signup' %}" title="Go to register account page">Register</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                        <a class="nav-link" href="{% url 'account_login' %}" title="Go to Login page">Login</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -100,10 +101,15 @@
                 Made by D Hamilton
             </a>
         </p>
-        <p class="m-0 text-center text-white">Follow us: <i class="fab fa-facebook-square ms-3"></i>
-            <i class="fab fa-twitter-square ms-3"></i>
-            <i class="fab fa-instagram-square ms-3"></i>
-            <i class="fab fa-youtube-square ms-3"></i></p>
+        <p class="m-0 text-center text-white">Follow us:
+            <a href="https://en-gb.facebook.com/" rel="external" title="Go to Facebook" target="_blank"
+                class="footer_button"><i class="fab fa-facebook-square ms-3"></i></a>
+            <a href="https://twitter.com/?lang=en" rel="external" title="Go to Twitter" target="_blank"
+                class="footer_button"><i class="fab fa-twitter-square ms-3"></i></a>
+            <a href="https://www.instagram.com/" rel="external" title="Go to Instagram" target="_blank"
+                class="footer_button"><i class="fab fa-instagram-square ms-3"></i></a>
+            <a href="https://www.youtube.com/" rel="external" title="Go to Youtube" target="_blank"
+                class="footer_button"><i class="fab fa-youtube-square ms-3"></i></a></p>
     </footer>
     {% if user.is_authenticated %}
     <!-- Profile Slider -->
@@ -112,16 +118,16 @@
         <!-- Header -->
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasScrollingLabel">
-                <a class="navbar-brand" href="{% url 'home' %}">
-                    <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675026306/site_images/Logo-WC.webp">
+                <a class="navbar-brand" href="{% url 'home' %}" title="Go to Home page">
+                    <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675026306/site_images/Logo-WC.webp" alt="What's Cooking Logo">
                 </a>
                 <span class="brand">
-                    <a class="text-decoration-none text-reset" href="{% url 'home' %}">
+                    <a class="text-decoration-none text-reset" href="{% url 'home' %}" title="Go to Home page">
                         <span class="brand-text">what's cooking</span>
                         <span class="brand-text-short">wc</span>
                     </a>
                     {% if user.is_authenticated %}
-                    <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
+                    <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}" title="Go to user profile page">
                         <span class="thin brand-bar">| Profile</span>
                     </a>
                     {% else %}
@@ -136,11 +142,11 @@
         <div class="offcanvas-body">
             {% if user.is_authenticated %}
             <!-- Profile Pic -->
-            <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
+            <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}" title="Go to user profile page">
                 <div class="image_box_size mx-auto d-block">
                     <div class="ratio ratio-1x1 rounded-circle overflow-hidden">
                         <img src="{{ user.user_details.user_image.url }}" class="card-img-top img-cover"
-                            alt="profile pic">
+                            alt="User profile picture">
                     </div>
                 </div>
             </a>
@@ -150,7 +156,7 @@
                 <div class="col">
                     <div class="mx-auto d-block">
                         <strong>
-                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}">
+                            <a class="text-decoration-none text-reset" href="{% url 'profile_page' user.username %}" title="Go to user profile page">
                                 <p class="text-center text-uppercase post-link">{{ user.username }}</p>
                             </a>
                         </strong>
@@ -177,9 +183,9 @@
                             <p class="card-text">
                                 You have not completed all details in your account. Click the button below to enter the
                                 final details</p>
-                            <button type="button" class="btn btn-outline-danger"><a
+                            <button type="button" class="btn btn-outline-danger" aria-label="Complete user account details"><a
                                     class="text-decoration-none text-reset"
-                                    href="{% url 'profile_page' user.username %}">Complete Account</a></button>
+                                    href="{% url 'profile_page' user.username %}" title="Complete user account details">Complete Account</a></button>
                         </div>
                     </div>
 
@@ -218,7 +224,7 @@
             <!-- Links to user pages -->
             <div class="row my-3 justify-content-center">
                 <div class="col-4 text-center d-inline">
-                    <a href="{% url 'profile_page_favourites' user.username %}" class="post-link">
+                    <a href="{% url 'profile_page_favourites' user.username %}" class="post-link" title="Go to user favorite recipes page">
                         <strong>
                             <i class="fas fa-heart text-orange-color profile_icons"></i>
                         </strong>
@@ -226,7 +232,7 @@
                     </a>
                 </div>
                 <div class="col-4 text-center d-inline">
-                    <a href="{% url 'profile_page_recipes' user.username %}" class="post-link">
+                    <a href="{% url 'profile_page_recipes' user.username %}" class="post-link" title="Go to user recipes page">
                         <strong>
                             <i class="fas fa-utensils text-orange-color profile_icons"></i>
                         </strong>
@@ -234,7 +240,7 @@
                     </a>
                 </div>
                 <div class="col-4 text-center d-inline">
-                    <a href="{% url 'profile_page_followers' user.username %}" class="post-link">
+                    <a href="{% url 'profile_page_followers' user.username %}" class="post-link" title="Go to user followers page">
                         <strong>
                             <i class="fas fa-user-friends text-orange-color profile_icons"></i>
                         </strong>
@@ -246,9 +252,9 @@
                 <div class="col">
                     <div class="d-grid gap-2 col-6 mx-auto">
                         <button class="btn btn-secondary" type="button"
-                            onclick="location.href ='{% url 'profile_page' user.username %}'">My Profile</button>
+                            onclick="location.href ='{% url 'profile_page' user.username %}'" aria-label="Go to my profile">My Profile</button>
                         <button class="btn btn-outline-secondary" type="button"
-                            onclick="location.href ='{% url 'account_logout' %}'">Logout</button>
+                            onclick="location.href ='{% url 'account_logout' %}'" aria-label="Logout of account">Logout</button>
                     </div>
                 </div>
             </div>

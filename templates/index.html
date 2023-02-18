@@ -6,17 +6,17 @@
 <div id="recipe_carousel" class="carousel slide" data-bs-ride="carousel">
   <!-- Indicators/dots -->
   <div class="carousel-indicators">
-    <button type="button" data-bs-target="#recipe_carousel" data-bs-slide-to="0" class="active"></button>
-    <button type="button" data-bs-target="#recipe_carousel" data-bs-slide-to="1"></button>
-    <button type="button" data-bs-target="#recipe_carousel" data-bs-slide-to="2"></button>
+    <button type="button" data-bs-target="#recipe_carousel" data-bs-slide-to="0" class="active" aria-label="View image recipe 1"></button>
+    <button type="button" data-bs-target="#recipe_carousel" data-bs-slide-to="1" aria-label="View image recipe 2"></button>
+    <button type="button" data-bs-target="#recipe_carousel" data-bs-slide-to="2" aria-label="CView image recipe 3"></button>
   </div>
   <!-- The slideshow/carousel -->
   <div class="carousel-inner">
     <!-- Image 1 -->
     <div class="carousel-item active h-50 carousel-max-vh-50">
-      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025432/site_images/pic1.webp" alt="Los Angeles" class="d-block" style="width:100%">
+      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025432/site_images/pic1.webp" alt="Recipe image 1" class="d-block" style="width:100%">
       <div class="carousel-caption">
-        <a href="#" class="post-link">
+        <a href="#" class="post-link" title="Go to main recipe 1 page">
           <h3>Veggie Chilli Sweet Potato Fries</h3>
           <p>Made by Chris Robinson</p>
         </a>
@@ -24,9 +24,9 @@
     </div>
     <!-- Image 2 -->
     <div class="carousel-item h-50 carousel-max-vh-50">
-      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025428/site_images/pic2.webp" alt="Chicago" class="d-block" style="width:100%">
+      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025428/site_images/pic2.webp" alt="Recipe image 2" class="d-block" style="width:100%">
       <div class="carousel-caption">
-        <a href="#" class="post-link">
+        <a href="#" class="post-link" title="Go to main recipe 2 page">
           <h3>Beans and Courgette Salad</h3>
           <p>Made by Amy Lancanster</p>
         </a>
@@ -34,9 +34,9 @@
     </div>
     <!-- Image 3 -->
     <div class="carousel-item h-50 carousel-max-vh-50">
-      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025432/site_images/pic3.webp" alt="New York" class="d-block" style="width:100%">
+      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025432/site_images/pic3.webp" alt="Recipe image 3" class="d-block" style="width:100%">
       <div class="carousel-caption">
-        <a href="#" class="post-link">
+        <a href="#" class="post-link" title="Go to main recipe 3 page">
           <h3>Rice & Calalou Salad</h3>
           <p>Made by Lucy Smith</p>
         </a>
@@ -45,16 +45,16 @@
     <!-- Sign up button -->
     {% if not user.is_authenticated %}
     <div class="carousel-button">
-      <a class="btn btn-outline-secondary btn-index" href="{% url 'account_login' %}"><strong>Login/ Sign
+      <a class="btn btn-outline-secondary btn-index" href="{% url 'account_login' %}" title="Go to login/ sign up page"><strong>Login/ Sign
           Up</strong></a>
     </div>
     {% endif %}
   </div>
   <!-- Left and right controls/icons -->
-  <button class="carousel-control-prev" type="button" data-bs-target="#recipe_carousel" data-bs-slide="prev">
+  <button class="carousel-control-prev" type="button" data-bs-target="#recipe_carousel" data-bs-slide="prev" aria-label="Previous carousel image">
     <span class="carousel-control-prev-icon"></span>
   </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#recipe_carousel" data-bs-slide="next">
+  <button class="carousel-control-next" type="button" data-bs-target="#recipe_carousel" data-bs-slide="next" aria-label="Next carousel image">
     <span class="carousel-control-next-icon"></span>
   </button>
 </div>
@@ -103,8 +103,8 @@
             <li class="fs-5 mb-4">A forum for sharing cooking tips and techniques.</li>
           </ul>
           <div class="d-grid gap-2 d-md-block">
-            <button class="btn btn-outline-secondary">
-              <a class="text-decoration-none text-reset" href="{% url 'account_signup' %}">
+            <button class="btn btn-outline-secondary" aria-label="Go to sign up page">
+              <a class="text-decoration-none text-reset" href="{% url 'account_signup' %}" title="Go to sign up page">
                 <strong>Sign Up Here</strong>
               </a>
             </button>
@@ -168,11 +168,11 @@
         {% for recipe in top_users %}
         <div class="col-md-4">
           <div class="card mb-4">
-            <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link">
+            <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
               <div class="index-card-body">
                 <div class="image-container">
                
-                  <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}">
+                  <img class="card-img-top auto-img-h" alt="Recipe image" src="{{ recipe.recipe_image.url }}">
 
                   <div class="image-flash">
                     <p class="author">Recipe by: {{ recipe.author }}</p>

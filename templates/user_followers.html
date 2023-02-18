@@ -19,7 +19,7 @@
 
   <div class="row">
     <div class="col">
-  <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}">
+  <span class="text-dark fs-5"><a class="text-decoration-none text-reset" href="{% url 'profile_page' page_name.username %}" title="Go to user profile page">
     <i class="fa-solid fa-chevron-left"></i>Back</a></span>
   </div>
 </div>
@@ -54,14 +54,14 @@
             <div class="user-profile-card border-{{ follow.user_details.get_status_display|lower }}">
                 <div class="user-profile-card-title-wrapper">
                     <a class="text-decoration-none text-reset hide_small"
-                        href="{% url 'profile_page' follow.username %}">
+                        href="{% url 'profile_page' follow.username %}" title="Go to user profile page">
                         <img src="{{ follow.user_details.user_image.url }}" class="user-profile-card-img"
-                            alt="profile pic">
+                            alt="User profile picture">
                     </a>
                     <div class="user-profile-card-meeting-info">
                         <span class="text-uppercase post-link">
                             <strong><a class="text-decoration-none text-reset"
-                                    href="{% url 'profile_page' follow.username %}">{{ follow.username }}</a></strong>
+                                    href="{% url 'profile_page' follow.username %}" title="Go to user profile page">{{ follow.username }}</a></strong>
                             {% if follow.user_details.location != "" %}
                             <span
                                 class="text-capitalize user-profile-card-lrg">({{ follow.user_details.location }})</span>
@@ -89,10 +89,10 @@
                     <form name="follow_submit" method="post">
                         {% csrf_token %}
                         {{ follow_form }}
-                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-wc-green">
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-wc-green" aria-label="Follow user">
                         Follow
                         </button>
-                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-wc-green">
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-wc-green" aria-label="Follow user">
                             <i class="fas fa-user-plus"></i>
                             </button>
                         <input type="hidden" name="the_follow_form" value="{{ follow.username }}">
@@ -102,10 +102,10 @@
                     <form name="follow_submit" method="post">
                         {% csrf_token %}
                         {{ unfollow_form }}
-                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary following_btn_blue" id="following_btn_blue">
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-lrg btn btn-primary following_btn_blue" id="following_btn_blue" aria-label="Unfollow user">
                         Following
                         </button>
-                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary following_btn_blue_sm" id="following_btn_blue_sm">
+                        <button type="submit" class="user-profile-card-meeting-action ms-auto user-profile-card-shrt user-profile-card-shrt-hide btn btn-primary following_btn_blue_sm" id="following_btn_blue_sm" aria-label="Unfollow user">
                             <i class="fas fa-user"></i>
                             </button>
                         <input type="hidden" name="the_follow_form" value="{{ follow.username }}">
