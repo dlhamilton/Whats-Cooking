@@ -341,8 +341,14 @@ A separate testing document has been created as TESTING.md
 ### User Story Testing
 ### Validators
 
+### Fixed Bugs
+1.
 image_form = RecipeImagesForm(request.POST)
 image_form = RecipeImagesForm(request.POST, request.FILES)
+
+2.
+colour change - #8AA848 to #667D36
+This is due to the accessibility contrast ratio between the colours of the green
 
 ### Bugs
 No known errors remaining.

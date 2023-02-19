@@ -11,7 +11,7 @@ body {
     font-family: 'Unica One', cursive;
     font-size: 1.4rem;
     font-weight: 700;
-    color: #8AA848;
+    color: #667D36;
 }
 
 .brand-bar{
@@ -32,7 +32,7 @@ body {
     bottom: 5%;
     min-width: 30%;
     left: -2px;
-    background-color: #8AA848;
+    background-color: #667D36;
 }
 
 .author {
@@ -53,7 +53,7 @@ body {
 
 .post-link-green:hover,
 .page-link-green {
-    color: #8AA848;
+    color: #667D36;
 }
 
 .text-orange-color{
@@ -61,7 +61,7 @@ body {
 }
 
 .text-green-color{
-    color: #8AA848 !important;
+    color: #667D36 !important;
 }
 
 .index-card-body{
@@ -78,7 +78,7 @@ body {
 }
 
 .btn-wc-green{
-    background-color: #8AA848;
+    background-color: #667D36;
     color:white;
 }
 
@@ -159,7 +159,7 @@ body {
 } */
 
 .footer-bg {
-    background-color: #8AA848;
+    background-color: #667D36;
 }
 
 .main-bg {
@@ -714,7 +714,7 @@ input:checked + .slider:before {
 }
 
 .pub{
-    background-color: #8AA848;
+    background-color: #667D36;
 }
 
 .hid{

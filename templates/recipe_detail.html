@@ -75,7 +75,7 @@
                     {% if rated == False %}
                 <i class="fa-solid fa-star star_click" data-fill="fill" data-num="{{ forloop.counter0 }}"></i>          
             {% else %}
-            <i class="fa-solid fa-star star_click" style="color: #8AA848;" data-fill="fill" data-num="{{ forloop.counter0 }}"></i>          
+            <i class="fa-solid fa-star star_click" style="color: #667D36;" data-fill="fill" data-num="{{ forloop.counter0 }}"></i>
             {% endif %}
             </button>
                 {% endfor %}
@@ -208,7 +208,7 @@
         </div>
     </div>
     <!-- Picture upload place -->
-    <div class="row">
+    <div class="row not-printable">
         <div class="col-md-8 card mb-4  mt-3 ">
             <h3>Pictures:</h3>
         {% if user.is_authenticated %}
@@ -218,7 +218,7 @@
         {% endif %}
     </div>
     {% if images|length != 0 %}
-    <div class="row d-flex justify-content-center">
+    <div class="row d-flex justify-content-center not-printable">
         <div class="col">
             <section id="image-main-carousel" class="splide" aria-label="Beautiful Images">
                 <div class="splide__track">
@@ -391,7 +391,7 @@
   integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
   crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
-{% if rated %}
+{% if user.is_authenticated %}
     <script>
         let isAuthenticated = true;
     </script>
@@ -400,7 +400,7 @@
         let isAuthenticated = false;
     </script>
 {% endif %}
-{% if user.is_authenticated %}
+{% if rated %}
     <script>
         let ratedA = true;
     </script>
@@ -414,4 +414,4 @@
 </script>
 <script src="{% static 'js/recipe_detail.js' %}"></script>
 
-{% endblock content %}
+{% endblock content %}rated

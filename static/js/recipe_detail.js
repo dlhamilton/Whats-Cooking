@@ -165,7 +165,7 @@ if (isAuthenticated) {
 
   if(ratedA){
     if ($(this).data("fill") != "clear") {
-        $(this).css("color", "#8AA848");
+        $(this).css("color", "#667D36");
     }
  }
   });

@@ -10,6 +10,10 @@
       font-size: 12pt;
       visibility:hidden;
     }
+
+    .not-printable{
+      visibility:hidden;
+    }
   
     /* Specify which elements should be printed */
     .printable {
