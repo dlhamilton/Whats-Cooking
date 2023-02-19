@@ -350,6 +350,13 @@ image_form = RecipeImagesForm(request.POST, request.FILES)
 colour change - #8AA848 to #667D36
 This is due to the accessibility contrast ratio between the colours of the green
 
+3.
+auto search
+   // $('#search_query').keyup(function () {
+    //     $('#search_recipe_bar').submit();
+    // });
+I removed the auto search feature from the recipe search because on a mobile device, the keyboard kept disappearing after every character was entered. This problem could be fixed by adding a selection statement that checks if the user is on a mobile or desktop device, or by making the search an asynchronous function that doesn't require the entire page to reload when a search is performed.
+
 ### Bugs
 No known errors remaining.
 

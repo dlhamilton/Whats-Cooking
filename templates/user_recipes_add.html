@@ -34,6 +34,7 @@
   <div class="row">
     <div class="col">
       <div class="col-md-8 mt-3 offset-md-2 mb-4">
+        <p>Welcome to the New Recipe page! To get started, please fill in all of the fields below. Once you've completed this page, you'll be directed to the next page where you can add ingredients and write out the recipe steps. We can't wait to see what you come up with!</p>
         <form method="post" style="margin-top: 1.3em;" enctype="multipart/form-data">
           {{ add_form | crispy }}
           {% csrf_token %}

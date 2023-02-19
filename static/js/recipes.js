@@ -1,8 +1,5 @@
 $(document).ready(function () {
-    $('#search_query').keyup(function () {
-        $('#search_recipe_bar').submit();
-    });
-
+ 
     $('#search_query').focus();
 
     let input = $('#search_query')[0];
