@@ -943,3 +943,7 @@ class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
         return reverse(
             'profile_page',
             kwargs={'username': self.request.user.username})
+
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)

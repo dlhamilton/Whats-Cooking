@@ -4,6 +4,7 @@ social recipe urls
 from django.urls import path
 from . import views
 
+handler404 = views.custom_404
 
 urlpatterns = [
     path(
