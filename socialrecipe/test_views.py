@@ -10,7 +10,7 @@ from .models import (User, Recipes, UserDetails, StarRating, Units,
                      Ingredients, RecipeItems, Methods)
 from .views import (RecipeDetail, CurrentUserProfileRedirectView, RecipesList,
                     RecipeImages, Comments, ProfileRecipesEdit,
-                    ProfileRecipesAdd)
+                    ProfileRecipesAdd, custom_500, custom_403, custom_404)
 from .forms import (RecipeImagesForm)
 
 
@@ -2099,3 +2099,91 @@ class TestProfileCurrentUserProfileRedirectView(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, '/accounts/login/?next=/loggedIn/')
+
+
+class AboutUsTest(TestCase):
+    """
+    Test About page
+    """
+    def test_get(self):
+        '''
+        Test get request on about page
+        '''
+        url = reverse('aboutus')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'about_us.html')
+
+    def test_post_success(self):
+        '''
+        Test send of contact us form, valid
+        '''
+        url = reverse('aboutus')
+        data = {"status": 1}
+        response = self.client.post(url, data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"message": "Message"})
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Message Sent')
+
+    def test_post_error(self):
+        '''
+        Test send of contact us form, invalid
+        '''
+        url = reverse('aboutus')
+        data = {"status": 2}
+        response = self.client.post(url, data, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), {"message": "Message"})
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Error With Message')
+
+
+class Custom404Test(TestCase):
+    '''
+    Test 404
+    '''
+    def test_custom_404_from_url(self):
+        '''
+        Test from invalid url
+        '''
+        url = f'/nothere'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+        self.assertTemplateUsed(response, '404.html')
+
+    def test_custom_404(self):
+        '''
+        Test 404 view
+        '''
+        factory = RequestFactory()
+        response = custom_404(factory)
+        self.assertEqual(response.status_code, 404)
+
+
+class Custom403Test(TestCase):
+    '''
+    Test 403
+    '''
+    def test_custom_403(self):
+        '''
+        Test 403 view
+        '''
+        factory = RequestFactory()
+        response = custom_403(factory)
+        self.assertEqual(response.status_code, 403)
+
+
+class Custom500Test(TestCase):
+    '''
+    Test 500
+    '''
+    def test_custom_500(self):
+        '''
+        Test 500 view
+        '''
+        factory = RequestFactory()
+        response = custom_500(factory)
+        self.assertEqual(response.status_code, 500)
