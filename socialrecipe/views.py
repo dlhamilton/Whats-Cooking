@@ -946,12 +946,21 @@ class CurrentUserProfileRedirectView(LoginRequiredMixin, RedirectView):
 
 
 def custom_404(request, exception=None):
+    """
+    custom 404 view
+    """
     return render(request, '404.html', status=404)
 
 
 def custom_403(request, exception=None):
+    """
+    custom 403 view
+    """
     return render(request, '403.html', status=403)
 
 
 def custom_500(request, exception=None):
+    """
+    custom 500 view
+    """
     return render(request, '500.html', status=500)
