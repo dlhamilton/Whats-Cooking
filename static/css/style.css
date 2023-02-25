@@ -18,6 +18,15 @@ body {
     color: #4A4A4F;
 }
 
+.brand-bar-border{
+ border-color: #4A4A4F;
+}
+
+.more-btn:hover{
+background-color: #4A4A4F;
+color: white;
+}
+
 .card {
     border: none;
     background-color: transparent;
@@ -144,6 +153,19 @@ body {
 
 .modal-dialog {
     max-width: 800px
+}
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.logo-size {
+    width:49px;
+    height:49px;
 }
 
 /* ---------------------------------------------- */
@@ -401,13 +423,13 @@ body {
 }
 
 .bg_index_img-a{
-    background-image: url("https://res.cloudinary.com/dcyscwwbk/image/upload/v1675028098/site_images/home_Image_1.webp");
+    background-image: url("https://res.cloudinary.com/dcyscwwbk/image/upload/q_10/v1677363040/site_images/home_Image_1.webp");
 }
 .bg_index_img-b{
-    background-image: url("https://res.cloudinary.com/dcyscwwbk/image/upload/v1675028220/site_images/home_image_2.webp");
+    background-image: url("https://res.cloudinary.com/dcyscwwbk/image/upload/q_10/v1677362737/site_images/home_image_2.webp");
 }
 .bg_index_img-c{
-    background-image: url("https://res.cloudinary.com/dcyscwwbk/image/upload/v1675028144/site_images/home_image_3.webp");
+    background-image: url("https://res.cloudinary.com/dcyscwwbk/image/upload/q_10/v1677362916/site_images/home_image_3.webp");
 }
 
 .bg_index_img{ 
@@ -683,7 +705,7 @@ input:checked + .slider:before {
     bottom: 0;
     left: 0;
     right: 0;
-    background: url('https://res.cloudinary.com/dcyscwwbk/image/upload/v1675022439/site_images/profile-bg.webp') center center;
+    background: url('https://res.cloudinary.com/dcyscwwbk/image/upload/v1677363898/site_images/profile-bg.webp') center center;
     opacity: .4;
     width: 100%;
     height: 100%;    

@@ -79,7 +79,7 @@ def get_average_rating(recipes_list):
 
 def following_change(request, username):
     '''
-    will toggle the state of following
+    will toggle the state of following a user
     '''
     user_details = request.user.user_details
     follow_form = FollowForm(request.POST)

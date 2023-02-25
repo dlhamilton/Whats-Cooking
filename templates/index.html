@@ -14,7 +14,7 @@
   <div class="carousel-inner">
     <!-- Image 1 -->
     <div class="carousel-item active h-50 carousel-max-vh-50">
-      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025432/site_images/pic1.webp" alt="Recipe image 1" class="d-block" style="width:100%">
+      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1677362144/site_images/pic1.webp" alt="Recipe image 1" class="d-block" style="width:100%">
       <div class="carousel-caption">
         <a href="#" class="post-link" title="Go to main recipe 1 page">
           <h3>Veggie Chilli Sweet Potato Fries</h3>
@@ -24,7 +24,7 @@
     </div>
     <!-- Image 2 -->
     <div class="carousel-item h-50 carousel-max-vh-50">
-      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025428/site_images/pic2.webp" alt="Recipe image 2" class="d-block" style="width:100%">
+      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1677363379/site_images/pic2.webp" alt="Recipe image 2" class="d-block" style="width:100%">
       <div class="carousel-caption">
         <a href="#" class="post-link" title="Go to main recipe 2 page">
           <h3>Beans and Courgette Salad</h3>
@@ -34,7 +34,7 @@
     </div>
     <!-- Image 3 -->
     <div class="carousel-item h-50 carousel-max-vh-50">
-      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675025432/site_images/pic3.webp" alt="Recipe image 3" class="d-block" style="width:100%">
+      <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1677363700/site_images/pic3.webp" alt="Recipe image 3" class="d-block" style="width:100%">
       <div class="carousel-caption">
         <a href="#" class="post-link" title="Go to main recipe 3 page">
           <h3>Rice & Calalou Salad</h3>
@@ -103,7 +103,7 @@
             <li class="fs-5 mb-4">A forum for sharing cooking tips and techniques.</li>
           </ul>
           <div class="d-grid gap-2 d-md-block">
-            <button class="btn btn-outline-secondary" aria-label="Go to sign up page">
+            <button class="btn brand-bar-border brand-bar more-btn" aria-label="Go to sign up page">
               <a class="text-decoration-none text-reset" href="{% url 'account_signup' %}" title="Go to sign up page">
                 <strong>Sign Up Here</strong>
               </a>
@@ -144,9 +144,9 @@
             cooking with Whats Cooking!</p>
 
             <div class="d-grid gap-2 d-md-block">
-              <button class="btn btn-outline-secondary" aria-label="Go to about page">
+              <button class="btn brand-bar-border brand-bar more-btn" aria-label="Go to about page">
                 <a class="text-decoration-none text-reset" href="{% url 'aboutus' %}" title="Go to about page">
-                  <strong>Read More</strong>
+                  <strong>More About What's Cooking</strong>
                 </a>
               </button>
             </div>
@@ -178,9 +178,9 @@
           <div class="card mb-4">
             <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
               <div class="index-card-body">
-                <div class="image-container">
+                <div class="image-container card-img-top overflow-hidden">
                
-                  <img class="card-img-top auto-img-h" alt="Recipe image" src="{{ recipe.recipe_image.url }}">
+                  <img class="vertical-center w-100 auto-img-h" alt="Recipe image" src="{{ recipe.recipe_image.url }}">
 
                   <div class="image-flash">
                     <p class="author">Recipe by: {{ recipe.author }}</p>
