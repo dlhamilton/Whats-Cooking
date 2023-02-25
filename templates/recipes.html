@@ -96,8 +96,8 @@
                 <div class="col-md-4">
                     <div class="card mb-4">
                         <div class="card-body index-card-body">
-                            <div class="image-container">
-                                <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
+                            <div class="image-container card-img-top overflow-hidden">
+                                <img class="vertical-center w-100 auto-img-h" src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
                                 <div class="image-flash">
                                     <a class="text-decoration-none text-reset"
                                         href="{% url 'profile_page' recipe.author %}" title="Go to user profile page">

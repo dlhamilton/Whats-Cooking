@@ -112,6 +112,7 @@ With these steps, you should be able to easily use **What's Cooking** to find, s
 - 25 - As a Site User I can view the 5 top recipes so that I can try the most popular recipes.
 - 29 - As a Site User I can click on a recipe title so that I can read the full recipe.
 - 32 - As a user, I want to be able to view detailed information about a recipe, including the ingredients, instructions, and user reviews, so that I can decide if I want to make the recipe.
+- 27 - As a Site User I can view the top 5 ingredients used in recipes so that I know what ingredients I will use the most.
 
 ### Epic: User Interactions: The ability for users to interact with each other by liking and saving recipes, leaving reviews, and following other users.
 - 6 - As a Site User I can view comments on an individual recipes so that I can read the conversations.
@@ -119,7 +120,7 @@ With these steps, you should be able to easily use **What's Cooking** to find, s
 - 18 - As a Site User I can leave a comment on a recipe so that I can leave a review on the recipe and give feedback.
 - 28 - As a Site User I can view comments on an individual recipe so that I can read the conversations and reviews.
 - 35 - As a Site User I can upload pictures of the recipe if I have tried to make it. so that users can see and example of the meal.
-### Epic: Notifications
+- 14 - As a Site User I can print/ export a recipe so that I can use it when i want to make the recipe.
 
 ### Epic: Application Configuration
 - 1 - As a Site Admin I can approve or disapprove comments so that I can filter out objectionable comments.
@@ -128,10 +129,6 @@ With these steps, you should be able to easily use **What's Cooking** to find, s
 - 4 - As a Site Admin I can view the number of favourites on each post so that I can see which is the most popular or viral.
 - 5 - As a Site Admin I can create, read, update and delete recipes so that I can manage my app content
 
-### To Do
-- 14 - As a Site User I can print/ export a recipe so that I can use it when i want to make the recipe.
-- 27 - As a Site User I can view the top 5 ingredients used in recipes so that I know what ingredients I will use the most.
-- - As a Site User I can register for an account using social media so that I can quickly make an account with all user details transfered.
 ***
 
 ### Incomplete User Stories for future developement

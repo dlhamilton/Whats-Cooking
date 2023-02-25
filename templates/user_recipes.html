@@ -64,8 +64,8 @@
               <div class="col-md-4">
                 <div class="card mb-4">
                   <div class="card-body index-card-body">
-                    <div class="image-container">
-                        <img class="card-img-top auto-img-h" src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
+                    <div class="image-container card-img-top overflow-hidden">
+                        <img class="vertical-center w-100 auto-img-h" src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
                       {% if page_name == user %}
                         {% if recipe.status == 1 %}
                           <div class="pub_button_img_flash pub rounded">

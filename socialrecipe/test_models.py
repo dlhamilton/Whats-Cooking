@@ -230,7 +230,7 @@ class TestRecipesModels(TestCase):
         '''
         self.assertEqual(
             self.recipe.recipe_image,
-            'v1675027391/placeholder-recipe.png')
+            'v1677366914/placeholder-recipe.png')
 
     def test_status_default(self):
         '''

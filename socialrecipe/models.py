@@ -82,7 +82,7 @@ class Recipes(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_recipes")
     recipe_image = CloudinaryField(
-        'image', default='v1675027391/placeholder-recipe.png')
+        'image', default='v1677366914/placeholder-recipe.png')
     excerpt = models.TextField()
     status = models.IntegerField(choices=RECIPE_STATUS, default=0)
     favourites = models.ManyToManyField(
