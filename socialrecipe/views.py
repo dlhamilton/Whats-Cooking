@@ -3,6 +3,8 @@ Social recipe views
 """
 import json
 from collections import Counter
+from cloudinary.uploader import destroy
+import cloudinary
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import View
 from django.http import HttpResponseRedirect, JsonResponse
@@ -156,7 +158,8 @@ class RecipesList(View):
         '''
         get the most common ingredients
         '''
-        ingredients_list = RecipeItems.objects.values_list('ingredients__name', flat=True)
+        ingredients_list = RecipeItems_obj.values_list(
+            'ingredients__name', flat=True)
         top_ingredients = Counter(ingredients_list).most_common(5)
         return top_ingredients
 
@@ -270,10 +273,13 @@ class RecipeDetail(View):
         item_id = data.get('id')
         if model == "comment":
             record = get_object_or_404(Comments, id=item_id)
+            record.delete()
         else:
             record = get_object_or_404(RecipeImages, id=item_id)
+            cloudinary.uploader.destroy(
+                record.recipe_image.public_id, invalidate=True)
             messages.success(request, 'Removed Image')
-        record.delete()
+            record.delete()
         return JsonResponse({"message": item_id}, status=200)
 
     def post(self, request, slug, *args, **kwargs):
@@ -768,6 +774,14 @@ class ProfileRecipesEdit(View):
             elif "the_delete_form" in request.POST:
                 item_id = request.POST.get('id')
                 record = get_object_or_404(Recipes, id=item_id)
+                if "placeholder" not in record.recipe_image.public_id:
+                    cloudinary.uploader.destroy(
+                        record.recipe_image.public_id, invalidate=True)
+                recipe_images = record.recipe_images.all()
+                for recipe_image in recipe_images:
+                    cloudinary.uploader.destroy(
+                        recipe_image.recipe_image.public_id, invalidate=True)
+                    recipe_image.delete()
                 record.delete()
                 return redirect(
                     reverse(
@@ -926,6 +940,9 @@ class AboutUs(View):
         )
     
     def post(self, request, *args, **kwargs):
+        '''
+        post method for about us
+        '''
         data = json.loads(request.body)
         model = data.get('status')
         if model == 1:
