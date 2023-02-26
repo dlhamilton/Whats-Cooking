@@ -21,6 +21,7 @@ Welcome to the social recipe app, a platform for food enthusiasts to come togeth
 * [Features](#features)
     * [Existing Features](#Existing-Features)
     * [Future Features](#future-features)
+* [Technologies Used](technologies-used)
 * [Testing](#testing)
     * [Manual Testing](#manual-testing)
     * [User Story Testing](#user-story-testing)
@@ -81,6 +82,8 @@ Here are the steps to use **What's Cooking**:
 With these steps, you should be able to easily use **What's Cooking** to find, share, and discover new recipes.
 
 ## User Stories & Epics
+All user stories were entered as issues in a GitHub Kanban project follow the link to see the project:
+[Project Link](https://github.com/users/dlhamilton/projects/3)
 
 ### Epic: Authentication: The ability for users to create and manage their own profiles, including updating their information and viewing their saved recipes.
 - 26 - As a Site User I can register an account so that I can use the site to share and view recipes.
@@ -129,11 +132,9 @@ With these steps, you should be able to easily use **What's Cooking** to find, s
 - 4 - As a Site Admin I can view the number of favourites on each post so that I can see which is the most popular or viral.
 - 5 - As a Site Admin I can create, read, update and delete recipes so that I can manage my app content
 
-***
-
 ### Incomplete User Stories for future developement
-9 - As a Site User I can add new ingredients to my shopping list so that I can know what I need to purchase to make the meal.
-13 - As a Site User I can print/ export my shopping list so that I can know what I need to purchase to make the meal.
+- 9 - As a Site User I can add new ingredients to my shopping list so that I can know what I need to purchase to make the meal.
+- 13 - As a Site User I can print/ export my shopping list so that I can know what I need to purchase to make the meal.
 
 These are discussed more in the [Future Features](#future-features) section. 
 
@@ -227,8 +228,8 @@ Desktop
 Google fonts was used in this project with both fonts selected for their legibility and simplicity.
 
 Unica One - Use in Logo
-***** - Use in headings.
-***** - Use in paragraphs and labels.
+Roboto - Use in headings.
+Roboto - Use in paragraphs and labels.
 
 ***
 
@@ -284,50 +285,117 @@ Unica One - Use in Logo
 +++ An Image here +++
 
 #### Signup, Login and other account management pages
+- Users can Sign up and create a new account
+- Log in to their account
+- Reset their password if they forget it
+- Connect their account with social media platforms - Google
+- Allauth was implemented to handle account creation and management of email verification, email address management, password change, etc.
 
 +++ An Image here +++
 
 +++ An Image here +++
 
-Recipe list
+#### Recipe list
+- Users can search for recipes using keywords, ingredient lists, or author. They can also filter recipes by ingredients. This makes it easy to find recipes that match their tastes and needs.
 
-Filters and search
+- This sorting function allows users to view recipes in a certain order. They can sort by name, rating, the recipe with the most faviourites, the newest and finally the quickest in terms of total cooking time.
 
-Recipe management
++++ An Image here +++
 
-Recipe interactions
++++ An Image here +++
 
-Profile management
+#### Recipe management
 
-Profile pages
+- Users can create, edit and delete recipes that they have created. They can add ingridents, and methods to the recipe for other users to see. 
 
-Profile interactions
+- Users can also add images to the recipe and give a description on what the meal is. 
+
++++ An Image here +++
+
++++ An Image here +++
+
+#### Recipe interactions
+
+- User can favourite a recipe if they like it. This will allow a logged in user to store that recipe in their favourite recipes section of their user account. 
+
+- Users can write comments about a recipe if they wan to leave a review about that recipe for other users.
+
++++ An Image here +++
+
++++ An Image here +++
+
+- User can upload an image of the recipe if they have created to show evidence of what the meal could look like.
++++ An Image here +++
+
+-  User can print the recipe incase they wanted to have a local copy or have a physical copy.
++++ An Image here +++
+
+- Users can rate a recipe out of 5 top say if they like it or not. This will help other users decide if they want to make the recipe.
++++ An Image here +++
+
+#### Profile management
+
+- Connect their account with social media platforms - Google
+
++++ An Image here +++
+
+- Edit their profile information, such as their name, profile picture, and bio
+
++++ An Image here +++
+
+#### Profile pages
+
+- Users have the ability to view my profile page which has my recipes that I have created, my favourite recipes and also my favourite users.
+
+- The main home profile page shows the users. profile picture, and account details. 
+
+- The user has a Recipe page ,My favourites page and a My favourite users page. This contains a list of all of the recipes and users. Users have a create a recipe button on the recipe page.
+
++++ An Image here +++
+
+#### Profile interactions
+
+- A user can follow another or remove a follow from a user. 
+
++++ An Image here +++
 
 ### Future Features
 
-Shopping list
-Due to time constraints this feature could not be completed for this release
+#### Shopping list
+Due to time constraints this feature could not be completed for this release. The news stories for this are shown above.
 
-More social login options
-Due to time constraints this feature could not be completed for this release
+#### More social login options
+Due to time constraints this feature could not be completed for this release. In future iterations I am hoping to add more social accounts to the login options.
 
-Allauth
-Use Allauth to reset user passwords and to change the email address
+#### Cloudinary
+Using the cloudinary features to crop and focus on the right elements of an image when users upload an image. Below is a link to the cloudinary resource.
 
-Using all off to reset user passwords and also to send an email when verifying an account. This hasn't been done so for this release users can use the contact us form to get help to reopen their account or to get any issues that they have with the user accounts
-
-Cloudinary
-Using the cloud and airy features to crop and focus on the right elements of an image when I use uploads it
 https://cloudinary.com/documentation/django_image_manipulation
 
-image Zoom:
-When you click on an image it will become a model which takes up the screen so you can see the image better.
+#### Image Zoom:
+When you click on an image it will become a modal which takes up the screen so you can see the image better. At the moment the uploaded images cannot change size for some users they may want to zoom in or see a larger view of the image.
 
-Splide
-There will not be a repeat of items in the Splide
++++ An Image here +++
 
-recipe detaisl heading
+#### Recipe Heading
 The ability for the image in the top right corner on the recipe details page to be changed depending on cuisine this means that the model for recipes will have a cuisine feature added to it so that the user when creating a recipe can choose what cuisine it is. The image will change depending on the cuisine so you know what cuisine that recipe is under
+
+***
+
+## Technologies Used
+
+- HTML5
+- CSS3
+- Python
+- Javascript
+- cloudinary
+- django-allauth
+- django-crispy-forms
+- django-summernote
+- Google Fonts
+- Bootstrap
+- Postgre
+
 ***
 
 ## Testing 
@@ -340,26 +408,36 @@ A separate testing document has been created as TESTING.md
 
 ### Fixed Bugs
 1.
+#### Image Upload
+Allowing a user to upload an image was not working and during the testing phase I was able to identify that I was not passing the request.Files. when a user submitted the form or when handling the post request in views.py
+
 image_form = RecipeImagesForm(request.POST)
+
+to 
+
 image_form = RecipeImagesForm(request.POST, request.FILES)
 
 2.
-colour change - #8AA848 to #667D36
+#### Colour change - #8AA848 to #667D36
 This is due to the accessibility contrast ratio between the colours of the green
 
 3.
-auto search
+#### Auto search
    // $('#search_query').keyup(function () {
     //     $('#search_recipe_bar').submit();
     // });
 I removed the auto search feature from the recipe search because on a mobile device, the keyboard kept disappearing after every character was entered. This problem could be fixed by adding a selection statement that checks if the user is on a mobile or desktop device, or by making the search an asynchronous function that doesn't require the entire page to reload when a search is performed.
 
 ### Bugs
-No known errors remaining.
+
+#### Splide
+There will not be a repeat of items in the Splide. Due to time constraints this feature could not be completed for this release. When there is not enough items in the slide it will repeat this is something that will need to be fixed in a future release. This is only on desktop devices or when the splide view is showing 2 or more items. This does not affect the UX. 
+
++++ An Image here +++
 
 ***
 
-## Deployment Incomplete!!!
+## Deployment
 ### Cloning & Forking
 #### Fork
 1. On GitHub.com, navigate to the [dlhamilton/Route Me](https://github.com/dlhamilton/route-me) repository.
@@ -378,66 +456,68 @@ No known errors remaining.
 ### Local Deployment
 1. Sign up to [Gitpod](https://gitpod.io/)
 2. Download the Gitpod browser extension.
-3. On GitHub.com, navigate to the [dlhamilton/route_me](https://github.com/dlhamilton/route-me) repository.
+3. On GitHub.com, navigate to the [dlhamilton/Whats-Cooking](https://github.com/dlhamilton/Whats-Cooking) repository.
 4. Above the list of files click the button that says 'Gitpod'.
 5. Once open you will need to install the libraries, you can do this by typing "pip3 install -r requirements.txt" into the terminal
 
 ### Remote Deployment 
- The prgoram was deployed to Heroku. If you have forked/cloned the repository the steps to deploy are:
- 1. On Heroku, create a new app.
- 2. input a name for your app
- 3. Click on the settings tab
- 4. Scroll to the Config Vars and click on the "Reveal Config Vars"
- 5. Input CREDS into the key field and the content of the Google API creds file into the value area.
- 6. Add another config, PORT into key and 8000 into value.
- 7. Set the buildbacks to Python and NodeJs in that order .
- 8. Link your Heroku app to you repository.
- 9. Click on Deploy.
- 10. The page will then provide the url to the python terminal.
+ 1. Log in to Heroku
+ 2. Click 'Create new app'.
+ 3. Give your application a unique name, select a region appropriate to your location and click the 'Create app' button.
+ 4. You can use an external databse for example postgre or use 'Heroku Postgres' under the Add-ons section.
+ 5. Go to settings section and click 'Reveal Config Vars' in the Config vars section.
+ 6. Add ALLOWED_HOSTS and the value as the name of you project with '.herokuapp.com' appended to the end.
+ 7. Add CLOUDINARY_URL and the value as your cloudinary API key.
+ 8. Add EMAIL_HOST_PASSWORD and the value as the password for the email service.
+ 9. Add EMAIL_HOST_USER and the value as the the email address for the email service.
+ 10. Add SECRET_KEY and the value as a complex string which will be used to provide cryptographic signing.
+11. Add DATABASE_URL if you are using a different database than Heroku Postgres.
+12. Navigate to the 'Deploy' page
+13. Select 'GitHub' from the 'Deployment method' section
+14. Enter your github account details and select the forked/ clone repository.
+15. Select 'Manual deploy', select the 'main' branch in the drop down and click the 'Deploy' button.
+16. Once built, click the 'View' button to load the URL.
 
- The live link can be found here - [Route Me](https://route-me-dh.herokuapp.com/)
-### Google Sheet
-The program uses a Google Sheets to store saved graphs and mazes. 
 
-1. Sign up to a [Google Account](https://support.google.com/accounts/answer/27441?hl=en#)
-2. Open Google Sheets and create a new spreadsheet. [Click here for Google Sheets](https://docs.google.com/spreadsheets/)
-3. Change the name of the spreadsheet to 'route_me_data'
-    ```python
-    SHEET = GSPREAD_CLIENT.open('route_me_data')
-    ```
-4. You now need to change the name of the worksheet to 'saves'
-5. The google sheet is now complete
+ The live link can be found here - [Whats Cooking](https://whats-cooking.herokuapp.com/)
 
-Now you need to get the API credentials from the [Google Cloud Platform](https://console.cloud.google.com/)
+### Prerequisite
+- A Cloudinary account will be needed, create one for free at https://cloudinary.com.
 
-1. Create a new project and give it a name.
-2. Select APIs and services from the navigation pane. 
-3. Now click Library
-4. Search for the Google Sheets and click enable.
-5. Search for the google Drive API and click enable.
-6. Click create credentials and from the drop down select Google dRIVE api.
-7. From the form select Application data
-8. Then click No for "are you planning to use this API with compute Engine, Kubernetes engine, App engine or cloud Functions?"
-9. Press Create and Continue.
-10. Select a role of Editor from the options and click "Done"
-11. Navigate to the service account on the credentials page. 
-12. On the tab click KEYS then ADD KEY.
-13. The Key type will need to be JSON
-14. Copy the downloaded JSON file into your repository and name it "creds.json"
-15. ADD THE "creds.json" FILE TO .gitignore FILE. DO NOT SHARE PUBLICLY.
+- An account with an email service that can be used to send confirmations and notification to users.
+
+- EmailJs used on the contact page section to send messages to the site admins. https://www.emailjs.com/
 
 ***
 
 ## Credits / Acknowledgements
 
 - For colour pallete 
-[Coolors](https://coolors.co/dac03e-b1b1b1-34d1a2-e63946-f1faee-a8dadc-457b9d-1d3557)
+[Coolors](https://coolors.co/)
 
-Email Js
+- There has been useful guidance from various articles from Stack Overflow - [Stack Overflow ](https://stackoverflow.com/)
 
+- HTML, CSS and Javascript code help was taken from w3schools - [W3Schools](https://www.w3schools.com/)
 
-Delphine Hourlay
-Adonyi Gábor
-Klaus Nielsen
-Vie Studio 
+- Email Js - [EmailJs](https://www.emailjs.com/)
+
+- Splide - [Splide](https://splidejs.com/)
+
+- Django Documentation - [Django](https://docs.djangoproject.com/en/4.1/)
+
+- Bootstrap Documentation - [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/)
+
+- Lucid Chart - This helped me to design my flow charts and class diagrams - [Lucid Chart](https://lucid.app/)
+
+#### Media
+
+- Pixabay Image - [pixabay image](https://pixabay.com/)
+Below are the names of the artists that i used:
+- - Delphine Hourlay
+- - Adonyi Gábor
+- - Klaus Nielsen
+- - Vie Studio 
+
+- All page Icons - [Font Awesome](https://fontawesome.com/)
+
 ***
