@@ -400,7 +400,7 @@ The ability for the image in the top right corner on the recipe details page to 
 
 ## Testing 
 
-A separate testing document has been created as TESTING.md
+A separate testing document has been created as [TESTING.md](TESTING.md)
 
 ### Manual Testing
 ### User Story Testing
@@ -423,9 +423,11 @@ This is due to the accessibility contrast ratio between the colours of the green
 
 3.
 #### Auto search
-   // $('#search_query').keyup(function () {
-    //     $('#search_recipe_bar').submit();
-    // });
+    '''
+    $('#search_query').keyup(function () {
+         $('#search_recipe_bar').submit();
+    });
+    '''
 I removed the auto search feature from the recipe search because on a mobile device, the keyboard kept disappearing after every character was entered. This problem could be fixed by adding a selection statement that checks if the user is on a mobile or desktop device, or by making the search an asynchronous function that doesn't require the entire page to reload when a search is performed.
 
 ### Bugs

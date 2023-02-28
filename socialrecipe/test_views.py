@@ -1685,6 +1685,83 @@ class TestProfileRecipesEdit(TestCase):
         self.assertEqual(
             response.url, f'/users/{self.user.username}/myrecipes/')
 
+    def test_delete_recip_with_image(self):
+        '''
+        Test delete of recipe with image
+        '''
+        image = self.generate_test_image()
+        image.public_id = "test_image"
+        recipe_1 = Recipes_var.create(
+            title='testrecipe1',
+            slug='testrecipe1',
+            author=self.user,
+            excerpt='about the recipe',
+            status=1,
+            recipe_image=image,
+            prep_time=30,
+            cook_time=60,
+            serves=4,
+            id=99,
+        )
+        self.assertEqual(Recipes_var.count(), 3)
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'the_delete_form': 'the_delete_form',
+          'id': recipe_1.id
+        }
+        response = client.post(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            content)
+        self.assertEqual(response.status_code, 302)
+        self.recipe.refresh_from_db()
+        self.assertEqual(Recipes_var.count(), 2)
+        self.assertEqual(
+            response.url, f'/users/{self.user.username}/myrecipes/')
+
+    def test_delete_recip_with_review_image(self):
+        '''
+        Test delete of recipe with image
+        '''
+        image = self.generate_test_image()
+        image.public_id = "test_image"
+        recipe_1 = Recipes_var.create(
+            title='testrecipe1',
+            slug='testrecipe1',
+            author=self.user,
+            excerpt='about the recipe',
+            status=1,
+            recipe_image=image,
+            prep_time=30,
+            cook_time=60,
+            serves=4,
+            id=99,
+        )
+
+        RecipeImages_var.create(
+            recipe_image="path/to/image1.jpg",
+            recipe=recipe_1,
+            user=self.user,
+        )
+        self.assertEqual(RecipeImages_var.count(), 1)
+    
+        self.assertEqual(Recipes_var.count(), 3)
+        client = Client()
+        client.force_login(self.user)
+        content = {
+          'the_delete_form': 'the_delete_form',
+          'id': recipe_1.id
+        }
+        response = client.post(
+            f'/users/{self.user.username}/myrecipes/edit/{self.recipe.slug}',
+            content)
+        self.assertEqual(response.status_code, 302)
+        self.recipe.refresh_from_db()
+        self.assertEqual(Recipes_var.count(), 2)
+        self.assertEqual(RecipeImages_var.count(), 0)
+        self.assertEqual(
+            response.url, f'/users/{self.user.username}/myrecipes/')
+
     def test_add_ingredient(self):
         '''
         Test add of ingredients to recipe
@@ -2149,7 +2226,7 @@ class Custom404Test(TestCase):
         '''
         Test from invalid url
         '''
-        url = f'/nothere'
+        url = '/nothere'
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
         self.assertTemplateUsed(response, '404.html')
