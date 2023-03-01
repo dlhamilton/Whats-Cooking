@@ -2,17 +2,6 @@
 {% load static %}
 {% block content %}
 
-<head>
-  <script type="text/javascript"
-  src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
-</script>
-<script type="text/javascript">
-(function(){
-emailjs.init("sjZI_dTlFCVI_oVEq");
-})();
-</script>
-</head>
-
 <div class="container-fluid">
 
 <div class="row">
@@ -24,6 +13,7 @@ emailjs.init("sjZI_dTlFCVI_oVEq");
 <div class="row">
     <div class="col">
         <h1>About</h1>
+</div>
 </div>
 
 <div class="row">
@@ -142,9 +132,9 @@ emailjs.init("sjZI_dTlFCVI_oVEq");
         <p>An issues with accounts or just need help use the form below:</p>
         <form onsubmit="return sendMail(this);">
           {% csrf_token %}
-          <input type="text" name="name" id="fullname" class="form-control" placeholder="Name" required />
+          <input type="text" name="name" id="fullname" class="form-control" placeholder="Name" required>
           <input type="email" name="emailaddress" id="emailaddress" class="form-control" placeholder="Email"
-              required />
+              required>
           <textarea rows="5" name="formmessage" id="formmessage" class="form-control"
               placeholder="Message" required></textarea>
           <div class="form-row text-center">
@@ -157,6 +147,15 @@ emailjs.init("sjZI_dTlFCVI_oVEq");
     </div>
   </div>
 </div>
+
+<script
+src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+</script>
+<script>
+(function(){
+emailjs.init("sjZI_dTlFCVI_oVEq");
+})();
+</script>
 <script src="{% static 'js/sendEmail.js' %}"></script>
 {%endblock%}
 
