@@ -7,6 +7,8 @@
 I have 197 tests with 100% coverage of my code.
 ![Coverage Report](readme-media/coverage.png)
 
+***
+
 ## Manual Tests
 Manual testing occurred regularly throughout local development. Tests are documented below.
 
@@ -31,7 +33,6 @@ Manual testing occurred regularly throughout local development. Tests are docume
 | | shows the correct colour status for the user| |
 || follow button appears if you are logged in and not following a user|||
 || button goes to a mini version showing a icon instead of Word when the screen is on a smaller view|||
-
 ### recipe_detail
 |Test #|Test|Results|Evidence|
 | | if user is logged in it shows the edit button on their recipes| |
@@ -86,11 +87,19 @@ Manual testing occurred regularly throughout local development. Tests are docume
 || Page pagination works correctly|||
 || shows a colour around the recipe if it has been published or not only if you are logged in to your recipes|||
 
+***
+
+## User Story Testing
+
+***
+
 ## Code Validation
 ### HTML
 ### CSS
 ### JavaScript
 ### Python
+
+***
 
 ## Lighthouse/ Accessibility Testing
 ### index
@@ -104,6 +113,8 @@ Manual testing occurred regularly throughout local development. Tests are docume
 ### user_recipe_add
 ### user_recipes_edit
 ### user_recipes
+
+***
 
 ## Devices used for manual testing
 What's Cooking was tested using the following desktop and mobile browsers:

@@ -402,13 +402,9 @@ The ability for the image in the top right corner on the recipe details page to 
 
 A separate testing document has been created as [TESTING.md](TESTING.md)
 
-### Manual Testing
-### User Story Testing
-### Validators
-
 ### Fixed Bugs
-1.
-#### Image Upload
+
+#### 1. Image Upload
 Allowing a user to upload an image was not working and during the testing phase I was able to identify that I was not passing the request.Files. when a user submitted the form or when handling the post request in views.py
 
 image_form = RecipeImagesForm(request.POST)
@@ -417,12 +413,12 @@ to
 
 image_form = RecipeImagesForm(request.POST, request.FILES)
 
-2.
-#### Colour change - #8AA848 to #667D36
+
+#### 2. Colour change - #8AA848 to #667D36
 This is due to the accessibility contrast ratio between the colours of the green
 
-3.
-#### Auto search
+
+#### 3. Auto search
     '''
     $('#search_query').keyup(function () {
          $('#search_recipe_bar').submit();
