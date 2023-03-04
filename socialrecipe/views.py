@@ -3,7 +3,7 @@ Social recipe views
 """
 import json
 from collections import Counter
-from cloudinary.uploader import destroy
+# from cloudinary.uploader import destroy
 import cloudinary
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import View
@@ -153,7 +153,7 @@ class RecipesList(View):
                         'prep_time')+F(
                             'cook_time')).order_by('total_time')
         return recipes_list
-    
+
     def top_5_ingredients(self):
         '''
         get the most common ingredients
@@ -938,7 +938,7 @@ class AboutUs(View):
                 "page_name": "About Us",
             }
         )
-    
+
     def post(self, request, *args, **kwargs):
         '''
         post method for about us

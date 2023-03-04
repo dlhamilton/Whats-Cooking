@@ -24,7 +24,7 @@ function sendMail(contactForm){
     
                 location.reload();
               
-                })
+                });
         },
         function(error){
             console.log("FAILED", error);
@@ -45,7 +45,7 @@ function sendMail(contactForm){
     
                 location.reload();
               
-                })
+                });
         }
     );
     return false;

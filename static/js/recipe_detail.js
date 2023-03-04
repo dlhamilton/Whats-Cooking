@@ -35,15 +35,15 @@ if (isAuthenticated) {
     });
  }
 
-    const checkbox = document.getElementById('flexSwitchCheckChecked')
-    const comments_row = document.getElementById('comments_row')
+    const checkbox = document.getElementById('flexSwitchCheckChecked');
+    const comments_row = document.getElementById('comments_row');
     checkbox.addEventListener('change', (event) => {
         if (event.currentTarget.checked) {
             comments_row.style.display = 'flex';
         } else {
             comments_row.style.display = 'none';
         }
-    })
+    });
     if (document.getElementById("image-main-carousel")) {
     var main = new Splide('#image-main-carousel', {
         gap: 20,
@@ -86,7 +86,7 @@ if (isAuthenticated) {
             })
             .then(response => {
                 if (response.ok) {
-                    valid = response
+                    valid = response;
                     return response.json();
                 }
                 throw new Error(response.statusText);
@@ -130,7 +130,7 @@ if (isAuthenticated) {
             })
             .then(response => {
                 if (response.ok) {
-                    valid = response
+                    valid = response;
                     return response.json();
                 }
                 throw new Error(response.statusText);

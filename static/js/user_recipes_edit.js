@@ -12,17 +12,17 @@ imModal.addEventListener('show.bs.modal', function (event) {
     document.getElementById("id_unit").selectedIndex = 0;
 });
 
-let rModal = document.getElementById('r_staticBackdrop')
+let rModal = document.getElementById('r_staticBackdrop');
 rModal.addEventListener('show.bs.modal', function (event) {});
 
-let mmModal = document.getElementById('mm_staticBackdrop')
+let mmModal = document.getElementById('mm_staticBackdrop');
 mmModal.addEventListener('show.bs.modal', function (event) {
-    let button = event.relatedTarget
-    let methods_order = button.getAttribute('data-bs-method_order')
-    let methods = button.getAttribute('data-bs-method')
-    let methods_id = button.getAttribute('data-bs-method_id')
-    let modalTitle = mmModal.querySelector('.method_modal .modal-title')
-    let modalBodyInput = mmModal.querySelector('.method_modal .modal-body textarea')
+    let button = event.relatedTarget;
+    let methods_order = button.getAttribute('data-bs-method_order');
+    let methods = button.getAttribute('data-bs-method');
+    let methods_id = button.getAttribute('data-bs-method_id');
+    let modalTitle = mmModal.querySelector('.method_modal .modal-title');
+    let modalBodyInput = mmModal.querySelector('.method_modal .modal-body textarea');
 
     document.getElementById("the_method_form_id").value = methods_id;
 
@@ -32,7 +32,7 @@ mmModal.addEventListener('show.bs.modal', function (event) {
 
 let remove_button = document.getElementById("remove-method");
 if (remove_button){
-  remove_button.addEventListener("click",  function(){removeIngredients(-1,"Methods")});
+  remove_button.addEventListener("click",  function(){removeIngredients(-1,"Methods");});
 }
 
 function removeIngredients(id,model) {

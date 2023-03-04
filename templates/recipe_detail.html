@@ -3,10 +3,6 @@
 {% load crispy_forms_tags %}
 {% load cloudinary %}
 
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/print.css' %}" media="print">
-</head>
-
 <div class="masthead mb-2">
     <div class="container-fluid">
         <div class="row g-0">
@@ -37,7 +33,7 @@
             </div>
             <div class="d-none d-md-block col-md-6 masthead-image">
                 <!-- The image URL  --> 
-                <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675121604/site_images/banner.webp" alt="Banner image of cooking" width="100%">
+                <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1675121604/site_images/banner.webp" alt="Banner image of cooking" class="w-100">
             </div>
         </div>
     </div>
@@ -102,7 +98,7 @@
             <button id="printButton" class="btn post-link-green" aria-label="Print recipe button"><i class="fa-solid fa-print"></i> Print</button>
         </div>
         <div class="d-inline col-6">
-            <img src="{{ recipe.recipe_image.url }}" alt="Image of the recipe" width="100%" class="rounded-3 max_width_recipe_img" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <img src="{{ recipe.recipe_image.url }}" alt="Image of the recipe" class="rounded-3 max_width_recipe_img w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">
         </div>
     </div>
     <div class="row recipe_icons mt-4 printable">
@@ -209,7 +205,7 @@
     </div>
     <!-- Picture upload place -->
     <div class="row not-printable">
-        <div class="col-md-8 card mb-4  mt-3 ">
+        <div class="card mb-4  mt-3 ">
             <h3>Pictures:</h3>
         {% if user.is_authenticated %}
         <div class="col-sm-2 card mb-4  mt-3 ">
@@ -225,7 +221,7 @@
                     <ul class="splide__list">
                         {% for image in images %}
                         <li class="splide__slide" data-image_id="{{ image.id }}">
-                            <img class="rounded" src="{{ image.recipe_image.url }}" width="100%" alt="User profile image">
+                            <img class="rounded w-100" src="{{ image.recipe_image.url }}" alt="User profile image">
                             <div class="font-weight-bold">
                                 <span class=" text-muted font-weight-normal">
                                     <span class="text-capitalize text-green-color"><strong>{{ image.user }}</strong></span>
@@ -266,7 +262,7 @@
     </div>
     <!-- Comments upload place -->
     <div class="row" id="the_comments">
-        <div class="col-md-8 card mt-3 comments-section">
+        <div class="col card mt-3 comments-section">
             <div class="headings d-flex justify-content-between align-items-center mb-3">
                 <h3>Comments:</h3>
                 
@@ -343,6 +339,7 @@
     </div>
 </div>
 
+
 <!-- recipe image larger modal -->
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -353,7 +350,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <img src="{{ recipe.recipe_image.url }}" width="100%" alt="Final image of the meal">
+            <img src="{{ recipe.recipe_image.url }}" class="w-100" alt="Final image of the meal">
         </div>
       </div>
     </div>
@@ -361,7 +358,7 @@
 
   <!-- upload an image modal -->
   <!-- Modal -->
-<div class="modal fade" id="staticBackdrop_image_upload" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop_image_uploadLabel" aria-hidden="true">
+<div class="modal fade" id="staticBackdrop_image_upload" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">

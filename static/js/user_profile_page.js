@@ -12,7 +12,7 @@ let splide_settings = {
         gap: '.7rem',
       },
     },
-  }
+  };
 
   let splide_settings_big = {
     type: 'loop',
@@ -32,7 +32,7 @@ let splide_settings = {
         gap: '1rem',
       },
     },
-  }
+  };
 
   if (document.getElementById("splide1")) {
   var splide1 = new Splide('#splide1', splide_settings);

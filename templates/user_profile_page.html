@@ -3,10 +3,6 @@
 {% block content %}
 {% load cloudinary %}
 
-<head>
-  <link rel="stylesheet" href="{% static 'css/style_card.css' %}">
-</head>
-
 <div class="container-fluid">
 
   <div class="row">
@@ -325,8 +321,8 @@
                         </span>
                       </span>
                     </p>
-                    <a class="" href="{% url 'profile_page' follow.username %}" title="Go to user profile page">
-                      <button class="btn btn-wc-green" aria-label="Go to user profile page">View Page</button>
+                    <a class="btn btn-wc-green" href="{% url 'profile_page' follow.username %}" title="Go to user profile page">
+                     View Page
                     </a>
 
                   </div>
