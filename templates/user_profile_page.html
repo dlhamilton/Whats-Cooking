@@ -171,9 +171,10 @@
                   {% else %}
                   <div class="image-container">
                   {% endif %}
-              
+                  <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                       <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
                         src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
+                  </a>
                     </div>
                     <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                       <h2 class="card-title one-Line-ellipsis text-capitalize">{{ recipe.title }}
@@ -236,9 +237,10 @@
                 <div class="card mb-4">
                   <div class="card-body index-card-body">
                     <div class="image-container">
-                  
+                      <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                       <img class="card-img-top auto-img-h" style="max-height: 200px; max-width: none;"
                         src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
+                      </a>
                       <div class="image-flash">
                         <a class="text-decoration-none text-reset" href="{% url 'profile_page' recipe.author %}" title="Go to user profile page">
                           <p class="author">Recipe by: {{ recipe.author }}</p>

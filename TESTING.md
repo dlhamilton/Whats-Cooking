@@ -25,6 +25,7 @@ Manual testing occurred regularly throughout local development. Tests are docume
 |8| Account status shows the correct position on the progress bar|Pass||
 |9| Account status shows the correct colour of award|Pass||
 |10| contact link navigates to the contact form on the about page|Pass||
+|11| recipe card has a shadow when higlighted for ui|Pass||
 ### about_us
 |Test #|Test|Results|Evidence|
 | --- | --- | --- |--- |
@@ -109,16 +110,20 @@ Manual testing occurred regularly throughout local development. Tests are docume
 
 ### HTML
 #### index
+https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2F#l441c6
 #### about_us
 https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Faboutus%2F
 #### recipe_detail
 #### recipes
+https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Frecipes%2F#l441c6
 #### user_favourites
+https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Fusers%2Fhamiltondan93%2Fmyfavourites%2F#l125c27
 #### user_followers
+https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Fusers%2Fhamiltondan93%2Fmyfollowers%2F#l125c27
 #### user_profile_page
-#### user_recipe_add
-#### user_recipes_edit
+https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Fusers%2Fhamiltondan93%2F#l125c27
 #### user_recipes
+https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Fusers%2Fhamiltondan93%2Fmyrecipes%2F#l125c27
 
 ### CSS
 https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fwhats-cooking.herokuapp.com%2F&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en
@@ -156,6 +161,9 @@ No errors were found when passing through the official Jshint validator
 - The most complex function has a cyclomatic complexity value of 3 while the median is 1.
 
 ### Python
+
+|App/Parent folder|	File |Result|
+| --- | --- | --- |
 
 ***
 

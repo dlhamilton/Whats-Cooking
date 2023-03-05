@@ -65,7 +65,9 @@
                 <div class="card mb-4">
                   <div class="card-body index-card-body">
                     <div class="image-container card-img-top overflow-hidden">
+                      <a href="{% url 'recipe_detail' recipe.slug %}" class="post-link" title="Go to recipe details page">
                         <img class="vertical-center w-100 auto-img-h" src="{{ recipe.recipe_image.url }}" alt="Image of the recipe">
+                      </a>
                       {% if page_name == user %}
                         {% if recipe.status == 1 %}
                           <div class="pub_button_img_flash pub rounded">

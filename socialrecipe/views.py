@@ -3,7 +3,6 @@ Social recipe views
 """
 import json
 from collections import Counter
-# from cloudinary.uploader import destroy
 import cloudinary
 from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.views import View

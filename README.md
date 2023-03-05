@@ -380,6 +380,10 @@ When you click on an image it will become a modal which takes up the screen so y
 #### Recipe Heading
 The ability for the image in the top right corner on the recipe details page to be changed depending on cuisine this means that the model for recipes will have a cuisine feature added to it so that the user when creating a recipe can choose what cuisine it is. The image will change depending on the cuisine so you know what cuisine that recipe is under
 
+#### User profile customising 
+A user will be able to change the heading photo for their profile to make it more personal. They can also write more about them self and their background on the recipes and cooking. 
++++ An Image here +++
+
 ***
 
 ## Technologies Used
