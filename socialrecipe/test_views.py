@@ -1744,7 +1744,7 @@ class TestProfileRecipesEdit(TestCase):
             user=self.user,
         )
         self.assertEqual(RecipeImages_var.count(), 1)
-    
+
         self.assertEqual(Recipes_var.count(), 3)
         client = Client()
         client.force_login(self.user)

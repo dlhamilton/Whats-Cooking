@@ -48,7 +48,7 @@
       </div>
         <div class="row">
 
-          <h3>About:</h3>
+          <h2>About:</h2>
           <p class="card-text ">
             {{ recipe.excerpt | safe }}
           </p>
@@ -107,7 +107,7 @@
           <div class="col">
             <form class="col" method="get">
               {{ form.search_term }}
-              <input type="submit" value="Search" class="btn btn-dark">
+              <input type="submit" value="Search" class="btn btn-dark" aria-label="Search button">
             </form>
           </div>
         </div>

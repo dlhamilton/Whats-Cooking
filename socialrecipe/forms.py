@@ -118,7 +118,9 @@ class AddToRecipeForm(forms.Form):
     '''
     Form to search for an Ingredient for a recipe
     '''
-    search_term = forms.CharField(required=False)
+    search_term = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'aria-label': 'Search'}))
 
 
 class IngredientsForm(forms.ModelForm):

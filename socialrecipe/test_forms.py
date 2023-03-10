@@ -10,7 +10,8 @@ from .forms import (CommentsForm, RatingForm, RecipeImagesForm, RecipesForm,
                     UserDetailsForm, FollowForm, UnfollowForm)
 from .models import Recipes, Ingredients, Units, User, UserDetails
 
-img_link = 'https://res.cloudinary.com/demo/image/upload/v1581719397/sample.jpg'
+IMG_LINK = 'https://res.cloudinary.com/demo/image/upload/v1581719397/" \
+    "sample.jpg'
 Ingredients_var = Ingredients.objects
 Units_var = Units.objects
 UserDetails_var = UserDetails.objects
@@ -111,7 +112,7 @@ class TestRecipeImageUploadForm(TestCase):
         Test headline is required
         '''
         form = RecipeImagesForm({
-            'recipe_image': img_link
+            'recipe_image': IMG_LINK
         })
         self.assertFalse(form.is_valid())
         self.assertIn('headline', form.errors.keys())
@@ -204,7 +205,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': '',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -235,7 +236,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': '',
             'prep_time': 30,
             'cook_time': 60,
@@ -252,7 +253,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': '',
             'cook_time': 60,
@@ -269,7 +270,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': '',
@@ -286,7 +287,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -303,7 +304,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -320,7 +321,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -336,7 +337,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,
@@ -351,7 +352,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 'abc',
             'cook_time': 60,
@@ -366,7 +367,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 'abc',
@@ -381,7 +382,7 @@ class RecipesFormTestCase(TestCase):
         '''
         form = RecipesForm({
             'title': 'Test Recipe',
-            'recipe_image': img_link,
+            'recipe_image': IMG_LINK,
             'excerpt': 'This is a test excerpt',
             'prep_time': 30,
             'cook_time': 60,

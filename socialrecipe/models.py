@@ -44,8 +44,8 @@ class UserDetails(models.Model):
         '''
         get a list of all followers
         '''
-        x = self.follows.all()
-        return x
+        follow_list = self.follows.all()
+        return follow_list
 
     def get_amount_of_recipes(self):
         '''
