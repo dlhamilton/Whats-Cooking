@@ -245,6 +245,7 @@ Roboto - Use in paragraphs and labels.
 
 ## Features
 ### Existing Features
+Below are the main features of what's cooking. To get a list of smaller features to improve user experience you can go to the testing section and click on the manual testing heading.
 
 #### Base
 ##### NavBar
@@ -375,6 +376,8 @@ The ability for the image in the top right corner on the recipe details page to 
 #### User profile customising 
 A user will be able to change the heading photo for their profile to make it more personal. They can also write more about them self and their background on the recipes and cooking. 
 
+#### User profile search 
+A user will be able to search and view the profile of a user that has not published a recipe. This would require a new page which will show all of the users that are authenticated on the system and allow users to search and filter out users.
 ***
 
 ## Technologies Used
