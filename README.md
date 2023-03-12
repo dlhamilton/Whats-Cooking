@@ -253,6 +253,8 @@ Below are the main features of what's cooking. To get a list of smaller features
 - A toggle button to expand/collapse the navigation links in a dropdown menu.
 - Links for the home and recipes pages, which are active if the current page is the respective one.
 - Conditional links for user authentication: profile page or profile toggle button if the user is logged in, or register and login links if the user is not logged in.
+<br>
+
 ![nav 1](readme-media/site_images/navbar/img-nav_desktop.png)
 ![nav 2](readme-media/site_images/navbar/img-nav_mobile_in.png)
 ![nav 3](readme-media/site_images/navbar/img-nav_mobile_out.png)
@@ -262,6 +264,8 @@ Below are the main features of what's cooking. To get a list of smaller features
 - A loop that iterates over the messages passed from the views.
 - An alert for each message, with a class assigned based on the message's tags (e.g., success, warning, error). The message is displayed in a safe manner to prevent malicious content.
 - A close button for each alert using Bootstrap's data-bs-dismiss attribute.
+<br>
+
 ![messages 1](readme-media/site_images/messages/messages_1.png)
 ![messages 2](readme-media/site_images/messages/messages_2.png)
 
@@ -270,6 +274,8 @@ Below are the main features of what's cooking. To get a list of smaller features
 - Shows user account details. It shows the users status and how far they are from the next level. If the user has not completed their account then it will show a button to link the user to the complete account section.
 - Quick links to favourite recipes, recipes made by the user and the users that the user follows.
 - There is a button which links to the user profile and a logout button
+<br>
+
 ![Profile 1](readme-media/site_images/profile_section/profile_1.png)
 ![Profile 2](readme-media/site_images/profile_section/profile_2.png)
 
@@ -277,6 +283,8 @@ Below are the main features of what's cooking. To get a list of smaller features
 - The footer contains two paragraphs of text and icons.
 - The first paragraph displays a link to the author's Github account, and the second paragraph displays social media icons.
 - The footer has a background color of "footer-bg" and uses font awesome icons to display the social media icons.
+<br>
+
 ![footer](readme-media/site_images/footer/footer.png)
 
 #### Index
@@ -287,6 +295,8 @@ Below are the main features of what's cooking. To get a list of smaller features
 - Another section is added that explains why the user should sign up for the website.
 - A bulleted list is included with reasons to sign up, such as access to an extensive recipe database, ability to save favorite recipes, and share recipes with the community.
 - The page shows the top three liked recipes with the author of the recipe, description and the average rating.
+<br>
+
 ![index](readme-media/site_images/index/index_1.png)
 ![index_signup](readme-media/site_images/index/index_signup.png)
 
@@ -296,22 +306,30 @@ Below are the main features of what's cooking. To get a list of smaller features
 - Reset their password if they forget it
 - Connect their account with social media platforms - Google
 - Allauth was implemented to handle account creation and management of email verification, email address management, password change, etc.
+<br>
+
 ![account_1](readme-media/site_images/account/account_1.png)
 ![account_2](readme-media/site_images/account/account_2.png)
 ![account_3](readme-media/site_images/account/account_3.png)
 ![account_4](readme-media/site_images/account/account_4.png)
+![account_5](readme-media/site_images/account/email_verify.png)
 
 #### Recipe list
-- Users can search for recipes using keywords, ingredient lists, or author. They can also filter recipes by ingredients. This makes it easy to find recipes that match their tastes and needs.
+- Users can search for recipes using keywords, ingredient lists, or author. They can also filter recipes by ingredients. This makes it easy to find recipes that match their tastes and needs.<br>
+
 ![search](readme-media/site_images/recipe_list/recipe_icons.png)
 
 - This sorting function allows users to view recipes in a certain order. They can sort by name, rating, the recipe with the most faviourites, the newest and finally the quickest in terms of total cooking time.
+<br>
+
 ![sort](readme-media/site_images/recipe_list/recipe_sort.png)
 ![filter](readme-media/site_images/recipe_list/recipe_filter.png)
 
 #### Recipe management
 - Users can create, edit and delete recipes that they have created. They can add ingridents, and methods to the recipe for other users to see. 
-- Users can also add images to the recipe and give a description on what the meal is. 
+- Users can also add images to the recipe and give a description on what the meal is.
+<br>
+
 ![recipe_edit_1](readme-media/site_images/recipe_management/add_button.png)
 ![recipe_edit_2](readme-media/site_images/recipe_management/recipe_form.png)
 ![recipe_edit_3](readme-media/site_images/recipe_management/edit_recipe_1.png)
@@ -319,40 +337,66 @@ Below are the main features of what's cooking. To get a list of smaller features
 
 #### Recipe interactions
 - User can favourite a recipe if they like it. This will allow a logged in user to store that recipe in their favourite recipes section of their user account.
+<br>
+
 ![likes](readme-media/site_images/recipe_interactions/like_button.png)
 
 - Users can write comments about a recipe if they wan to leave a review about that recipe for other users.
+<br>
+
 ![comments](readme-media/site_images/recipe_interactions/comments.png)
 
 - User can upload an image of the recipe if they have created to show evidence of what the meal could look like.
+<br>
+
 ![uploads](readme-media/site_images/recipe_interactions/image_upload.png)
 
 -  User can print the recipe incase they wanted to have a local copy or have a physical copy.
+<br>
+
 ![print](readme-media/site_images/recipe_interactions/print_button.png)
 
 - Users can rate a recipe out of 5 top say if they like it or not. This will help other users decide if they want to make the recipe.
+<br>
+
 ![rating 1](readme-media/site_images/recipe_interactions/rating_recipe.png)
 ![rating 2](readme-media/site_images/recipe_interactions/rating.png)
 
 #### Profile management
 - Connect their account with social media platforms - Google
+<br>
+
 ![socials](readme-media/site_images/profile_management/google.png)
 
 - Edit their profile information, such as their name, profile picture, and bio
+<br>
+
 ![edit account](readme-media/site_images/profile_management/account_edit.png)
 
 #### Profile pages
 - Users have the ability to view my profile page which has my recipes that I have created, my favourite recipes and also my favourite users.
 - The main home profile page shows the users. profile picture, and account details. 
 - The user has a Recipe page ,My favourites page and a My favourite users page. This contains a list of all of the recipes and users. Users have a create a recipe button on the recipe page.
+<br>
+
 ![profile](readme-media/site_images/profile_pages/profile.png)
 
 #### Profile interactions
-- A user can follow another or remove a follow from a user. 
+- A user can follow another or remove a follow from a user.
+<br>
+
 ![follow 1](readme-media/site_images/profile_interactions/follow_1.png)
 ![follow 2](readme-media/site_images/profile_interactions/follow_2.png)
 ![follow 3](readme-media/site_images/profile_interactions/follow_3.png)
 ![follow 4](readme-media/site_images/profile_interactions/follow_4.png)
+
+#### About Us 
+- Key information about the site to help the user when they go onto website.
+- An email is sent to the admin with any queries sent from the contact us page.
+<br>
+
+![about us](readme-media/site_images/about/key_points.png)
+![contact](readme-media/site_images/about/contact_email.png)
 
 ### Future Features
 
@@ -511,6 +555,9 @@ Below are the names of the artists that i used:
 - - Vie Studio 
 
 - All page Icons - [Font Awesome](https://fontawesome.com/)
+
+- The starter recipes are from BBC food
+- - [BBC Food](https://www.bbc.co.uk/food)
 
 ## Acknowledgements
 A huge thank you to my mentor Chris Quinn and the Code Institute for their advice and support during the development of this project.
