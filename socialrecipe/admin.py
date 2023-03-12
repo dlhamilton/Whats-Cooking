@@ -60,6 +60,7 @@ class CommentsAdmin(admin.ModelAdmin):
         'body',
         'recipe_title']
     list_filter = ('post_date', 'status')
+    actions = ['remove_comment']
 
     def remove_comment(self, request, queryset):
         '''
@@ -108,6 +109,7 @@ class IngredientsAdmin(admin.ModelAdmin):
     """
     list_display = ('name', 'approved')
     search_fields = ['name']
+    actions = ['approve_ingredients']
 
     def approve_ingredients(self, request, queryset):
         '''
