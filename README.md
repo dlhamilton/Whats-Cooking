@@ -237,9 +237,9 @@ Desktop
 ### Fonts
 Google fonts was used in this project with both fonts selected for their legibility and simplicity.
 
-Unica One - Use in Logo
-Roboto - Use in headings.
-Roboto - Use in paragraphs and labels.
+Unica One - Use in Logo<br>
+Roboto - Use in headings.<br>
+Roboto - Use in paragraphs and labels.<br>
 
 ***
 
@@ -386,8 +386,8 @@ Below are the main features of what's cooking. To get a list of smaller features
 <br>
 
 ![follow 1](readme-media/site_images/profile_interactions/follow_1.png)
-![follow 2](readme-media/site_images/profile_interactions/follow_2.png)
 ![follow 3](readme-media/site_images/profile_interactions/follow_3.png)
+![follow 2](readme-media/site_images/profile_interactions/follow_2.png)
 ![follow 4](readme-media/site_images/profile_interactions/follow_4.png)
 
 #### About Us 
