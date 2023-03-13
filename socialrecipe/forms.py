@@ -4,6 +4,7 @@ Socialrecipe forms
 from django import forms
 from cloudinary.models import CloudinaryField
 from allauth.account.forms import SignupForm
+import re
 from .models import (Comments, Ingredients, Recipes, RecipeItems, Units,
                      Methods, UserDetails, StarRating, RecipeImages)
 
@@ -238,8 +239,24 @@ class MyCustomSignupForm(SignupForm):
         username cleaning to get rid of certain characters
         '''
         username = self.cleaned_data['username']
+        if not re.match(r'^[a-zA-Z0-9]+$', username):
+            raise forms.ValidationError(
+                "Usernames can only contain letters and digits")
         if '.' in username:
-            raise forms.ValidationError("Usernames cannot contain a full stop")
+            raise forms.ValidationError(
+                "Usernames cannot contain a full stop")
+        if '_' in username:
+            raise forms.ValidationError(
+                "Usernames cannot contain an underscore")
+        if '@' in username:
+            raise forms.ValidationError(
+                "Usernames cannot contain an at sign (@)")
+        if '+' in username:
+            raise forms.ValidationError(
+                "Usernames cannot contain a plus sign (+)")
+        if '-' in username:
+            raise forms.ValidationError(
+                "Usernames cannot contain a hyphen (-)")
         return username
 
     def save(self, request):
