@@ -27,7 +27,7 @@ class UserDetails(models.Model):
     status = models.IntegerField(
         choices=USER_STATUS, default=1)
     user_image = CloudinaryField(
-        'image', default='placeholder')
+        'image', default='placeholder.webp')
     follows = models.ManyToManyField(
         User, related_name='user_follows', blank=True)
 

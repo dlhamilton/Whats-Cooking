@@ -21,6 +21,14 @@ class UserDetailsAdmin(admin.ModelAdmin):
         'user__last_name',
         'user__email']
 
+    actions = ['placeholer_image']
+
+    def placeholer_image(self, request, queryset):
+        '''
+        add place holder
+        '''
+        queryset.update(user_image="placeholder.webp")
+
 
 @admin.register(socialrecipe.models.RecipeImages)
 class RecipeImagesAdmin(admin.ModelAdmin):
@@ -89,6 +97,14 @@ class RecipeAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('author', 'title')}
     list_filter = ('status', 'upload_date')
     summernote_fields = ('excerpt')
+
+    actions = ['placeholer_image']
+
+    def placeholer_image(self, request, queryset):
+        '''
+        add place holder
+        '''
+        queryset.update(user_image="placeholder-recipe.png")
 
 
 @admin.register(socialrecipe.models.Methods)
