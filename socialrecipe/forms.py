@@ -3,6 +3,7 @@ Socialrecipe forms
 """
 from django import forms
 from cloudinary.models import CloudinaryField
+from allauth.account.forms import SignupForm
 from .models import (Comments, Ingredients, Recipes, RecipeItems, Units,
                      Methods, UserDetails, StarRating, RecipeImages)
 
@@ -226,3 +227,24 @@ class UnfollowForm(forms.Form):
     '''
     unfollow = forms.IntegerField(
         widget=forms.HiddenInput(attrs={'class': 'd-none'}), required=False)
+
+
+class MyCustomSignupForm(SignupForm):
+    '''
+    Form to sign up as a new user
+    '''
+    def clean_username(self):
+        '''
+        username cleaning to get rid of certain characters
+        '''
+        username = self.cleaned_data['username']
+        if '.' in username:
+            raise forms.ValidationError("Usernames cannot contain a full stop")
+        return username
+
+    def save(self, request):
+        '''
+        save the new user
+        '''
+        user = super(MyCustomSignupForm, self).save(request)
+        return user
