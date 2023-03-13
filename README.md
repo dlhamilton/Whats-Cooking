@@ -422,6 +422,10 @@ A user will be able to change the heading photo for their profile to make it mor
 
 #### User profile search 
 A user will be able to search and view the profile of a user that has not published a recipe. This would require a new page which will show all of the users that are authenticated on the system and allow users to search and filter out users.
+
+#### Nutritional Values
+Allow users to see the nutritional values of meals. This will require it to be checked by an official source.
+
 ***
 
 ## Technologies Used

@@ -237,6 +237,10 @@ https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&
 https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Fusers%2Fhamiltondan93%2F#l125c27
 #### user_recipes
 https://validator.w3.org/nu/?showsource=yes&showoutline=yes&showimagereport=yes&doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Fusers%2Fhamiltondan93%2Fmyrecipes%2F#l125c27
+#### sign_up
+https://validator.w3.org/nu/?doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Faccounts%2Fsignup%2F
+#### login
+https://validator.w3.org/nu/?doc=https%3A%2F%2Fwhats-cooking.herokuapp.com%2Faccounts%2Flogin%2F
 
 ### CSS
 https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fwhats-cooking.herokuapp.com%2F&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en
@@ -333,6 +337,10 @@ With the Lighthouse tests there were some low performance issues due to the imag
 ![lighthouse-user_recipes_edit](readme-media/lighthouse/lighthouse-user_recipes_edit.png)
 ### user_recipes
 ![lighthouse-user_recipes](readme-media/lighthouse/lighthouse-user_recipes.png)
+### login
+![lighthouse-user_recipes](readme-media/lighthouse/lighthouse_login.png)
+### sign up
+![lighthouse-user_recipes](readme-media/lighthouse/lighthouse_sign_up.png)
 
 ***
 
