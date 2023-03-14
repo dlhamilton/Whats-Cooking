@@ -443,6 +443,14 @@ color: white;
     opacity: 0.5;
 }
 
+.text-outline {
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+}
+
+.index_signup_btn {
+    background-color: whitesmoke;
+}
+
 /* ---------------------------------------------- */
 /* login, signup, logout */
 /* ---------------------------------------------- */

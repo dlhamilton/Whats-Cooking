@@ -22,6 +22,7 @@ Welcome to the social recipe app, a platform for food enthusiasts to come togeth
 * [Fonts](#Fonts)
 * [Features](#features)
     * [Existing Features](#Existing-Features)
+    * [Future Refactor](#Future-Refactor)
     * [Future Features](#future-features)
 * [Technologies Used](technologies-used)
 * [Testing](#testing)
@@ -398,6 +399,10 @@ Below are the main features of what's cooking. To get a list of smaller features
 ![about us](readme-media/site_images/about/key_points.png)
 ![contact](readme-media/site_images/about/contact_email.png)
 
+### Future Refactor
+#### Method Table
+Currently the methods for the recipes are stored in their own table, this will be a problem in the future as the table will become very large when more users start to create recipes. A future improvement will be to change the database so that the methods are in the recipe table as an array field.
+
 ### Future Features
 
 #### Shopping list
@@ -532,18 +537,19 @@ There will not be a repeat of items in the Splide. Due to time constraints this 
 3. On GitHub.com, navigate to the [dlhamilton/Whats-Cooking](https://github.com/dlhamilton/Whats-Cooking) repository.
 4. Above the list of files click the button that says 'Gitpod'.
 5. Once open you will need to install the libraries, you can do this by typing "pip3 install -r requirements.txt" into the terminal
+6. Open the .env file in the project directory and change the key pair values to match your credentials. There is a [sample env file](/env_sample.py) that you can use to help you
 
 ### Remote Deployment 
- 1. Log in to Heroku
- 2. Click 'Create new app'.
- 3. Give your application a unique name, select a region appropriate to your location and click the 'Create app' button.
- 4. You can use an external databse for example postgre or use 'Heroku Postgres' under the Add-ons section.
- 5. Go to settings section and click 'Reveal Config Vars' in the Config vars section.
- 6. Add ALLOWED_HOSTS and the value as the name of you project with '.herokuapp.com' appended to the end.
- 7. Add CLOUDINARY_URL and the value as your cloudinary API key.
- 8. Add EMAIL_HOST_PASSWORD and the value as the password for the email service.
- 9. Add EMAIL_HOST_USER and the value as the the email address for the email service.
- 10. Add SECRET_KEY and the value as a complex string which will be used to provide cryptographic signing.
+1. Log in to Heroku
+2. Click 'Create new app'.
+3. Give your application a unique name, select a region appropriate to your location and click the 'Create app' button.
+4. You can use an external databAse for example postgre or use 'Heroku Postgres' under the Add-ons section.
+5. Go to settings section and click 'Reveal Config Vars' in the Config vars section.
+6. Add ALLOWED_HOSTS and the value as the name of you project with '.herokuapp.com' appended to the end.
+7. Add CLOUDINARY_URL and the value as your cloudinary API key.
+8. Add EMAIL_HOST_PASSWORD and the value as the password for the email service.
+9. Add EMAIL_HOST_USER and the value as the the email address for the email service.
+10. Add SECRET_KEY and the value as a complex string which will be used to provide cryptographic signing.
 11. Add DATABASE_URL if you are using a different database than Heroku Postgres.
 12. Navigate to the 'Deploy' page
 13. Select 'GitHub' from the 'Deployment method' section
@@ -551,6 +557,25 @@ There will not be a repeat of items in the Splide. Due to time constraints this 
 15. Select 'Manual deploy', select the 'main' branch in the drop down and click the 'Deploy' button.
 16. Once built, click the 'View' button to load the URL.
 
+### Database
+A Postgres database has been used for this project, provided by ElephantSQL.
+
+1. Open your web browser and go to the [ElephantSQL](https://www.elephantsql.com/) website.
+2. Sign up for a free account or log in if you already have an account.
+3. Once you have logged in, you will be taken to the Dashboard. From here, click on the "Create New Instance" button.
+4. You will now be taken to a page where you can configure your new database instance. Choose the "Tiny Turtle" plan which is free.
+5. Select the region where you want to host your database. The closest region to you is usually the best choice.
+6. Choose a name for your instance, this will be the name of your database.
+7. Choose a username and password for your instance.
+8. Click on the "Create" button to create your new database instance.
+1. The database url was stored in a config var: 'DATABASE_URL' on Heroku. This variable was then used in the settings.py to connect to the database.
+10. Click on the "Details" tab to view your instance details.
+11. Look for the "URI" field, which contains the connection details you need to connect to your database. The URI should start with: 'postgres://'
+
+The models were migrated to the database by entering the following commands in the the gitpod terminal:
+
+python3 manage.py makemigrations
+python3 manage.py migrate
 
  The live link can be found here - [Whats Cooking](https://whats-cooking.herokuapp.com/)
 

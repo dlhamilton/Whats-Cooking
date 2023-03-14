@@ -17,8 +17,8 @@
       <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1677362144/site_images/pic1.webp" alt="Recipe image 1" class="d-block w-100">
       <div class="carousel-caption">
         
-          <h3>Veggie Chilli Sweet Potato Fries</h3>
-          <p>Made by Chris Robinson</p>
+          <h3 class="text-outline">Veggie Chilli Sweet Potato Fries</h3>
+          <p class="text-outline">Made by Chris Robinson</p>
        
       </div>
     </div>
@@ -27,8 +27,8 @@
       <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1677363379/site_images/pic2.webp" alt="Recipe image 2" class="d-block w-100">
       <div class="carousel-caption">
         
-          <h3>Beans and Courgette Salad</h3>
-          <p>Made by Amy Lancanster</p>
+          <h3 class="text-outline">Beans and Courgette Salad</h3>
+          <p class="text-outline">Made by Amy Lancanster</p>
        
       </div>
     </div>
@@ -37,15 +37,15 @@
       <img src="https://res.cloudinary.com/dcyscwwbk/image/upload/v1677363700/site_images/pic3.webp" alt="Recipe image 3" class="d-block w-100">
       <div class="carousel-caption">
         
-          <h3>Rice & Calalou Salad</h3>
-          <p>Made by Lucy Smith</p>
+          <h3 class="text-outline">Rice & Calalou Salad</h3>
+          <p class="text-outline">Made by Lucy Smith</p>
         
       </div>
     </div>
     <!-- Sign up button -->
     {% if not user.is_authenticated %}
     <div class="carousel-button">
-      <a class="btn btn-outline-secondary btn-index" href="{% url 'account_login' %}" title="Go to login/ sign up page"><strong>Login/ Sign
+      <a class="btn btn-outline-secondary btn-index index_signup_btn" href="{% url 'account_login' %}" title="Go to login/ sign up page"><strong>Login/ Sign
           Up</strong></a>
     </div>
     {% endif %}
