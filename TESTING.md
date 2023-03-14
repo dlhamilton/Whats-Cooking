@@ -140,6 +140,45 @@ Manual testing occurred regularly throughout local development. Tests are docume
 ![colour box](readme-media/manual_tests/user_recipes/recipes_box.png)
 ***
 
+## Manual Tests JS
+
+### recipe_detail.js
+1. If the user is authenticated. It turns the heart icon into a form button which allows the user to favourite or unfavourite the recipe. It will also find out if the user has Favourited this recipe before. - PASS
+
+2. If the user is authenticated. It makes the change in the database if the user favourites or on favourites a recipe, it also changs the colour of the heart and update the number of favourites. - PASS
+
+3. An event listener for a checkbox, and shows or hides a comments section based on whether the checkbox is checked. - PASS
+
+4. Code sets up a carousel using the Splide library, and includes various configuration options. - PASS
+
+5. Is used to delete a comment from the server and update the HTML content of the page. - PASS
+
+6. removeImageFunction that is used to delete an image from the server and reload the page. - PASS
+
+7. Triggered if the user is authenticated. It sets up event listeners for star icons and sends a fetch request to the server when a star is clicked. The response data is used to update the HTML content of the page and update the database with the new star rating. - PASS
+
+8. Event listener for a "Print" button, which triggers the browser's print functionality when clicked. - PASS
+
+### recipes.js
+1. Sets the focus on the input field with the ID "search_query" when the page loads. - PASS
+
+2. Allows the user to check and uncheck the check boxes on the screen and set the class so that the filter functions can work. - PASS
+
+### sendEmail.js 
+1. Send an email to the admin of the page using email JS. - PASS
+
+2. Validates the form and will notify if there are any errors when sending the email. - PASS
+
+### user_profile_page.js
+1. Code sets up the three carousels using the Splide library, and includes various configuration options. - PASS
+
+### user_recipes_edit.js
+1. Allows the user to add and remove ingredients from the recipe making sure that the changes are visually shown on screen. - PASS
+
+2. Allows the user to add and remove methods from the recipe making sure that the changes are visually shown on screen. - PASS
+
+3. The correct models appear when the user initiates them. - PASS
+
 ## User Story Testing
 
 [Project Stories](https://github.com/users/dlhamilton/projects/3)

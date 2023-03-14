@@ -92,8 +92,6 @@ if (isAuthenticated) {
                 throw new Error(response.statusText);
             })
             .then(data => {
-                console.log(data.message);
-                console.log(valid);
                 if (valid.ok) {
                     //find the comment element
                     let comment = document.querySelector(`[data-comment_id="${id}"]`);
@@ -106,8 +104,6 @@ if (isAuthenticated) {
                     }, 2500);
 
                 } else {
-                    // Handle other status codes
-                    console.log(data.message);
                 }
             })
             .catch(error => console.error(error));

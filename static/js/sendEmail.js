@@ -6,7 +6,6 @@ function sendMail(contactForm){
     })
     .then(
         function(response){
-            console.log("SUCCESS", response);
             let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         
             fetch(`/aboutus/`, {
@@ -27,7 +26,6 @@ function sendMail(contactForm){
                 });
         },
         function(error){
-            console.log("FAILED", error);
             let csrf_token = document.getElementsByName('csrfmiddlewaretoken')[0].value;
         
             fetch(`/aboutus/`, {

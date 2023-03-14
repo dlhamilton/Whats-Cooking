@@ -60,8 +60,6 @@ function removeIngredients(id,model) {
         throw new Error(response.statusText);
     })
     .then(data => {
-        console.log(data.message);
-        console.log(valid);
         if (valid.ok) {
           if (model == "Methods"){
             let method = document.querySelector(`[data-method_id="${id}"]`);
@@ -85,7 +83,6 @@ function removeIngredients(id,model) {
             }, 2500);
           }
         } else {
-          console.log(data.message);
         }
     })
     .catch(error => console.error(error));
